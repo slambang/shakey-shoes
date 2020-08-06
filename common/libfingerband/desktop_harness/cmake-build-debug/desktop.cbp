@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="desktop"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gist">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libgist.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 gist"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="gist/fast">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libgist.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 gist/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="iir1">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libiir1.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 iir1"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="iir1/fast">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libiir1.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 iir1/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ofxgist">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libofxgist.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 ofxgist"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ofxgist/fast">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libofxgist.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 ofxgist/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sndfile">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libsndfile.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 sndfile"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sndfile/fast">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libsndfile.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 sndfile/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="kissfft">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libkissfft.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 kissfft"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="kissfft/fast">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/libkissfft.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 kissfft/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="fingerband">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/fingerband" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 fingerband"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="fingerband/fast">
+				<Option output="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/fingerband" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DBEATPROCESSOR_DEBUG"/>
+					<Add option="-DUSE_KISS_FFT"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft"/>
+					<Add directory="/home/steve/Desktop/fingerband/common/libfingerband/src"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 fingerband/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/steve/Desktop/fingerband/platforms/desktop/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/Gist.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/Gist.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/core/CoreFrequencyDomainFeatures.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/core/CoreFrequencyDomainFeatures.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/core/CoreTimeDomainFeatures.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/core/CoreTimeDomainFeatures.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/fft/WindowFunctions.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/fft/WindowFunctions.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/mfcc/MFCC.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/mfcc/MFCC.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/onset-detection-functions/OnsetDetectionFunction.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/onset-detection-functions/OnsetDetectionFunction.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/pitch/Yin.cpp">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/Gist/src/pitch/Yin.h">
+			<Option target="gist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Biquad.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Biquad.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Butterworth.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Butterworth.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Cascade.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Cascade.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/ChebyshevI.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/ChebyshevI.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/ChebyshevII.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/ChebyshevII.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Custom.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/Custom.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/PoleFilter.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/PoleFilter.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/RBJ.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/RBJ.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/State.cpp">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/iir1/iir/State.h">
+			<Option target="iir1"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft/kiss_fft.c">
+			<Option target="kissfft"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/kissfft/kiss_fft.h">
+			<Option target="kissfft"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/G72x/g721.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/G72x/g723_16.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/G72x/g723_24.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/G72x/g723_40.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/G72x/g72x.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/G72x/g72x.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/add.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/code.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/decode.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/gsm_create.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/gsm_decode.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/gsm_destroy.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/gsm_encode.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/gsm_option.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/long_term.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/lpc.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/preprocess.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/rpe.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/short_term.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/GSM610/table.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/aiff.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/alaw.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/au.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/audio_detect.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/avr.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/broadcast.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/caf.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/chanmap.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/chanmap.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/chunk.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/command.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/common.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/common.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/dither.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/double64.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/dwd.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/dwvw.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/file_io.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/flac.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/float32.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/g72x.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/gsm610.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/htk.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/id3.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ima_adpcm.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ima_oki_adpcm.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ima_oki_adpcm.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/interleave.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ircam.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/macbinary3.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/macos.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/mat4.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/mat5.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/mpc2k.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ms_adpcm.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/nist.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ogg.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ogg.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/paf.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/pcm.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/pvf.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/raw.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/rf64.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/rx2.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/sd2.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/sds.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/sndfile.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/sndfile.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/strings.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/svx.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/txw.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/ulaw.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/voc.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/vox_adpcm.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/w64.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/wav.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/wav_w64.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/wav_w64.h">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/windows.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/wve.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/libsndfile/src/xi.c">
+			<Option target="sndfile"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src/ofxGist.cpp">
+			<Option target="ofxgist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/libs/ofxGist/src/ofxGist.h">
+			<Option target="ofxgist"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/BeatProcessor.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/BeatProcessor.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/DebugLogger.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/PreProcessor.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/PreProcessor.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/decode/WavFileDataSource.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/decode/WavFileDataSource.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/dsp/BeatGeneratorImpl.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/dsp/BeatGeneratorImpl.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/dsp/DspUtil.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/dsp/DspUtil.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/AudioFrameWriter.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/AudioFrameWriter.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/AverageMagnitudeWriter.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/AverageMagnitudeWriter.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/EventWriter.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/EventWriter.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/MagnitudesWriter.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/MagnitudesWriter.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/StringWriter.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/libfingerband/src/write/StringWriter.h">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/common/main.cpp">
+			<Option target="fingerband"/>
+		</Unit>
+		<Unit filename="/home/steve/Desktop/fingerband/platforms/desktop/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

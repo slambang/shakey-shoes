@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">RCB Demo</string>
+    <string name="title_activity_rcb_demo">RCB Demo</string>
+
+    <string name="bluetooth_denied">Bluetooth denied</string>
+
+    <string name="project_repo">Visit project repo</string>
+    <string name="delete_all_buffers">Delete all buffers</string>
+
+    <string name="connecting_caps">CONNECTING</string>
+
+    <string name="buffer_item_accuracy_format">%d (%.2f%%)</string>
+
+    <string name="buffer_item_page_2_title">%s: %d bytes</string>
+    <string name="buffer_item_page_0_baud">%d Bytes/s</string>
+    <string name="buffer_item_page_1_max_size">%d</string>
+    <string name="buffer_item_page_1_actual_size">= %d bytes</string>
+    <string name="buffer_item_page_1_latency">= %d ms</string>
+    <string name="buffer_item_page_1_underflow_time">= %d ms</string>
+    <string name="select_device_title">Select a device</string>
+
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="apply">Apply</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="config">Config</string>
+
+    <string name="delete">Delete</string>
+    <string name="delete_buffer_dialog_title">Delete buffer?</string>
+    <string name="delete_buffer_dialog_message">This will disconnect the remote device</string>
+
+    <string name="delete_all_buffers_dialog_title">Delete all buffers?</string>
+    <string name="delete_all_buffers_dialog_message">This will disconnect all remote devices</string>
+</resources>

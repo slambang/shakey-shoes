@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/LiveEffect/LiveEffect.iml" filepath="$PROJECT_DIR$/.idea/modules/LiveEffect/LiveEffect.iml" group="samples/LiveEffect" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MegaDrone/MegaDrone.iml" filepath="$PROJECT_DIR$/.idea/modules/MegaDrone/MegaDrone.iml" group="samples/MegaDrone" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RhythmGame/RhythmGame.iml" filepath="$PROJECT_DIR$/.idea/modules/RhythmGame/RhythmGame.iml" group="samples/RhythmGame" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/audio-device/audio-device.iml" filepath="$PROJECT_DIR$/.idea/modules/audio-device/audio-device.iml" group="samples/audio-device" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/drumthumper/drumthumper.iml" filepath="$PROJECT_DIR$/.idea/modules/drumthumper/drumthumper.iml" group="samples/drumthumper" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hello-oboe/hello-oboe.iml" filepath="$PROJECT_DIR$/.idea/modules/hello-oboe/hello-oboe.iml" group="samples/hello-oboe" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/iolib/iolib.iml" filepath="$PROJECT_DIR$/.idea/modules/iolib/iolib.iml" group="samples/iolib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/parselib/parselib.iml" filepath="$PROJECT_DIR$/.idea/modules/parselib/parselib.iml" group="samples/parselib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/samples.iml" filepath="$PROJECT_DIR$/.idea/modules/samples.iml" group="samples" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,36 @@
+# IntelliJ
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/misc.xml
+**/.idea/vcs.xml
+**/.idea/caches/
+
+# Android C++
+**/.cxx/
+
+android/main_app/build/
+
+android/audio_test/samples/build/
+android/audio_test/samples/audio-device/build
+android/audio_test/samples/drumthumper/build
+android/audio_test/samples/hello-oboe/build
+android/audio_test/samples/LiveEffect/build
+android/audio_test/samples/MegaDrone/build
+android/audio_test/samples/RhythmGame/build
+
+# Fingerband
+common/libfingerband/desktop_harness/cmake-build-debug/CMakeFiles/
+common/libfingerband/desktop_harness/cmake-build-debug/*.so
+common/libfingerband/desktop_harness/cmake-build-debug/fingerband
+arduino/mock_app/cmake-build-debug/CMakeFiles/
+arduino/mock_app/cmake-build-debug/*.so
+arduino/mock_app/cmake-build-debug/mock_app
+
+# Arduino
+arduino/arduino_app/*.bin
+arduino/arduino_app/*.hex
+arduino/arduino_app/circular_buffer
+
+# PyCharm
+test/debug_viewer/venv/
+**/*.pyc
