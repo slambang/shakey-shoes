@@ -84,11 +84,13 @@ This library analyses chunks of audio data to determine how much bass intensity 
 It is essential to visualise the algorithms and results used in [fingerband](https://github.com/slambang/shakey_shoes/tree/master/common/libfingerband/libfingerband). This project parses the debug logs and repesents them in the form of graphs. This allows me to see how the analysis algorithms are performing and debug issues.
 
 - Python using PyCharm
-- Parses debug logs from libfigerband
-- Visualises data with graphs
+- Parses debug logs from [fingerband](https://github.com/slambang/shakey_shoes/tree/master/common/libfingerband/libfingerband)
+- Visualises audio analysis with graphs
+
+![](https://github.com/slambang/shakey_shoes/blob/master/resources/mono_filtered.png)
 
 [test_runner](https://github.com/slambang/shakey_shoes/tree/master/test/test_runner): __Working__  
-In order to test [fingerband](https://github.com/slambang/shakey_shoes/tree/master/common/libfingerband/libfingerband)  is working correctly on both Android (target platform) and Desktop (testing platform), I wrote this set of scripts. The invoke fingerband on both platforms, pull the debug logs into a central place and compares them for equality.
+In order to test [fingerband](https://github.com/slambang/shakey_shoes/tree/master/common/libfingerband/libfingerband) is working correctly on both Android (target platform) and Desktop (testing platform), I wrote this set of scripts. They invoke fingerband on both platforms, pull the debug logs into a central place and compares them for equality.
 
 - Bash scripts
 - Both sets of debug logs can be visualised with [debug_viewer](https://github.com/slambang/shakey_shoes/tree/master/test/debug_viewer)

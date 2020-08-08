@@ -69,15 +69,15 @@ def run(desktop_base, android_base):
     print(len(mono_signal))
     plt.plot(mono_signal, label='mono')
 
-    # print('Plotting filtered')
-    # filtered_signal = read_signal(render_base + '/filtered', 0.5)
-    # print(len(filtered_signal))
-    # plt.plot(filtered_signal, label='filtered')
+    print('Plotting filtered')
+    filtered_signal = read_signal(render_base + '/filtered', 0.5)
+    print(len(filtered_signal))
+    plt.plot(filtered_signal, label='filtered')
 
-    print('Plotting magnitudes')
-    magnitude_signal = read_average_magnitudes(render_base + '/average_magnitude', len(mono_signal))
-    print(len(magnitude_signal))
-    plt.plot(magnitude_signal, label='magnitude')
+    # print('Plotting magnitudes')
+    # magnitude_signal = read_average_magnitudes(render_base + '/average_magnitude', len(mono_signal))
+    # print(len(magnitude_signal))
+    # plt.plot(magnitude_signal, label='magnitude')
 
     # print('Plotting events')
     # event_plot = read_events(render_base + '/event', "is_note_on", 1, len(mono_signal))
@@ -90,9 +90,5 @@ def run(desktop_base, android_base):
     plt.show()
 
 
-def main():
-    run(sys.argv[1], sys.argv[2])
-
-
 if __name__ == "__main__":
-    main()
+    run(sys.argv[1], sys.argv[2])
