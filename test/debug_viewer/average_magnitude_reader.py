@@ -16,7 +16,6 @@ def read_average_magnitudes(path, mono_signal_size):
 
     window_size = int(magnitudes_file.readline())
     magnitudes = magnitudes_file.readlines()
-    print(len(magnitudes))
 
     plot = plot_magnitudes_(magnitudes, window_size, mono_signal_size)
     return plot

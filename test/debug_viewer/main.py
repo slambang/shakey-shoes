@@ -1,94 +1,69 @@
 import sys
-import filecmp
 import matplotlib.pyplot as plt
 from event_reader import read_events
 from signal_reader import read_signal
 from average_magnitude_reader import read_average_magnitudes
-# import numpy as np
 
 
-# y = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
-# y2 = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-# x = np.arange(10)
-# fig = plt.figure()
-# ax = plt.subplot(111)
-# ax.plot(x, label='$y = numbers')
-# # ax.plot(x, y2, label='$y2 = other numbers')
-# plt.title('Legend outside')
-# chartBox = ax.get_position()
-# ax.set_position([chartBox.x0, chartBox.y0, chartBox.width*0.6, chartBox.height])
-# ax.legend(loc='upper center', bbox_to_anchor=(1.45, 0.8), shadow=True, ncol=1)
-# plt.show()
-
-# y = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
-# y2 = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-# x = np.arange(10)
-# fig = plt.figure()
-# ax = plt.subplot(111)
-# ax.plot(x, y, label='$y = numbers')
-# ax.plot(x, y2, label='$y2 = other numbers')
-# plt.title('Legend inside')
-# ax.legend()
-# plt.show()
-
-def get_source_file_name(render_base):
-    log_file = open(render_base + '/log', "r")
+def get_input_signal_file_path(log_output_base):
+    log_file = open(log_output_base + '/log', "r")
     return log_file.readline()
 
 
-def compare(file_1, file_2):
-    if filecmp.cmp(file_1, file_2) is False:
-        print('Files not equal: {} & {}'.format(file_1, file_2))
-        exit(-1)
+def run(log_output_base):
 
-
-def check(desktop_base, android_base):
-    compare(desktop_base + '/mono', android_base + '/mono')
-    compare(desktop_base + '/filtered', android_base + '/filtered')
-    # compare(desktop_base + '/magnitude', android_base + '/magnitude')
-    # compare(desktop_base + '/event', android_base + '/event')
-
-
-def run(desktop_base, android_base):
-
-    # check(desktop_base, android_base)
-    render_base = desktop_base
-
-    dpi = 80
-    plt.figure(figsize=(1600/dpi, 800/dpi), dpi=dpi)
-    plt.title(get_source_file_name(render_base))
-    plt.xlabel('Time')
+    fig, ax = plt.subplots()
+    plt.title(get_input_signal_file_path(log_output_base))
+    plt.xlabel('Time (in samples)')
     plt.grid(True)
-    # ax = plt.subplot(111)
-    # chart_box = ax.get_position()
-    # ax.set_position([chart_box.x0, chart_box.y0, chart_box.width*0.6, chart_box.height])
-    # ax.legend(loc='upper center', bbox_to_anchor=(1.45, 0.8), shadow=True, ncol=1)
 
     print('Plotting mono')
-    mono_signal = read_signal(render_base + '/mono', 1.0)
-    print(len(mono_signal))
-    plt.plot(mono_signal, label='mono')
+    mono_signal = read_signal(log_output_base + '/mono', 1.0)
+    mono_signal_len = len(mono_signal)
+    mono_line, = ax.plot(mono_signal, lw=1, label='Mono Signal (Input)')
 
     print('Plotting filtered')
-    filtered_signal = read_signal(render_base + '/filtered', 0.5)
-    print(len(filtered_signal))
-    plt.plot(filtered_signal, label='filtered')
+    filtered_signal = read_signal(log_output_base + '/filtered', 0.5)
+    filtered_line, = ax.plot(filtered_signal, lw=1, label='Filtered Signal')
 
-    # print('Plotting magnitudes')
-    # magnitude_signal = read_average_magnitudes(render_base + '/average_magnitude', len(mono_signal))
-    # print(len(magnitude_signal))
-    # plt.plot(magnitude_signal, label='magnitude')
+    print('Plotting average magnitudes')
+    magnitude_signal = read_average_magnitudes(log_output_base + '/average_magnitude', mono_signal_len)
+    magnitude_line, = ax.plot(magnitude_signal, lw=1, label='Average Magnitude (per window)')
 
-    # print('Plotting events')
-    # event_plot = read_events(render_base + '/event', "is_note_on", 1, len(mono_signal))
-    # print(len(event_plot))
-    # plt.plot(event_plot, label='event')
+    print('Plotting events')
+    event_plot = read_events(log_output_base + '/event', "is_note_on", 1, mono_signal_len)
+    events_line, = ax.plot(event_plot, lw=1, label='Onset Events')
+
+    legend = ax.legend(loc='upper right', fancybox=True, shadow=True)
+    legend.get_frame().set_alpha(0.4)
+
+    lines = [mono_line, filtered_line, magnitude_line, events_line]
+    line_dict = dict()
+    for legend_line, data_line in zip(legend.get_lines(), lines):
+        legend_line.set_picker(5)  # 5 pts tolerance
+        line_dict[legend_line] = data_line
+
+    def on_pick(event):
+        # Toggle data visibility
+        selected_legend_line = event.artist
+        selected_data_line = line_dict[selected_legend_line]
+        is_visible = not selected_data_line.get_visible()
+        selected_data_line.set_visible(is_visible)
+
+        # Toggle legend alpha
+        if is_visible:
+            selected_legend_line.set_alpha(1.0)
+        else:
+            selected_legend_line.set_alpha(0.2)
+        fig.canvas.draw()
+
+    fig.canvas.mpl_connect('pick_event', on_pick)
 
     print('Rendering')
-    # plt.tight_layout()
-    plt.savefig(render_base + '/graph.png')
+    plt.savefig(log_output_base + '/graph.png')
     plt.show()
 
 
 if __name__ == "__main__":
-    run(sys.argv[1], sys.argv[2])
+    fingerband_debug_log_root = sys.argv[1]
+    run(fingerband_debug_log_root)
