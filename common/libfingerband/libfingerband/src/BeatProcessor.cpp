@@ -91,7 +91,6 @@ WindowResult* BeatProcessor::process(float *window, int numFrames) {
     toMono(window, numFrames);
     applyFilter(numFrames, window, lpfData);
     Event *event = generateEvent(numFrames);
-    DspUtil::normaliseMagnitudes(event->mMagnitudes, numFrames / 2);
     float averageMagnitude = getAverageMagnitude(config->filterCenterHz, config->filterWidthHz, event->mMagnitudes, config->sampleRate, config->frameBufferSize);
 
     // TODO: Scale these and we are done!

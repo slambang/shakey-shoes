@@ -10,7 +10,6 @@ public:
     static int64_t timeNow();
     static void toMono(float *input, float *output, size_t numFrames, size_t numChannels);
     static void filter(Iir::RBJ::RBJbase *filter, int numFrames, const float *window, float *output);
-    static void normaliseMagnitudes(float *window, int size);
     static float averageMagnitude(int centerHz, int widthHz, const float *magnitudes, int sampleRate, int frameBufferSize);
 };
 

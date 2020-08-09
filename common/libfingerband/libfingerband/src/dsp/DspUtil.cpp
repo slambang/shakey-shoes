@@ -39,22 +39,6 @@ void DspUtil::filter(Iir::RBJ::RBJbase *filter, int numFrames, const float *wind
     }
 }
 
-void DspUtil::normaliseMagnitudes(float *window, int size) {
-    float max = 0;
-    for (int i = 0; i < size; ++i) {
-        float value = window[i];
-        if (value > max) {
-            max = value;
-        }
-    }
-
-    for (int i = 0; i < size; ++i) {
-        if (max > 0) {
-            window[i] /= max;
-        }
-    }
-}
-
 float DspUtil::averageMagnitude(int centerHz, int widthHz, const float *magnitudes, int sampleRate, int frameBufferSize) {
     int bandWidth = (sampleRate / 2);
     int binCount = (frameBufferSize / 2); // TODO: Should we be ignoring DC @ [0]?
