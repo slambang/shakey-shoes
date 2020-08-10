@@ -87,7 +87,7 @@ It is essential to visualise the algorithms and results used in [fingerband](htt
 - Parses debug logs from [fingerband](https://github.com/slambang/shakey_shoes/tree/master/common/libfingerband/libfingerband)
 - Visualises audio analysis with graphs
 
-![](https://github.com/slambang/shakey_shoes/blob/master/resources/mono_filtered.png)
+![debug_viewer example](https://github.com/slambang/shakey_shoes/blob/hotfix/dsp_improvements/resources/debug_viewer_graph.gif)
 
 [test_runner](https://github.com/slambang/shakey_shoes/tree/master/test/test_runner): __Working__  
 In order to test [fingerband](https://github.com/slambang/shakey_shoes/tree/master/common/libfingerband/libfingerband) is working correctly on both Android (target platform) and Desktop (testing platform), I wrote this set of scripts. They invoke fingerband on both platforms, pull the debug logs into a central place and compares them for equality.

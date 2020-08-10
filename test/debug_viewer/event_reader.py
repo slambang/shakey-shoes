@@ -51,6 +51,6 @@ def read_events(path, attribute, multiplier, size):
     width = int(events_file.readline())
     threshold = float(events_file.readline())
     events = convert_events(events_file)
-    print(len(events))
+
     plot = plot_events_internal(events, width, attribute, multiplier, size)
     return plot

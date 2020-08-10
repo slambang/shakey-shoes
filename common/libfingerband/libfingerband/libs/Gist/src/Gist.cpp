@@ -355,9 +355,10 @@ void Gist<T>::performFFT()
 #endif
     
     // calculate the magnitude spectrum
+    // http://users.ece.utexas.edu/~valvano/Starterfiles/FFT.CPP
     for (int i = 0; i < frameSize / 2; i++)
     {
-        magnitudeSpectrum[i] = sqrt ((fftReal[i] * fftReal[i]) + (fftImag[i] * fftImag[i]));
+        magnitudeSpectrum[i] = sqrt ((fftReal[i] * fftReal[i]) + (fftImag[i] * fftImag[i])) / frameSize;
     }
 }
 
