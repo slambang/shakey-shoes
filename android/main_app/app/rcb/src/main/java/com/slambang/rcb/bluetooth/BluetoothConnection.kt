@@ -1,4 +1,4 @@
-package com.slambang.rcb
+package com.slambang.rcb.bluetooth
 
 import java.io.InputStream
 import java.io.OutputStream

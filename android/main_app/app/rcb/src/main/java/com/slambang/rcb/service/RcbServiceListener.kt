@@ -1,4 +1,4 @@
-package com.slambang.rcb
+package com.slambang.rcb.service
 
 interface RcbServiceListener {
     fun onBufferServiceState(rcbService: RcbService, state: RcbState)

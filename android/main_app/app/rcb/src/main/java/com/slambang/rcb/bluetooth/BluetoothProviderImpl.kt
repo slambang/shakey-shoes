@@ -1,4 +1,4 @@
-package com.slambang.rcb
+package com.slambang.rcb.bluetooth
 
 import android.bluetooth.BluetoothDevice
 import com.github.ivbaranov.rxbluetooth.RxBluetooth

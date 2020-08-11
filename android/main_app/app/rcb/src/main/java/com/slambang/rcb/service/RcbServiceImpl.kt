@@ -1,5 +1,7 @@
-package com.slambang.rcb
+package com.slambang.rcb.service
 
+import com.slambang.rcb.bluetooth.BluetoothConnection
+import com.slambang.rcb.bluetooth.BluetoothConnectionState
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 

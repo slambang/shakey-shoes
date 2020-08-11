@@ -1,4 +1,4 @@
-package com.slambang.rcb
+package com.slambang.rcb.bluetooth
 
 enum class BluetoothConnectionState {
     UNAVAILABLE,

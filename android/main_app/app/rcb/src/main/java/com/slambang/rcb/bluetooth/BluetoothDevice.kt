@@ -1,4 +1,4 @@
-package com.slambang.rcb
+package com.slambang.rcb.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -110,10 +110,11 @@ class BluetoothDevice private constructor(
         bluetoothSocket ?: throw IllegalStateException("Required bluetooth socket")
 
     companion object {
-        fun newInstance(context: Context): com.slambang.rcb.BluetoothDevice {
+        fun newInstance(context: Context): com.slambang.rcb.bluetooth.BluetoothDevice {
             val subscriptions = CompositeDisposable()
             val rxBluetooth = RxBluetooth(context)
-            val provider = BluetoothProviderImpl(rxBluetooth)
+            val provider =
+                BluetoothProviderImpl(rxBluetooth)
             val scheduler = Schedulers.from(Executors.newSingleThreadExecutor())
             return BluetoothDevice(
                 scheduler,

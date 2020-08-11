@@ -2,10 +2,10 @@ package com.betty7.fingerband.alpha.bluetooth.domain
 
 import com.betty7.fingerband.alpha.bluetooth.data.audio.RcbDataSource
 import com.betty7.fingerband.alpha.bluetooth.data.audio.SettableRcbDataSource
-import com.slambang.rcb.RcbService
-import com.slambang.rcb.RcbServiceConfig
-import com.slambang.rcb.RcbServiceListener
-import com.slambang.rcb.RcbState
+import com.slambang.rcb.service.RcbService
+import com.slambang.rcb.service.RcbServiceConfig
+import com.slambang.rcb.service.RcbServiceListener
+import com.slambang.rcb.service.RcbState
 
 class RcbServiceInteractorImpl(
     private val newRcbDataSource: () -> RcbDataSource,
@@ -15,7 +15,8 @@ class RcbServiceInteractorImpl(
     private val deviceDomains: MutableMap<Int, DeviceDomain> = mutableMapOf()
 ) : RcbServiceOrchestrator {
 
-    private val rcbServiceListener = object : RcbServiceListener {
+    private val rcbServiceListener = object :
+        RcbServiceListener {
         override fun onBufferServiceState(
             rcbService: RcbService,
             state: RcbState

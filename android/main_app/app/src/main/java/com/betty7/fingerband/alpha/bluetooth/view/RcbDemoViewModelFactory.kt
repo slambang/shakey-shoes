@@ -11,10 +11,10 @@ import com.betty7.fingerband.alpha.bluetooth.domain.BluetoothDeviceEntityMapper
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceRepositoryInteractor
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceInteractorImpl
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceOrchestrator
-import com.slambang.rcb.BluetoothConnection
-import com.slambang.rcb.BluetoothDevice
-import com.slambang.rcb.RcbService
-import com.slambang.rcb.RcbServiceImpl
+import com.slambang.rcb.bluetooth.BluetoothConnection
+import com.slambang.rcb.bluetooth.BluetoothDevice
+import com.slambang.rcb.service.RcbService
+import com.slambang.rcb.service.RcbServiceImpl
 
 class RcbDemoViewModelFactory constructor(
     private val context: Context
