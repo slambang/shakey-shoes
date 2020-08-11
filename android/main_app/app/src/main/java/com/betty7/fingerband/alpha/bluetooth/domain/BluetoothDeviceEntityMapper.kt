@@ -34,7 +34,7 @@ class BluetoothDeviceEntityMapper {
         private val PRODUCT_MAPPINGS = mapOf(
             HC05_DSD_MK0.id to Pair(
                 "HC-05 (DSD): Mk0",
-                "https://www.amazon.co.uk/gp/product/B01DC9FZ2I/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1"
+                "https://www.amazon.co.uk/gp/product/B01G9KSAF6/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1"
             ),
             HC05_DSD_MK1.id to Pair(
                 "HC-05 (DSD): Mk1",
