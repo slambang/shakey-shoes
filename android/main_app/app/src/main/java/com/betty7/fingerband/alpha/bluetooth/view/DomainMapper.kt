@@ -9,8 +9,6 @@ import java.util.*
 
 class DomainMapper(private val resources: ViewResources) {
 
-    fun mapDeviceNames(domains: List<DeviceDomain>) = domains.map { it.name }
-
     fun mapAccuracies(domain: DeviceAccuracyDomain, viewModel: BufferItemViewModel) {
 
         val totalFrames = (domain.refillCount * viewModel.page1.config.refillSize)

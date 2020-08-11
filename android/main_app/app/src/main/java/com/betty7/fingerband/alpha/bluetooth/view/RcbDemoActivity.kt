@@ -30,16 +30,16 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
         setSupportActionBar(activity_test_toolbar)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        grantBluetooth(::initView, viewModel::bluetoothDenied)
+        grantBluetooth(::initView, viewModel::onBluetoothDenied)
     }
 
     private fun initView() {
 
         recyclerAdapter = BufferItemRecyclerAdapter().apply {
-            onConnectClicked = viewModel::connectBuffer
-            onResumeClicked = viewModel::toggleBuffer
+            onConnectClicked = viewModel::onConnectBufferClicked
+            onResumeClicked = viewModel::toggleBufferService
             onVibrateUpdate = viewModel::setVibrateValue
-            onApplyClicked = viewModel::configureBuffer
+            onApplyClicked = viewModel::onConfigureBufferClicked
             onProductUrlClicked = viewModel::onProductUrlClicked
             onDeleteClicked = ::confirmDeleteBuffer
             onEditConfig = ::displayConfig
@@ -66,16 +66,16 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
             ::updateItem,
             ::onLaunchUrl,
             recyclerAdapter::setPage
-        ).also { viewModel.resume() }
+        ).also { viewModel.onResume() }
 
     override fun onPause() {
         super.onPause()
-        viewModel.pause()
+        viewModel.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-        viewModel.stop()
+        viewModel.onStop()
     }
 
     private fun updateItem(item: BufferItemViewModel) {
@@ -113,7 +113,7 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
             R.string.delete_buffer_dialog_message
         ) {
             recyclerAdapter.deleteItem(bufferId)
-            viewModel.deleteBufferItem(bufferId)
+            viewModel.onDeleteBufferItemClicked(bufferId)
             setDeleteAllEnabled(recyclerAdapter.itemCount > 0)
         }
     }
@@ -124,7 +124,7 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
             R.string.delete_all_buffers_dialog_message
         ) {
             recyclerAdapter.clearItems()
-            viewModel.deleteAllBuffers()
+            viewModel.onDeleteAllBuffersClicked()
             setDeleteAllEnabled(false)
         }
 
@@ -140,10 +140,10 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
         menu.findItem(R.id.rcb_activity_menu_delete_all).isEnabled = enabled
     }
 
-    private fun displayDeviceList(devices: List<String>) {
+    private fun displayDeviceList(deviceNames: List<String>) {
         AlertDialog.Builder(this)
             .setTitle(R.string.select_device_title)
-            .setItems(devices.toTypedArray()) { _, which ->
+            .setItems(deviceNames.toTypedArray()) { _, which ->
                 viewModel.onDeviceSelected(this, which)
             }
             .setOnDismissListener { setAddBufferListener() }
@@ -153,8 +153,8 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
 
     private fun setAddBufferListener() =
         add_buffer_button.setOnClickListener {
-            it.setOnClickListener(null)
-            viewModel.createBuffer()
+            it.setOnClickListener(null) // Prevent double-click
+            viewModel.onCreateBufferClicked()
         }
 
     private fun displayConfig(model: BufferItemViewModel) {

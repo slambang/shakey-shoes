@@ -7,11 +7,9 @@ interface DeviceRepository {
     fun getDeviceEntity(deviceId: Int): BluetoothDeviceEntity
 }
 
-class DeviceRepositoryImpl :
-    DeviceRepository {
+class DeviceRepositoryImpl : DeviceRepository {
 
-    override fun getDeviceEntities() =
-        DEVICES
+    override fun getDeviceEntities() = DEVICES
 
     override fun getDeviceEntity(deviceId: Int): BluetoothDeviceEntity =
         DEVICES.firstOrNull { it.id == deviceId }

@@ -23,9 +23,9 @@ enum class CircularBufferState {
 interface CircularBufferService {
 
     interface Listener {
-        fun onBufferState(buffer: CircularBufferService, state: CircularBufferState)
-        fun onBufferFreeHeap(buffer: CircularBufferService, freeHeapBytes: Int)
-        fun onBufferError(buffer: CircularBufferService, error: Throwable? = null)
+        fun onBufferServiceState(bufferService: CircularBufferService, state: CircularBufferState)
+        fun onBufferServiceFreeHeap(bufferService: CircularBufferService, freeHeapBytes: Int)
+        fun onBufferServiceError(bufferService: CircularBufferService, error: Throwable? = null)
     }
 
     val id: Int
@@ -64,7 +64,7 @@ class CircularBufferServiceImpl(
         wasStopped = false
         bluetoothConnection.start(macAddress, serviceUuid) {
             when (it) {
-                BluetoothConnectionState.CONNECTING -> listener.onBufferState(
+                BluetoothConnectionState.CONNECTING -> listener.onBufferServiceState(
                     this,
                     CircularBufferState.CONNECTING
                 )
@@ -72,19 +72,19 @@ class CircularBufferServiceImpl(
                     awaitFreeHeap(listener)
                     listenForSignals(listener)
                 }
-                BluetoothConnectionState.GENERIC_ERROR -> listener.onBufferError(
+                BluetoothConnectionState.GENERIC_ERROR -> listener.onBufferServiceError(
                     this,
                     java.lang.IllegalStateException("Not found")
                 )
-                BluetoothConnectionState.UNAVAILABLE -> listener.onBufferError(
+                BluetoothConnectionState.UNAVAILABLE -> listener.onBufferServiceError(
                     this,
                     IllegalStateException("Connection unavailable")
                 )
-                BluetoothConnectionState.DISABLED -> listener.onBufferError(
+                BluetoothConnectionState.DISABLED -> listener.onBufferServiceError(
                     this,
                     IllegalStateException("Connection disabled")
                 )
-                BluetoothConnectionState.CONNECTION_ERROR -> listener.onBufferError(
+                BluetoothConnectionState.CONNECTION_ERROR -> listener.onBufferServiceError(
                     this,
                     IllegalStateException("Connection error")
                 )
@@ -146,23 +146,23 @@ class CircularBufferServiceImpl(
         try {
             while (bluetoothConnection.isConnected) {
                 when (val value = bluetoothConnection.inputStream.read()) {
-                    SIGNAL_IN_READY -> listener.onBufferState(
+                    SIGNAL_IN_READY -> listener.onBufferServiceState(
                         this,
                         CircularBufferState.READY
                     )
-                    SIGNAL_IN_PAUSED -> listener.onBufferState(
+                    SIGNAL_IN_PAUSED -> listener.onBufferServiceState(
                         this,
                         CircularBufferState.PAUSED
                     )
-                    SIGNAL_IN_RESUMED -> listener.onBufferState(
+                    SIGNAL_IN_RESUMED -> listener.onBufferServiceState(
                         this,
                         CircularBufferState.RESUMED
                     )
-                    SIGNAL_IN_REQUEST_REFILL -> listener.onBufferState(
+                    SIGNAL_IN_REQUEST_REFILL -> listener.onBufferServiceState(
                         this,
                         CircularBufferState.REFILL
                     )
-                    SIGNAL_IN_UNDERFLOW -> listener.onBufferState(
+                    SIGNAL_IN_UNDERFLOW -> listener.onBufferServiceState(
                         this,
                         CircularBufferState.UNDERFLOW
                     )
@@ -171,17 +171,17 @@ class CircularBufferServiceImpl(
             }
         } catch (error: IOException) {
             if (wasStopped) {
-                listener.onBufferState(this, CircularBufferState.DISCONNECTED)
+                listener.onBufferServiceState(this, CircularBufferState.DISCONNECTED)
             } else {
                 stop()
-                listener.onBufferError(this, error)
+                listener.onBufferServiceError(this, error)
             }
         }
 
     private fun awaitFreeHeap(listener: CircularBufferService.Listener) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONNECT)
         val freeRamBytes = bluetoothConnection.inputStream.readInt()
-        listener.onBufferFreeHeap(this, freeRamBytes)
+        listener.onBufferServiceFreeHeap(this, freeRamBytes)
     }
 
     private fun transmit(data: Int) {

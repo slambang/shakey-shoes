@@ -3,13 +3,18 @@ package com.betty7.fingerband.alpha.bluetooth.view
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.betty7.fingerband.alpha.bluetooth.domain.DeviceRepositoryInteractor
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceInteractorImpl
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceOrchestrator
 import com.betty7.fingerband.alpha.bluetooth.entity.BluetoothDeviceEntityMapper
 import com.betty7.fingerband.alpha.bluetooth.entity.DeviceRepository
 import com.betty7.fingerband.alpha.bluetooth.entity.DeviceRepositoryImpl
-import com.betty7.fingerband.alpha.bluetooth.files.*
-import com.betty7.rcb.*
+import com.betty7.fingerband.alpha.bluetooth.files.RcbDataSource
+import com.betty7.fingerband.alpha.bluetooth.files.SettableRcbDataSource
+import com.betty7.rcb.BluetoothConnection
+import com.betty7.rcb.BluetoothDevice
+import com.betty7.rcb.CircularBufferService
+import com.betty7.rcb.CircularBufferServiceImpl
 
 class RcbDemoViewModelFactory constructor(
     private val context: Context
@@ -29,26 +34,25 @@ private fun provideViewModel(context: Context): RcbDemoActivityViewModelImpl {
 
     val resources = provideResources(context)
     val domainMapper = provideDeviceDomainMapper(resources)
-    val interactor = provideCircularBufferInteractor(context)
+    val rcbServiceOrchestrator = provideRcbServiceOrchestrator(context)
+    val deviceRepoInteractor = provideDeviceRepoInteractor()
 
-    return RcbDemoActivityViewModelImpl(domainMapper, interactor)
+    return RcbDemoActivityViewModelImpl(domainMapper, rcbServiceOrchestrator, deviceRepoInteractor)
+}
+
+private fun provideDeviceRepoInteractor(): DeviceRepositoryInteractor {
+    val entityMapper = provideDeviceEntityMapper()
+    val deviceRepo = provideDeviceRepository()
+    return DeviceRepositoryInteractor(deviceRepo, entityMapper)
 }
 
 private fun provideResources(context: Context): ViewResources = ViewResourcesImpl(context)
 
-private fun provideSettableDataSource(): BeatMap = SettableBeatMap(INITIAL_VIBRATE_VALUE)
-
-private fun provideDebugFileDataSource(): BeatMap {
-    val fileReader = DebugFileReader()
-    val valueMapper = DebugFileValueMapper()
-    return FileBeatMap("/sdcard/fingerband/1/average_magnitude", fileReader, valueMapper).also { it.init(254, 0) }
-}
+private fun provideSettableDataSource(): RcbDataSource =
+    SettableRcbDataSource(INITIAL_VIBRATE_VALUE)
 
 private fun provideBluetoothConnection(context: Context): BluetoothConnection =
     BluetoothDevice.newInstance(context)
-
-private fun provideMockBluetoothConnection(): BluetoothConnection =
-    MockBluetoothDevice(1234)
 
 private fun provideCircularBufferService(context: Context): CircularBufferService {
     val bluetoothConnection = provideBluetoothConnection(context)
@@ -59,19 +63,12 @@ private fun provideDeviceEntityMapper() = BluetoothDeviceEntityMapper()
 
 private fun provideDeviceRepository(): DeviceRepository = DeviceRepositoryImpl()
 
-private fun provideCircularBufferInteractor(context: Context): RcbServiceOrchestrator {
-
-    val entityMapper = provideDeviceEntityMapper()
-    val deviceRepo = provideDeviceRepository()
+private fun provideRcbServiceOrchestrator(context: Context): RcbServiceOrchestrator {
 
     return RcbServiceInteractorImpl(
-        deviceRepo,
-        entityMapper,
-        ::provideSettableDataSource
-//        ::provideDebugFileDataSource
-    ) {
-        provideCircularBufferService(context)
-    }
+        ::provideSettableDataSource,
+        { provideCircularBufferService(context) }
+    )
 }
 
 private fun provideDeviceDomainMapper(resources: ViewResources) = DomainMapper(resources)

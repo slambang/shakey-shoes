@@ -3,10 +3,7 @@ package com.betty7.fingerband.alpha.bluetooth.view
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceOrchestrator
-import com.betty7.fingerband.alpha.bluetooth.domain.CircularBufferStatus
-import com.betty7.fingerband.alpha.bluetooth.domain.DeviceAccuracyDomain
-import com.betty7.fingerband.alpha.bluetooth.domain.DeviceDomain
+import com.betty7.fingerband.alpha.bluetooth.domain.*
 
 abstract class RcbDemoActivityViewModel : ViewModel() {
 
@@ -18,56 +15,52 @@ abstract class RcbDemoActivityViewModel : ViewModel() {
         bufferItemPageObserver: (Int, Int) -> Unit
     )
 
-    abstract fun pause()
-    abstract fun resume()
-    abstract fun stop()
+    // Lifecycle events
+    abstract fun onPause()
+    abstract fun onResume()
+    abstract fun onStop()
 
     abstract fun onDeviceSelected(owner: LifecycleOwner, deviceId: Int)
+    abstract fun onCreateBufferClicked()
+    abstract fun onConnectBufferClicked(bufferServiceId: Int)
+    abstract fun onConfigureBufferClicked(bufferServiceId: Int)
+    abstract fun toggleBufferService(bufferServiceId: Int)
+    abstract fun onResumeBufferClicked(bufferServiceId: Int)
+    abstract fun onPauseBufferClicked(bufferServiceId: Int)
+    abstract fun onProjectUrlClicked()
+    abstract fun onProductUrlClicked(deviceId: Int)
+    abstract fun onDeleteAllBuffersClicked()
+    abstract fun onDeleteBufferItemClicked(bufferServiceId: Int)
 
-    abstract fun createBuffer()
-    abstract fun connectBuffer(bufferId: Int)
-    abstract fun configureBuffer(bufferId: Int)
-    abstract fun toggleBuffer(bufferId: Int)
-    abstract fun resumeBuffer(bufferId: Int)
-    abstract fun pauseBuffer(bufferId: Int)
-    abstract fun stopBuffer(bufferId: Int)
+    abstract fun onBluetoothDenied()
+    abstract fun setVibrateValue(bufferServiceId: Int, vibrateValue: Int)
     abstract fun checkConfig(
-        bufferId: Int,
+        bufferServiceId: Int,
         numberOfRefills: String,
         refillSize: String,
         windowSizeMs: String,
         maxUnderflows: String
     )
-
-    abstract fun onProjectUrlClicked()
-    abstract fun onProductUrlClicked(deviceId: Int)
-
-    abstract fun deleteAllBuffers()
-    abstract fun deleteBufferItem(bufferId: Int)
-
-    abstract fun bluetoothDenied()
-    abstract fun setVibrateValue(bufferId: Int, vibrateValue: Int)
 }
 
 class RcbDemoActivityViewModelImpl(
     private val domainMapper: DomainMapper,
-    private val bufferOrchestrator: RcbServiceOrchestrator
+    private val bufferOrchestrator: RcbServiceOrchestrator,
+    private val deviceRepoInteractor: DeviceRepositoryInteractor,
+    private val showDeviceListLiveData:SingleLiveEvent<List<String>> = SingleLiveEvent(),
+    private val launchUrlLiveData: SingleLiveEvent<String> = SingleLiveEvent(),
+    private val bufferItemLiveDataMap: MutableMap<Int, DefaultLiveData<BufferItemViewModel>> = mutableMapOf(),
+    private val bufferItemPageLiveData: SingleLiveEvent<Pair<Int, Int>> = SingleLiveEvent()
 ) : RcbDemoActivityViewModel() {
 
     private lateinit var bufferItemObserver: (BufferItemViewModel) -> Unit
 
-    private val showDeviceListLiveData = SingleLiveEvent<List<String>>()
-    private val launchUrlLiveData = SingleLiveEvent<String>()
-    private val bufferItemLiveDataMap = mutableMapOf<Int, DefaultLiveData<BufferItemViewModel>>()
-    private val bufferItemPageLiveData = SingleLiveEvent<Pair<Int, Int>>()
-
     init {
-        bufferOrchestrator.bufferStateObserver = ::onBufferState
-        bufferOrchestrator.bufferAccuracyObserver = ::onBufferAccuracy
+        bufferOrchestrator.subscribe(::onBufferServiceStatus, ::onBufferAccuracy)
     }
 
-    override fun bluetoothDenied() { /* TODO */
-    }
+    // TODO: This should be handled by the Activity & its VM!
+    override fun onBluetoothDenied() {}
 
     override fun subscribe(
         owner: LifecycleOwner,
@@ -85,59 +78,64 @@ class RcbDemoActivityViewModelImpl(
     }
 
     override fun checkConfig(
-        bufferId: Int,
+        bufferServiceId: Int,
         numberOfRefills: String,
         refillSize: String,
         windowSizeMs: String,
         maxUnderflows: String
-    ) = requireBufferItem(bufferId).apply {
-        domainMapper.mapConfig(
-            numberOfRefills.toSafeInt(),
-            refillSize.toSafeInt(),
-            windowSizeMs.toSafeInt(),
-            maxUnderflows.toSafeInt(),
-            value
-        )
-    }.repostValue()
+    ) {
+        fun String.toSafeInt() =
+            try {
+                toInt()
+            } catch (_: NumberFormatException) {
+                0
+            }
 
-    override fun createBuffer() {
-        val deviceDomains = bufferOrchestrator.getDeviceDomains()
-        val deviceNames = domainMapper.mapDeviceNames(deviceDomains)
+        requireBufferItem(bufferServiceId).apply {
+            domainMapper.mapConfig(
+                numberOfRefills.toSafeInt(),
+                refillSize.toSafeInt(),
+                windowSizeMs.toSafeInt(),
+                maxUnderflows.toSafeInt(),
+                value
+            )
+        }.repostValue()
+    }
+
+    override fun onCreateBufferClicked() {
+        val deviceNames = deviceRepoInteractor.getDeviceNames()
         showDeviceListLiveData.postValue(deviceNames)
+    }
+
+    private fun getDeviceDomain(deviceId: Int): DeviceDomain {
+        return deviceRepoInteractor.getDeviceDomain(deviceId)
     }
 
     override fun onDeviceSelected(owner: LifecycleOwner, deviceId: Int) {
 
-        val bufferId = bufferOrchestrator.createBuffer()
+        val bufferServiceId = bufferOrchestrator.createBufferService()
 
-        bufferItemLiveDataMap[bufferId] = DefaultLiveData(BufferItemViewModel(bufferId)).apply {
+        bufferItemLiveDataMap[bufferServiceId] = DefaultLiveData(BufferItemViewModel(bufferServiceId)).apply {
             observe(owner, Observer { bufferItemObserver(it) })
         }
 
-        bufferOrchestrator.begin(bufferId)
+        bufferOrchestrator.beginBufferService(bufferServiceId)
 
-        requireBufferItem(bufferId).apply {
-            val deviceDomain = bufferOrchestrator.getDeviceDomain(deviceId)
+        requireBufferItem(bufferServiceId).apply {
+            val deviceDomain = getDeviceDomain(deviceId)
             domainMapper.mapSelectedDevice(deviceDomain, value)
         }.repostValue()
     }
 
-    private fun String.toSafeInt() =
-        try {
-            toInt()
-        } catch (_: NumberFormatException) {
-            0
+    override fun onConnectBufferClicked(bufferServiceId: Int) =
+        requireBufferItem(bufferServiceId).value.let {
+            bufferOrchestrator.connectBufferService(bufferServiceId, getDeviceDomain(it.selectedDeviceId))
         }
 
-    override fun connectBuffer(bufferId: Int) =
-        requireBufferItem(bufferId).value.let {
-            bufferOrchestrator.connectBuffer(bufferId, it.selectedDeviceId)
-        }
-
-    override fun configureBuffer(bufferId: Int) {
-        requireBufferItem(bufferId).apply {
-            bufferOrchestrator.configureBuffer(
-                bufferId,
+    override fun onConfigureBufferClicked(bufferServiceId: Int) {
+        requireBufferItem(bufferServiceId).apply {
+            bufferOrchestrator.configureBufferService(
+                bufferServiceId,
                 value.page1.config.refillCount,
                 value.page1.config.refillSize,
                 value.page1.config.windowSize,
@@ -151,7 +149,7 @@ class RcbDemoActivityViewModelImpl(
             domainMapper.mapAccuracies(domain, value)
         }.repostValue()
 
-    private fun onBufferState(domain: DeviceDomain) =
+    private fun onBufferServiceStatus(domain: DeviceDomain) =
         requireBufferItem(domain.id).apply {
             domainMapper.mapState(domain, value)
             setBufferItemPage(domain, value)
@@ -167,52 +165,56 @@ class RcbDemoActivityViewModelImpl(
             bufferItemPageLiveData.postValue(Pair(model.id, it))
         }
 
-    override fun setVibrateValue(bufferId: Int, vibrateValue: Int) =
-        bufferOrchestrator.hackBufferValue(bufferId, vibrateValue)
+    override fun setVibrateValue(bufferServiceId: Int, vibrateValue: Int) =
+        bufferOrchestrator.hackBufferValue(bufferServiceId, vibrateValue)
 
-    override fun toggleBuffer(bufferId: Int) =
-        requireBufferItem(bufferId).apply {
+    override fun toggleBufferService(bufferServiceId: Int) =
+        requireBufferItem(bufferServiceId).apply {
             if (value.page2.isResumed) {
-                bufferOrchestrator.pause(bufferId)
+                bufferOrchestrator.pauseBufferService(bufferServiceId)
             } else {
-                bufferOrchestrator.start(bufferId)
+                bufferOrchestrator.startBufferService(bufferServiceId)
             }
         }.repostValue()
 
-    override fun resumeBuffer(bufferId: Int) = bufferOrchestrator.resume(bufferId)
+    override fun onResumeBufferClicked(bufferServiceId: Int) =
+        bufferOrchestrator.resumeBufferService(bufferServiceId)
 
-    override fun pauseBuffer(bufferId: Int) = bufferOrchestrator.pause(bufferId)
+    override fun onPauseBufferClicked(bufferServiceId: Int) =
+        bufferOrchestrator.pauseBufferService(bufferServiceId)
 
-    override fun stopBuffer(bufferId: Int) = bufferOrchestrator.stop(bufferId)
+    override fun onPause() =
+        bufferItemLiveDataMap.keys.forEach { onPauseBufferClicked(it) }
 
-    override fun pause() = bufferItemLiveDataMap.keys.forEach { pauseBuffer(it) }
+    override fun onResume() =
+        bufferItemLiveDataMap.keys.forEach { onResumeBufferClicked(it) }
 
-    override fun resume() = bufferItemLiveDataMap.keys.forEach { resumeBuffer(it) }
+    override fun onStop() =
+        bufferItemLiveDataMap.keys.forEach { bufferOrchestrator.stopBufferService(it) }
 
-    override fun stop() = bufferItemLiveDataMap.keys.forEach { stopBuffer(it) }
-
-    override fun onProjectUrlClicked() = launchUrlLiveData.postValue(PROJECT_REPO_URL)
+    override fun onProjectUrlClicked() =
+        launchUrlLiveData.postValue(PROJECT_REPO_URL)
 
     override fun onProductUrlClicked(deviceId: Int) =
-        launchUrlLiveData.postValue(bufferOrchestrator.getDeviceDomain(deviceId).productUrl)
+        launchUrlLiveData.postValue(getDeviceDomain(deviceId).productUrl)
 
-    override fun deleteAllBuffers() =
+    override fun onDeleteAllBuffersClicked() =
         with(bufferItemLiveDataMap.iterator()) {
             forEach {
-                bufferOrchestrator.deleteBuffer(it.key)
+                bufferOrchestrator.deleteBufferService(it.key)
                 remove()
             }
         }
 
-    override fun deleteBufferItem(bufferId: Int) {
-        bufferItemLiveDataMap.remove(bufferId)?.let {
-            bufferOrchestrator.deleteBuffer(bufferId)
+    override fun onDeleteBufferItemClicked(bufferServiceId: Int) {
+        bufferItemLiveDataMap.remove(bufferServiceId)?.let {
+            bufferOrchestrator.deleteBufferService(bufferServiceId)
         }
     }
 
-    private fun requireBufferItem(bufferId: Int) =
-        bufferItemLiveDataMap[bufferId]
-            ?: throw IllegalArgumentException("Invalid bufferId: $bufferId")
+    private fun requireBufferItem(bufferServiceId: Int) =
+        bufferItemLiveDataMap[bufferServiceId]
+            ?: throw IllegalArgumentException("Invalid bufferServiceId: $bufferServiceId")
 
     companion object {
         private const val PROJECT_REPO_URL = "https://bitbucket.org/slambang2/fingerband"
