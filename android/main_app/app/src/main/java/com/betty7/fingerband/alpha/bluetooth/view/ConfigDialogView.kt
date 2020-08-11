@@ -34,7 +34,7 @@ class ConfigDialogView(
         }
     }
 
-    fun bind(configModel: BufferConfigViewModel) {
+    fun bind(configModel: RcbConfigModel) {
         maxSize.text = configModel.maxSize
         numRefills.text = configModel.refillCount.toString()
         refillSize.text = configModel.refillSize.toString()

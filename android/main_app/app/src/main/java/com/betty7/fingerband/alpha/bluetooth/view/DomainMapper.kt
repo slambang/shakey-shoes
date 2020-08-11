@@ -2,39 +2,39 @@ package com.betty7.fingerband.alpha.bluetooth.view
 
 import android.annotation.SuppressLint
 import com.betty7.fingerband.alpha.R
-import com.betty7.fingerband.alpha.bluetooth.domain.CircularBufferStatus
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceAccuracyDomain
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceDomain
+import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceState
 import java.util.*
 
 class DomainMapper(private val resources: ViewResources) {
 
-    fun mapAccuracies(domain: DeviceAccuracyDomain, viewModel: BufferItemViewModel) {
+    fun mapAccuracies(domain: DeviceAccuracyDomain, model: RcbItemModel) {
 
-        val totalFrames = (domain.refillCount * viewModel.page1.config.refillSize)
+        val totalFrames = (domain.refillCount * model.page2.config.refillSize)
         val successFrames = if (totalFrames == 0) 0 else totalFrames - domain.underflowCount
 
         val successPercent = if (totalFrames == 0) 0f else ((100f / totalFrames) * successFrames)
         val errorPercent =
             if (totalFrames == 0) 0f else ((100f / totalFrames) * domain.underflowCount)
 
-        viewModel.page2.successRate =
+        model.page3.successRate =
             resources.getString(R.string.buffer_item_accuracy_format, totalFrames, successPercent)
 
-        viewModel.page2.errorRate = resources.getString(
+        model.page3.errorRate = resources.getString(
             R.string.buffer_item_accuracy_format,
             domain.underflowCount,
             errorPercent
         )
     }
 
-    fun mapSelectedDevice(domainModel: DeviceDomain, viewModel: BufferItemViewModel) {
-        viewModel.selectedDeviceId = domainModel.id
-        viewModel.header.deviceName = domainModel.name
-        viewModel.page0.baudRateBytes =
+    fun mapSelectedDevice(domainModel: DeviceDomain, model: RcbItemModel) {
+        model.selectedDeviceId = domainModel.id
+        model.header.deviceName = domainModel.name
+        model.page1.baudRateBytes =
             resources.getString(R.string.buffer_item_page_0_baud, domainModel.baudRateBytes)
-        viewModel.page0.macAddress = domainModel.macAddress
-        viewModel.page0.pairingPin = domainModel.pairingPin
+        model.page1.macAddress = domainModel.macAddress
+        model.page1.pairingPin = domainModel.pairingPin
     }
 
     fun mapConfig(
@@ -42,106 +42,106 @@ class DomainMapper(private val resources: ViewResources) {
         refillSize: Int,
         windowSizeMs: Int,
         maxUnderflows: Int,
-        viewModel: BufferItemViewModel
+        model: RcbItemModel
     ) {
-        viewModel.page1.config.refillCount = numberOfRefills
-        viewModel.page1.config.refillSize = refillSize
-        viewModel.page1.config.windowSize = windowSizeMs
-        viewModel.page1.config.maxUnderflows = maxUnderflows
+        model.page2.config.refillCount = numberOfRefills
+        model.page2.config.refillSize = refillSize
+        model.page2.config.windowSize = windowSizeMs
+        model.page2.config.maxUnderflows = maxUnderflows
 
-        viewModel.page1.config.actualSize = resources.getString(
+        model.page2.config.actualSize = resources.getString(
             R.string.buffer_item_page_1_actual_size,
             refillSize * numberOfRefills
         )
 
-        viewModel.page1.config.latency = resources.getString(
+        model.page2.config.latency = resources.getString(
             R.string.buffer_item_page_1_latency,
             (refillSize * numberOfRefills) * windowSizeMs
         )
 
-        viewModel.page1.config.maxUnderflowTime = resources.getString(
+        model.page2.config.maxUnderflowTime = resources.getString(
             R.string.buffer_item_page_1_underflow_time,
             windowSizeMs * maxUnderflows
         )
     }
 
-    fun mapState(domainModel: DeviceDomain, viewModel: BufferItemViewModel) {
+    fun mapState(domainModel: DeviceDomain, model: RcbItemModel) {
         when (domainModel.status) {
-            CircularBufferStatus.DISCONNECTED -> {
+            RcbServiceState.DISCONNECTED -> {
 
-                viewModel.page2.resumeButtonText = resources.getString(R.string.resume)
-                setMaxSize(viewModel, domainModel.freeHeapBytes)
+                model.page3.resumeButtonText = resources.getString(R.string.resume)
+                setMaxSize(model, domainModel.freeHeapBytes)
 
                 mapConfig(
-                    viewModel.page1.config.refillCount,
-                    viewModel.page1.config.refillSize,
-                    viewModel.page1.config.windowSize,
-                    viewModel.page1.config.maxUnderflows,
-                    viewModel
+                    model.page2.config.refillCount,
+                    model.page2.config.refillSize,
+                    model.page2.config.windowSize,
+                    model.page2.config.maxUnderflows,
+                    model
                 )
             }
-            CircularBufferStatus.CONNECTING -> {
-                viewModel.header.isConnecting = true
-                viewModel.page0.connectButtonEnabled = false
+            RcbServiceState.CONNECTING -> {
+                model.header.isConnecting = true
+                model.page1.connectButtonEnabled = false
             }
-            CircularBufferStatus.SETUP -> {
-                setMaxSize(viewModel, domainModel.freeHeapBytes)
-                viewModel.header.isConnected = true
-                viewModel.header.isConnecting = false
-                viewModel.page1.applyButtonEnabled = true
+            RcbServiceState.SETUP -> {
+                setMaxSize(model, domainModel.freeHeapBytes)
+                model.header.isConnected = true
+                model.header.isConnecting = false
+                model.page2.applyButtonEnabled = true
             }
-            CircularBufferStatus.READY -> {
-                viewModel.page0.connectButtonEnabled = false
-                viewModel.page1.applyButtonEnabled = false
-                viewModel.page2.resumeButtonEnabled = true
+            RcbServiceState.READY -> {
+                model.page1.connectButtonEnabled = false
+                model.page2.applyButtonEnabled = false
+                model.page3.resumeButtonEnabled = true
             }
-            CircularBufferStatus.ERROR -> {
-                viewModel.header.isConnecting = false
-                viewModel.page0.connectButtonEnabled = true
-                viewModel.page2.isResumed = false
+            RcbServiceState.ERROR -> {
+                model.header.isConnecting = false
+                model.page1.connectButtonEnabled = true
+                model.page3.isResumed = false
             }
-            CircularBufferStatus.PAUSED -> {
-                viewModel.page2.isResumed = false
-                viewModel.page2.resumeButtonText = resources.getString(R.string.resume)
+            RcbServiceState.PAUSED -> {
+                model.page3.isResumed = false
+                model.page3.resumeButtonText = resources.getString(R.string.resume)
             }
-            CircularBufferStatus.RESUMED -> {
-                viewModel.page2.isResumed = true
-                viewModel.page2.resumeButtonText = resources.getString(R.string.pause)
+            RcbServiceState.RESUMED -> {
+                model.page3.isResumed = true
+                model.page3.resumeButtonText = resources.getString(R.string.pause)
             }
         }
 
         val isConnected = isConnected(domainModel.status)
-        viewModel.header.isConnected = isConnected
+        model.header.isConnected = isConnected
 
-        viewModel.page0.status = getStatus(domainModel.status)
-        viewModel.page0.connectButtonEnabled = !isConnected
+        model.page1.status = getStatus(domainModel.status)
+        model.page1.connectButtonEnabled = !isConnected
         when (isConnected) {
             true -> R.string.disconnect
             false -> R.string.connect
         }.let {
-            viewModel.page0.connectButtonText = resources.getString(it)
+            model.page1.connectButtonText = resources.getString(it)
         }
     }
 
     @SuppressLint("DefaultLocale")
-    private fun getStatus(status: CircularBufferStatus) =
+    private fun getStatus(status: RcbServiceState) =
         status.name.toLowerCase(Locale.getDefault()).capitalize().also {
-            return if (status == CircularBufferStatus.ERROR) {
+            return if (status == RcbServiceState.ERROR) {
                 "$it (${status.message})"
             } else {
                 it
             }
         }
 
-    private fun setMaxSize(viewModel: BufferItemViewModel, maxSize: Int) {
-        viewModel.page1.config.maxSize = resources.getString(
+    private fun setMaxSize(model: RcbItemModel, maxSize: Int) {
+        model.page2.config.maxSize = resources.getString(
             R.string.buffer_item_page_1_max_size,
             maxSize
         )
     }
 
-    private fun isConnected(status: CircularBufferStatus) =
-        (status != CircularBufferStatus.CONNECTING &&
-                status != CircularBufferStatus.DISCONNECTED &&
-                status != CircularBufferStatus.ERROR)
+    private fun isConnected(status: RcbServiceState) =
+        (status != RcbServiceState.CONNECTING &&
+                status != RcbServiceState.DISCONNECTED &&
+                status != RcbServiceState.ERROR)
 }

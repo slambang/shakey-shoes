@@ -3,7 +3,7 @@ package com.betty7.fingerband.alpha.bluetooth.view.bufferitem
 import android.view.View
 import android.widget.TextView
 import com.betty7.fingerband.alpha.R
-import com.betty7.fingerband.alpha.bluetooth.view.Page0ViewModel
+import com.betty7.fingerband.alpha.bluetooth.view.Page1Model
 import com.betty7.fingerband.alpha.bluetooth.view.PageModel
 
 class Page0ViewHolder internal constructor(
@@ -30,7 +30,7 @@ class Page0ViewHolder internal constructor(
     }
 
     override fun bind(model: PageModel) {
-        model as Page0ViewModel
+        model as Page1Model
 
         status.text = model.status
         macAddress.text = model.macAddress

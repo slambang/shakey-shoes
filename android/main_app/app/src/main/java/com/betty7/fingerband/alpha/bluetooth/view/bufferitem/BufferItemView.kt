@@ -10,8 +10,8 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.betty7.fingerband.alpha.R
-import com.betty7.fingerband.alpha.bluetooth.view.BufferItemHeaderViewModel
-import com.betty7.fingerband.alpha.bluetooth.view.BufferItemViewModel
+import com.betty7.fingerband.alpha.bluetooth.view.ItemHeaderModel
+import com.betty7.fingerband.alpha.bluetooth.view.RcbItemModel
 import kotlinx.android.synthetic.main.circular_buffer_view.view.*
 
 class BufferItemView @JvmOverloads constructor(
@@ -42,13 +42,13 @@ class BufferItemView @JvmOverloads constructor(
         setupView()
     }
 
-    fun bind(model: BufferItemViewModel) {
+    fun bind(model: RcbItemModel) {
         bufferId = model.id
         updateHeader(model.header)
-        recyclerAdapter.updatePages(model.page0, model.page1, model.page2)
+        recyclerAdapter.updatePages(model.page1, model.page2, model.page3)
     }
 
-    private fun updateHeader(headerModel: BufferItemHeaderViewModel) =
+    private fun updateHeader(headerModel: ItemHeaderModel) =
         with(buffer_view_header_container) {
 
             buffer_view_header_device_name.text = headerModel.deviceName

@@ -3,7 +3,7 @@ package com.betty7.fingerband.alpha.bluetooth.view.bufferitem
 import android.view.View
 import android.widget.TextView
 import com.betty7.fingerband.alpha.R
-import com.betty7.fingerband.alpha.bluetooth.view.Page2ViewModel
+import com.betty7.fingerband.alpha.bluetooth.view.Page3Model
 import com.betty7.fingerband.alpha.bluetooth.view.PageModel
 import com.warkiz.widget.IndicatorSeekBar
 
@@ -30,7 +30,7 @@ class Page2ViewHolder internal constructor(
     }
 
     override fun bind(model: PageModel) {
-        model as Page2ViewModel
+        model as Page3Model
 
         if (model.isResumed) upTime.resume() else upTime.pause()
 

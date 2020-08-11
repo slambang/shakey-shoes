@@ -3,18 +3,18 @@ package com.betty7.fingerband.alpha.bluetooth.view
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.betty7.fingerband.alpha.bluetooth.data.audio.RcbDataSource
+import com.betty7.fingerband.alpha.bluetooth.data.audio.SettableRcbDataSource
+import com.betty7.fingerband.alpha.bluetooth.data.entity.DeviceRepository
+import com.betty7.fingerband.alpha.bluetooth.data.entity.DeviceRepositoryImpl
+import com.betty7.fingerband.alpha.bluetooth.domain.BluetoothDeviceEntityMapper
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceRepositoryInteractor
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceInteractorImpl
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceOrchestrator
-import com.betty7.fingerband.alpha.bluetooth.entity.BluetoothDeviceEntityMapper
-import com.betty7.fingerband.alpha.bluetooth.entity.DeviceRepository
-import com.betty7.fingerband.alpha.bluetooth.entity.DeviceRepositoryImpl
-import com.betty7.fingerband.alpha.bluetooth.files.RcbDataSource
-import com.betty7.fingerband.alpha.bluetooth.files.SettableRcbDataSource
-import com.betty7.rcb.BluetoothConnection
-import com.betty7.rcb.BluetoothDevice
-import com.betty7.rcb.CircularBufferService
-import com.betty7.rcb.CircularBufferServiceImpl
+import com.slambang.rcb.BluetoothConnection
+import com.slambang.rcb.BluetoothDevice
+import com.slambang.rcb.RcbService
+import com.slambang.rcb.RcbServiceImpl
 
 class RcbDemoViewModelFactory constructor(
     private val context: Context
@@ -49,17 +49,20 @@ private fun provideDeviceRepoInteractor(): DeviceRepositoryInteractor {
 private fun provideResources(context: Context): ViewResources = ViewResourcesImpl(context)
 
 private fun provideSettableDataSource(): RcbDataSource =
-    SettableRcbDataSource(INITIAL_VIBRATE_VALUE)
+    SettableRcbDataSource(
+        INITIAL_VIBRATE_VALUE
+    )
 
 private fun provideBluetoothConnection(context: Context): BluetoothConnection =
     BluetoothDevice.newInstance(context)
 
-private fun provideCircularBufferService(context: Context): CircularBufferService {
+private fun provideCircularBufferService(context: Context): RcbService {
     val bluetoothConnection = provideBluetoothConnection(context)
-    return CircularBufferServiceImpl(bluetoothConnection)
+    return RcbServiceImpl(bluetoothConnection)
 }
 
-private fun provideDeviceEntityMapper() = BluetoothDeviceEntityMapper()
+private fun provideDeviceEntityMapper() =
+    BluetoothDeviceEntityMapper()
 
 private fun provideDeviceRepository(): DeviceRepository = DeviceRepositoryImpl()
 

@@ -1,7 +1,6 @@
 package com.betty7.fingerband.alpha.bluetooth.domain
 
-import com.betty7.fingerband.alpha.bluetooth.entity.BluetoothDeviceEntityMapper
-import com.betty7.fingerband.alpha.bluetooth.entity.DeviceRepository
+import com.betty7.fingerband.alpha.bluetooth.data.entity.DeviceRepository
 
 class DeviceRepositoryInteractor(
     private val deviceRepo: DeviceRepository,

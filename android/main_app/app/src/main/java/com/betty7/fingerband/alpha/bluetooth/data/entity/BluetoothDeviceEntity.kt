@@ -1,4 +1,4 @@
-package com.betty7.fingerband.alpha.bluetooth.entity
+package com.betty7.fingerband.alpha.bluetooth.data.entity
 
 data class BluetoothDeviceEntity(
     val id: Int,

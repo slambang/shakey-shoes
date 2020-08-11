@@ -9,7 +9,7 @@ data class DeviceDomain(
     val productUrl: String = "",
     val baudRateBytes: Int = 0,
     var freeHeapBytes: Int = 0,
-    var status: CircularBufferStatus = CircularBufferStatus.DISCONNECTED,
+    var status: RcbServiceState = RcbServiceState.DISCONNECTED,
     val accuracies: DeviceAccuracyDomain = DeviceAccuracyDomain(id)
 )
 

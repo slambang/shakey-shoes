@@ -13,11 +13,11 @@ class BufferItemRecyclerAdapter : RecyclerView.Adapter<BufferItemRecyclerAdapter
     lateinit var onApplyClicked: (Int) -> Unit
     lateinit var onProductUrlClicked: (Int) -> Unit
     lateinit var onDeleteClicked: (Int) -> Unit
-    lateinit var onEditConfig: (BufferItemViewModel) -> Unit
+    lateinit var onEditConfig: (RcbItemModel) -> Unit
 
     private lateinit var recycler: RecyclerView
 
-    private val items = mutableListOf<BufferItemViewModel>()
+    private val items = mutableListOf<RcbItemModel>()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -50,7 +50,7 @@ class BufferItemRecyclerAdapter : RecyclerView.Adapter<BufferItemRecyclerAdapter
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
-    fun updateItem(item: BufferItemViewModel) {
+    fun updateItem(item: RcbItemModel) {
         val index = requireIndex(item.id, false)
         if (index == -1) {
             items.add(item)
@@ -99,7 +99,7 @@ class BufferItemRecyclerAdapter : RecyclerView.Adapter<BufferItemRecyclerAdapter
 
         private val circularBufferView = (itemView as BufferItemView)
 
-        fun bind(model: BufferItemViewModel) = circularBufferView.bind(model)
+        fun bind(model: RcbItemModel) = circularBufferView.bind(model)
         fun setPage(index: Int) = circularBufferView.setPageIndex(index)
     }
 }

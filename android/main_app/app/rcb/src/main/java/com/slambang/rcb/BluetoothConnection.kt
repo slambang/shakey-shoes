@@ -1,16 +1,7 @@
-package com.betty7.rcb
+package com.slambang.rcb
 
 import java.io.InputStream
 import java.io.OutputStream
-
-enum class BluetoothConnectionState {
-    UNAVAILABLE,
-    DISABLED,
-    CONNECTION_ERROR,
-    CONNECTING,
-    CONNECTED,
-    GENERIC_ERROR
-}
 
 interface BluetoothConnection {
 

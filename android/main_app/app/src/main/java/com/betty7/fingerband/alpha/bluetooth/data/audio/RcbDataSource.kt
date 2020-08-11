@@ -1,4 +1,4 @@
-package com.betty7.fingerband.alpha.bluetooth.files
+package com.betty7.fingerband.alpha.bluetooth.data.audio
 
 interface RcbDataSource : Iterator<Int> {
 
@@ -11,7 +11,6 @@ interface RcbDataSource : Iterator<Int> {
 
     /**
      * Removes the next element and returns it.
-     * The offset passed to [init] is already added.
      *
      * @return The next element
      */

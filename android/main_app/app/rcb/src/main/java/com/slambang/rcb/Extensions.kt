@@ -1,4 +1,4 @@
-package com.betty7.rcb
+package com.slambang.rcb
 
 import java.io.InputStream
 import java.nio.ByteBuffer

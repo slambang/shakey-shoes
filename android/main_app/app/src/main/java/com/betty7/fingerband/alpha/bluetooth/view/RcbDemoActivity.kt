@@ -78,7 +78,7 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
         viewModel.onStop()
     }
 
-    private fun updateItem(item: BufferItemViewModel) {
+    private fun updateItem(item: RcbItemModel) {
         recyclerAdapter.updateItem(item)
         setDeleteAllEnabled(true)
     }
@@ -157,7 +157,7 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
             viewModel.onCreateBufferClicked()
         }
 
-    private fun displayConfig(model: BufferItemViewModel) {
+    private fun displayConfig(model: RcbItemModel) {
         if (configDialog == null) {
             configDialog =
                 ConfigDialogView(model.id, model.header.deviceName, this, ::onConfigUpdated) {
@@ -165,7 +165,7 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
                 }
         }
 
-        configDialog?.bind(model.page1.config)
+        configDialog?.bind(model.page2.config)
     }
 
     private fun onConfigUpdated(

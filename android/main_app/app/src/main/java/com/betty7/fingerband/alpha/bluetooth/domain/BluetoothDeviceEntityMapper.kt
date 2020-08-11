@@ -1,7 +1,9 @@
-package com.betty7.fingerband.alpha.bluetooth.entity
+package com.betty7.fingerband.alpha.bluetooth.domain
 
-import com.betty7.fingerband.alpha.bluetooth.domain.CircularBufferStatus
-import com.betty7.fingerband.alpha.bluetooth.domain.DeviceDomain
+import com.betty7.fingerband.alpha.bluetooth.data.entity.BluetoothDeviceEntity
+import com.betty7.fingerband.alpha.bluetooth.data.entity.HC05_DSD
+import com.betty7.fingerband.alpha.bluetooth.data.entity.HC05_DSD_MK1
+import com.betty7.fingerband.alpha.bluetooth.data.entity.HC05_WINGONEER
 
 class BluetoothDeviceEntityMapper {
 
@@ -21,7 +23,7 @@ class BluetoothDeviceEntityMapper {
             productMap.second,
             entity.baudRateBits / 10, // [1 start-bit, 8 data-bits, 1 stop-bit]
             0,
-            CircularBufferStatus.READY
+            RcbServiceState.READY
         )
     }
 

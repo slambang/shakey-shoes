@@ -1,4 +1,4 @@
-package com.betty7.rcb
+package com.slambang.rcb
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -110,12 +110,16 @@ class BluetoothDevice private constructor(
         bluetoothSocket ?: throw IllegalStateException("Required bluetooth socket")
 
     companion object {
-        fun newInstance(context: Context): com.betty7.rcb.BluetoothDevice {
+        fun newInstance(context: Context): com.slambang.rcb.BluetoothDevice {
             val subscriptions = CompositeDisposable()
             val rxBluetooth = RxBluetooth(context)
             val provider = BluetoothProviderImpl(rxBluetooth)
             val scheduler = Schedulers.from(Executors.newSingleThreadExecutor())
-            return BluetoothDevice(scheduler, provider, subscriptions)
+            return BluetoothDevice(
+                scheduler,
+                provider,
+                subscriptions
+            )
         }
     }
 }

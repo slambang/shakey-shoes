@@ -3,16 +3,16 @@ package com.betty7.fingerband.alpha.bluetooth.view
 const val INITIAL_VIBRATE_VALUE = 0
 const val DELETE_ALL_BUFFERS_ID = -1
 
-data class BufferItemViewModel(
+data class RcbItemModel(
     val id: Int,
     var selectedDeviceId: Int = 0,
-    val page0: Page0ViewModel = Page0ViewModel(),
-    val page1: Page1ViewModel = Page1ViewModel(),
-    val page2: Page2ViewModel = Page2ViewModel(),
-    val header: BufferItemHeaderViewModel = BufferItemHeaderViewModel()
+    val page1: Page1Model = Page1Model(),
+    val page2: Page2Model = Page2Model(),
+    val page3: Page3Model = Page3Model(),
+    val header: ItemHeaderModel = ItemHeaderModel()
 )
 
-data class BufferItemHeaderViewModel(
+data class ItemHeaderModel(
     var deviceName: String = "",
     var isConnected: Boolean = false,
     var isConnecting: Boolean = false
@@ -20,7 +20,7 @@ data class BufferItemHeaderViewModel(
 
 sealed class PageModel
 
-data class BufferConfigViewModel(
+data class RcbConfigModel(
     var refillSize: Int = 4,
     var refillCount: Int = 3,
     var windowSize: Int = 10,
@@ -31,7 +31,7 @@ data class BufferConfigViewModel(
     var maxUnderflowTime: String ="0"
 )
 
-data class Page0ViewModel(
+data class Page1Model(
     var status: String = "",
     var macAddress: String = "",
     var pairingPin: String = "",
@@ -40,13 +40,13 @@ data class Page0ViewModel(
     var connectButtonText: String = ""
 ) : PageModel()
 
-data class Page1ViewModel(
-    var config: BufferConfigViewModel = BufferConfigViewModel(),
+data class Page2Model(
+    var config: RcbConfigModel = RcbConfigModel(),
     var applyButtonEnabled: Boolean = false,
     var progressVisible: Boolean = false
 ) : PageModel()
 
-data class Page2ViewModel(
+data class Page3Model(
     var maxVibrateValue: Int = 254,
     var currentVibrateValue: Int = INITIAL_VIBRATE_VALUE,
     var resumeButtonEnabled: Boolean = false,

@@ -1,57 +1,16 @@
-package com.betty7.rcb
+package com.slambang.rcb
 
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 
-data class CircularBufferConfig(
-    val numRefills: Int = 0,
-    val refillSize: Int = 0,
-    val windowSizeMs: Int = 0,
-    val maxUnderflows: Int = 0
-)
-
-enum class CircularBufferState {
-    CONNECTING,
-    READY,
-    PAUSED,
-    RESUMED,
-    DISCONNECTED,
-    REFILL,
-    UNDERFLOW
-}
-
-interface CircularBufferService {
-
-    interface Listener {
-        fun onBufferServiceState(bufferService: CircularBufferService, state: CircularBufferState)
-        fun onBufferServiceFreeHeap(bufferService: CircularBufferService, freeHeapBytes: Int)
-        fun onBufferServiceError(bufferService: CircularBufferService, error: Throwable? = null)
-    }
-
-    val id: Int
-    val config: CircularBufferConfig
-
-    fun connect(
-        macAddress: String,
-        serviceUuid: String, listener: Listener
-    )
-
-    fun setConfig(config: CircularBufferConfig)
-    fun reset()
-    fun resume()
-    fun pause()
-    fun stop()
-    fun sendBufferData(data: Int)
-}
-
-class CircularBufferServiceImpl(
+class RcbServiceImpl(
     private val bluetoothConnection: BluetoothConnection
-) : CircularBufferService {
+) : RcbService {
 
     override var id = ID.incrementAndGet()
 
-    private lateinit var _config: CircularBufferConfig
-    override val config: CircularBufferConfig
+    private lateinit var _config: RcbServiceConfig
+    override val config: RcbServiceConfig
         get() = _config
 
     private var wasStopped = false
@@ -59,14 +18,14 @@ class CircularBufferServiceImpl(
     override fun connect(
         macAddress: String,
         serviceUuid: String,
-        listener: CircularBufferService.Listener
+        listener: RcbServiceListener
     ) {
         wasStopped = false
         bluetoothConnection.start(macAddress, serviceUuid) {
             when (it) {
                 BluetoothConnectionState.CONNECTING -> listener.onBufferServiceState(
                     this,
-                    CircularBufferState.CONNECTING
+                    RcbState.CONNECTING
                 )
                 BluetoothConnectionState.CONNECTED -> {
                     awaitFreeHeap(listener)
@@ -92,7 +51,7 @@ class CircularBufferServiceImpl(
         }
     }
 
-    override fun setConfig(config: CircularBufferConfig) {
+    override fun setConfig(config: RcbServiceConfig) {
         _config = config
 
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
@@ -142,43 +101,45 @@ class CircularBufferServiceImpl(
             }
         )
 
-    private fun listenForSignals(listener: CircularBufferService.Listener) =
+    private fun listenForSignals(listener: RcbServiceListener) =
         try {
             while (bluetoothConnection.isConnected) {
                 when (val value = bluetoothConnection.inputStream.read()) {
                     SIGNAL_IN_READY -> listener.onBufferServiceState(
                         this,
-                        CircularBufferState.READY
+                        RcbState.READY
                     )
                     SIGNAL_IN_PAUSED -> listener.onBufferServiceState(
                         this,
-                        CircularBufferState.PAUSED
+                        RcbState.PAUSED
                     )
                     SIGNAL_IN_RESUMED -> listener.onBufferServiceState(
                         this,
-                        CircularBufferState.RESUMED
+                        RcbState.RESUMED
                     )
                     SIGNAL_IN_REQUEST_REFILL -> listener.onBufferServiceState(
                         this,
-                        CircularBufferState.REFILL
+                        RcbState.REFILL
                     )
                     SIGNAL_IN_UNDERFLOW -> listener.onBufferServiceState(
                         this,
-                        CircularBufferState.UNDERFLOW
+                        RcbState.UNDERFLOW
                     )
                     else -> throw IllegalArgumentException("Invalid SIGNAL_IN: $value")
                 }
             }
         } catch (error: IOException) {
             if (wasStopped) {
-                listener.onBufferServiceState(this, CircularBufferState.DISCONNECTED)
+                listener.onBufferServiceState(this,
+                    RcbState.DISCONNECTED
+                )
             } else {
                 stop()
                 listener.onBufferServiceError(this, error)
             }
         }
 
-    private fun awaitFreeHeap(listener: CircularBufferService.Listener) {
+    private fun awaitFreeHeap(listener: RcbServiceListener) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONNECT)
         val freeRamBytes = bluetoothConnection.inputStream.readInt()
         listener.onBufferServiceFreeHeap(this, freeRamBytes)

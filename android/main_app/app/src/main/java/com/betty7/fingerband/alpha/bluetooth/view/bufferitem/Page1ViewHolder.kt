@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.betty7.fingerband.alpha.R
-import com.betty7.fingerband.alpha.bluetooth.view.Page1ViewModel
+import com.betty7.fingerband.alpha.bluetooth.view.Page2Model
 import com.betty7.fingerband.alpha.bluetooth.view.PageModel
 
 class Page1ViewHolder internal constructor(
@@ -35,7 +35,7 @@ class Page1ViewHolder internal constructor(
     }
 
     override fun bind(model: PageModel) {
-        model as Page1ViewModel
+        model as Page2Model
 
         maxSize.text = model.config.maxSize
         actualSize.text = model.config.actualSize

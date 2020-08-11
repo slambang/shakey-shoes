@@ -1,6 +1,6 @@
-package com.betty7.fingerband.alpha.bluetooth.entity
+package com.betty7.fingerband.alpha.bluetooth.data.entity
 
-import com.betty7.rcb.BluetoothProvider
+import com.slambang.rcb.BluetoothProvider
 
 interface DeviceRepository {
     fun getDeviceEntities(): List<BluetoothDeviceEntity>

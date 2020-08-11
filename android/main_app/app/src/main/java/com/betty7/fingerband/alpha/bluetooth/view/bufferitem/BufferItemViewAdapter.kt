@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.betty7.fingerband.alpha.bluetooth.view.Page0ViewModel
-import com.betty7.fingerband.alpha.bluetooth.view.Page1ViewModel
-import com.betty7.fingerband.alpha.bluetooth.view.Page2ViewModel
+import com.betty7.fingerband.alpha.bluetooth.view.Page1Model
+import com.betty7.fingerband.alpha.bluetooth.view.Page2Model
+import com.betty7.fingerband.alpha.bluetooth.view.Page3Model
 import com.betty7.fingerband.alpha.bluetooth.view.PageModel
 
 class BufferItemViewAdapter(context: Context) :
@@ -41,9 +41,9 @@ class BufferItemViewAdapter(context: Context) :
         }
 
     // Optimisation: It would be nice if we could only receive the pages that need updating
-    fun updatePages(page0: Page0ViewModel, page1: Page1ViewModel, page2: Page2ViewModel) {
-        items.addAll(listOf(page0, page1, page2))
-        bindWithoutNotify(page0, page1, page2)
+    fun updatePages(page1: Page1Model, page2: Page2Model, page3: Page3Model) {
+        items.addAll(listOf(page1, page2, page3))
+        bindWithoutNotify(page1, page2, page3)
     }
 
     /*
@@ -52,13 +52,13 @@ class BufferItemViewAdapter(context: Context) :
      * This only works from the *second* time that items are updated.
      */
     private fun bindWithoutNotify(
-        page0: Page0ViewModel,
-        page1: Page1ViewModel,
-        page2: Page2ViewModel
+        page1: Page1Model,
+        page2: Page2Model,
+        page3: Page3Model
     ) = with(recyclerView) {
-        (findViewHolderForAdapterPosition(0) as Page0ViewHolder?)?.bind(page0)
-        (findViewHolderForAdapterPosition(1) as Page1ViewHolder?)?.bind(page1)
-        (findViewHolderForAdapterPosition(2) as Page2ViewHolder?)?.bind(page2)
+        (findViewHolderForAdapterPosition(0) as Page0ViewHolder?)?.bind(page1)
+        (findViewHolderForAdapterPosition(1) as Page1ViewHolder?)?.bind(page2)
+        (findViewHolderForAdapterPosition(2) as Page2ViewHolder?)?.bind(page3)
     }
 
     override fun getItemCount() = PAGE_LAYOUTS.size
