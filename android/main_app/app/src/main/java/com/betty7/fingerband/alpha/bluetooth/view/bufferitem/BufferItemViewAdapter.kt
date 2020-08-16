@@ -13,12 +13,7 @@ import com.betty7.fingerband.alpha.bluetooth.view.PageModel
 class BufferItemViewAdapter(context: Context) :
     RecyclerView.Adapter<BufferItemViewAdapter.BaseViewHolder>() {
 
-    lateinit var onProductUrlClicked: () -> Unit
-    lateinit var onConnectClicked: () -> Unit
-    lateinit var onApplyClicked: () -> Unit
-    lateinit var onResumeClicked: () -> Unit
-    lateinit var onVibrateUpdate: (Int) -> Unit
-    lateinit var onEditConfig: () -> Unit
+    lateinit var listener: BufferItemViewListener
 
     private val items = mutableListOf<PageModel>()
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -33,9 +28,9 @@ class BufferItemViewAdapter(context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         with(inflater.inflate(PAGE_LAYOUTS[viewType], parent, false)) {
             when (viewType) {
-                0 -> Page0ViewHolder(this, onProductUrlClicked, onConnectClicked)
-                1 -> Page1ViewHolder(this, onApplyClicked, onEditConfig)
-                2 -> Page2ViewHolder(this, onResumeClicked, onVibrateUpdate)
+                0 -> Page1ViewHolder(this, listener)
+                1 -> Page2ViewHolder(this, listener)
+                2 -> Page3ViewHolder(this, listener)
                 else -> throw IllegalStateException("Invalid viewType: $viewType")
             }
         }
@@ -47,18 +42,18 @@ class BufferItemViewAdapter(context: Context) :
     }
 
     /*
-     * This allows the touch event to work on page 2 when dynamic data is continually coming in.
+     * This allows the touch event to work on page 3 when dynamic data is continually coming in.
      * Calls to [notifyDataSetChanged] mean the touch event is lost with dynamic data.
-     * This only works from the *second* time that items are updated.
+     * This only works from the *second+* time that items are updated.
      */
     private fun bindWithoutNotify(
         page1: Page1Model,
         page2: Page2Model,
         page3: Page3Model
     ) = with(recyclerView) {
-        (findViewHolderForAdapterPosition(0) as Page0ViewHolder?)?.bind(page1)
-        (findViewHolderForAdapterPosition(1) as Page1ViewHolder?)?.bind(page2)
-        (findViewHolderForAdapterPosition(2) as Page2ViewHolder?)?.bind(page3)
+        (findViewHolderForAdapterPosition(0) as Page1ViewHolder?)?.bind(page1)
+        (findViewHolderForAdapterPosition(1) as Page2ViewHolder?)?.bind(page2)
+        (findViewHolderForAdapterPosition(2) as Page3ViewHolder?)?.bind(page3)
     }
 
     override fun getItemCount() = PAGE_LAYOUTS.size
@@ -76,9 +71,9 @@ class BufferItemViewAdapter(context: Context) :
 
     companion object {
         private val PAGE_LAYOUTS = listOf(
-            Page0ViewHolder.layoutRes,
             Page1ViewHolder.layoutRes,
-            Page2ViewHolder.layoutRes
+            Page2ViewHolder.layoutRes,
+            Page3ViewHolder.layoutRes
         )
     }
 }

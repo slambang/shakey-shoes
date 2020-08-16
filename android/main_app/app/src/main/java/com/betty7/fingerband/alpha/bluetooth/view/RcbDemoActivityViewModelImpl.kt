@@ -7,7 +7,14 @@ import com.betty7.fingerband.alpha.bluetooth.domain.*
 class RcbDemoActivityViewModelImpl(
     private val domainMapper: DomainMapper,
     private val rcbServiceOrchestrator: RcbServiceOrchestrator,
+
+
+
     private val deviceRepoInteractor: DeviceRepositoryInteractor,
+
+
+
+
     private val showDeviceListLiveData:SingleLiveEvent<List<String>> = SingleLiveEvent(),
     private val launchUrlLiveData: SingleLiveEvent<String> = SingleLiveEvent(),
     private val rcbItemLiveDataMap: MutableMap<Int, DefaultLiveData<RcbItemModel>> = mutableMapOf(),
@@ -15,9 +22,6 @@ class RcbDemoActivityViewModelImpl(
 ) : RcbDemoActivityViewModel() {
 
     private lateinit var bufferItemObserver: (RcbItemModel) -> Unit
-
-    // TODO: This should be handled by the Activity & its VM!
-    override fun onBluetoothDenied() {}
 
     override fun subscribe(
         owner: LifecycleOwner,
@@ -61,7 +65,7 @@ class RcbDemoActivityViewModelImpl(
     }
 
     override fun onCreateBufferClicked() {
-        val deviceNames = deviceRepoInteractor.getDeviceNames()
+        val deviceNames = deviceRepoInteractor.getAllDeviceNames()
         showDeviceListLiveData.postValue(deviceNames)
     }
 

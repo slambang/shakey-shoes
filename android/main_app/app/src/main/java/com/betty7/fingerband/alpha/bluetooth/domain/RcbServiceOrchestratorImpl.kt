@@ -10,6 +10,7 @@ import com.slambang.rcb.service.RcbState
 class RcbServiceInteractorImpl(
     private val newRcbDataSource: () -> RcbDataSource,
     private val newRcbService: () -> RcbService,
+
     private val rcbDataSources: MutableMap<Int, RcbDataSource> = mutableMapOf(),
     private val rcbServices: MutableMap<Int, RcbService> = mutableMapOf(),
     private val deviceDomains: MutableMap<Int, DeviceDomain> = mutableMapOf()
@@ -105,7 +106,7 @@ class RcbServiceInteractorImpl(
 
     private fun onBufferRefill(buffer: RcbService) {
 
-        val beatMap = requireBeatMap(buffer.id)
+        val beatMap = requireDataSource(buffer.id)
         for (i in 0 until buffer.config.refillSize) {
             if (beatMap.hasNext()) {
                 buffer.sendBufferData(beatMap.next())
@@ -143,7 +144,7 @@ class RcbServiceInteractorImpl(
         }
 
     override fun hackBufferValue(rcbServiceId: Int, value: Int) {
-        requireBeatMap(rcbServiceId).also {
+        requireDataSource(rcbServiceId).also {
             if (it is SettableRcbDataSource) {
                 it.value = value
             }
@@ -211,7 +212,7 @@ class RcbServiceInteractorImpl(
         }
     }
 
-    private fun requireBeatMap(id: Int) =
+    private fun requireDataSource(id: Int) =
         rcbDataSources[id] ?: throw IllegalArgumentException("Required data source: $id")
 
     private fun requireBufferService(id: Int) =

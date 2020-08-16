@@ -4,16 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.betty7.fingerband.alpha.bluetooth.view.bufferitem.BufferItemView
+import com.betty7.fingerband.alpha.bluetooth.view.bufferitem.BufferItemViewListener
 
-class BufferItemRecyclerAdapter : RecyclerView.Adapter<BufferItemRecyclerAdapter.ViewHolder>() {
-
-    lateinit var onConnectClicked: (Int) -> Unit
-    lateinit var onResumeClicked: (Int) -> Unit
-    lateinit var onVibrateUpdate: (Int, Int) -> Unit
-    lateinit var onApplyClicked: (Int) -> Unit
-    lateinit var onProductUrlClicked: (Int) -> Unit
-    lateinit var onDeleteClicked: (Int) -> Unit
-    lateinit var onEditConfig: (RcbItemModel) -> Unit
+class BufferItemRecyclerAdapter(
+    private val listener: BufferItemViewListener
+) : RecyclerView.Adapter<BufferItemRecyclerAdapter.ViewHolder>() {
 
     private lateinit var recycler: RecyclerView
 
@@ -33,16 +28,7 @@ class BufferItemRecyclerAdapter : RecyclerView.Adapter<BufferItemRecyclerAdapter
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
 
-            onResumeClicked = this@BufferItemRecyclerAdapter.onResumeClicked
-            onConnectClicked = this@BufferItemRecyclerAdapter.onConnectClicked
-            onVibrateUpdate = this@BufferItemRecyclerAdapter.onVibrateUpdate
-            onApplyClicked = this@BufferItemRecyclerAdapter.onApplyClicked
-            onProductUrlClicked = this@BufferItemRecyclerAdapter.onProductUrlClicked
-            onDeleteClicked = this@BufferItemRecyclerAdapter.onDeleteClicked
-            onEditConfig = {
-                val index = requireIndex(it, true)
-                this@BufferItemRecyclerAdapter.onEditConfig(items[index])
-            }
+            setListener(listener)
         }
 
         return ViewHolder(view)
@@ -66,15 +52,11 @@ class BufferItemRecyclerAdapter : RecyclerView.Adapter<BufferItemRecyclerAdapter
         notifyDataSetChanged()
     }
 
-    fun deleteItem(bufferId: Int) =
-        if (bufferId == DELETE_ALL_BUFFERS_ID) {
-            items.clear()
-            notifyDataSetChanged()
-        } else {
-            val index = requireIndex(bufferId, true)
-            items.removeAt(index)
-            notifyItemRemoved(index)
-        }
+    fun deleteItem(bufferId: Int) {
+        val index = requireIndex(bufferId, true)
+        items.removeAt(index)
+        notifyItemRemoved(index)
+    }
 
     fun setPage(bufferId: Int, page: Int) {
         val index = requireIndex(bufferId, false)

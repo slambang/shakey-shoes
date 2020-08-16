@@ -11,16 +11,39 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.betty7.fingerband.alpha.R
+import com.betty7.fingerband.alpha.bluetooth.view.bufferitem.BufferItemViewListener
 import kotlinx.android.synthetic.main.activity_test.*
 
-class RcbDemoActivity : BluetoothPermissionActivity() {
+class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
+
+    override fun onResumeClicked(deviceId: Int) =
+        viewModel.toggleBufferService(deviceId)
+
+    override fun onConnectClicked(deviceId: Int) =
+        viewModel.onConnectBufferClicked(deviceId)
+
+    override fun onVibrateUpdate(deviceId: Int, value: Int) =
+        viewModel.setVibrateValue(deviceId, value)
+
+    override fun onApplyClicked(deviceId: Int) =
+        viewModel.onConnectBufferClicked(deviceId)
+
+    override fun onProductUrlClicked(deviceId: Int) =
+        viewModel.onProductUrlClicked(deviceId)
+
+    override fun onDeleteClicked(deviceId: Int) =
+        confirmDeleteBuffer(deviceId)
+
+    override fun onEditConfig(deviceId: Int) {
+//        ::displayConfig
+    }
 
     private val viewModel: RcbDemoActivityViewModel by viewModels {
         RcbDemoViewModelFactory(this)
     }
 
     private lateinit var menu: Menu
-    private lateinit var recyclerAdapter: BufferItemRecyclerAdapter
+    private val recyclerAdapter = BufferItemRecyclerAdapter(this)
 
     private var configDialog: ConfigDialogView? = null
 
@@ -30,20 +53,10 @@ class RcbDemoActivity : BluetoothPermissionActivity() {
         setSupportActionBar(activity_test_toolbar)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        grantBluetooth(::initView, viewModel::onBluetoothDenied)
+        initView()
     }
 
     private fun initView() {
-
-        recyclerAdapter = BufferItemRecyclerAdapter().apply {
-            onConnectClicked = viewModel::onConnectBufferClicked
-            onResumeClicked = viewModel::toggleBufferService
-            onVibrateUpdate = viewModel::setVibrateValue
-            onApplyClicked = viewModel::onConfigureBufferClicked
-            onProductUrlClicked = viewModel::onProductUrlClicked
-            onDeleteClicked = ::confirmDeleteBuffer
-            onEditConfig = ::displayConfig
-        }
 
         buffer_recycler_view.apply {
             adapter = recyclerAdapter

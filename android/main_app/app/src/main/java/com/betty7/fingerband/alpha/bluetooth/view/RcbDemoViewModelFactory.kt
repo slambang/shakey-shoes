@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.betty7.fingerband.alpha.bluetooth.data.audio.RcbDataSource
 import com.betty7.fingerband.alpha.bluetooth.data.audio.SettableRcbDataSource
-import com.betty7.fingerband.alpha.bluetooth.data.entity.DeviceRepository
-import com.betty7.fingerband.alpha.bluetooth.data.entity.DeviceRepositoryImpl
+import com.betty7.fingerband.alpha.bluetooth.data.entity.BluetoothDeviceRepository
+import com.betty7.fingerband.alpha.bluetooth.data.entity.BluetoothDeviceRepositoryImpl
 import com.betty7.fingerband.alpha.bluetooth.domain.BluetoothDeviceEntityMapper
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceRepositoryInteractor
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceInteractorImpl
@@ -64,7 +64,7 @@ private fun provideCircularBufferService(context: Context): RcbService {
 private fun provideDeviceEntityMapper() =
     BluetoothDeviceEntityMapper()
 
-private fun provideDeviceRepository(): DeviceRepository = DeviceRepositoryImpl()
+private fun provideDeviceRepository(): BluetoothDeviceRepository = BluetoothDeviceRepositoryImpl()
 
 private fun provideRcbServiceOrchestrator(context: Context): RcbServiceOrchestrator {
 

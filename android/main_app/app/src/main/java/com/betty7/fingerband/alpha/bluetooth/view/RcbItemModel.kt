@@ -1,14 +1,13 @@
 package com.betty7.fingerband.alpha.bluetooth.view
 
 const val INITIAL_VIBRATE_VALUE = 0
-const val DELETE_ALL_BUFFERS_ID = -1
 
 data class RcbItemModel(
     val id: Int,
     var selectedDeviceId: Int = 0,
-    val page1: Page1Model = Page1Model(),
-    val page2: Page2Model = Page2Model(),
-    val page3: Page3Model = Page3Model(),
+    val page1: Page1Model = Page1Model(id),
+    val page2: Page2Model = Page2Model(id),
+    val page3: Page3Model = Page3Model(id),
     val header: ItemHeaderModel = ItemHeaderModel()
 )
 
@@ -17,8 +16,6 @@ data class ItemHeaderModel(
     var isConnected: Boolean = false,
     var isConnecting: Boolean = false
 )
-
-sealed class PageModel
 
 data class RcbConfigModel(
     var refillSize: Int = 4,
@@ -31,7 +28,10 @@ data class RcbConfigModel(
     var maxUnderflowTime: String ="0"
 )
 
+sealed class PageModel
+
 data class Page1Model(
+    val id: Int,
     var status: String = "",
     var macAddress: String = "",
     var pairingPin: String = "",
@@ -41,12 +41,14 @@ data class Page1Model(
 ) : PageModel()
 
 data class Page2Model(
+    val id: Int,
     var config: RcbConfigModel = RcbConfigModel(),
     var applyButtonEnabled: Boolean = false,
     var progressVisible: Boolean = false
 ) : PageModel()
 
 data class Page3Model(
+    val id: Int,
     var maxVibrateValue: Int = 254,
     var currentVibrateValue: Int = INITIAL_VIBRATE_VALUE,
     var resumeButtonEnabled: Boolean = false,

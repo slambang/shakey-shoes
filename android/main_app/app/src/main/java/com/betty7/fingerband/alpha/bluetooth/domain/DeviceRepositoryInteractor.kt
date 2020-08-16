@@ -1,9 +1,9 @@
 package com.betty7.fingerband.alpha.bluetooth.domain
 
-import com.betty7.fingerband.alpha.bluetooth.data.entity.DeviceRepository
+import com.betty7.fingerband.alpha.bluetooth.data.entity.BluetoothDeviceRepository
 
 class DeviceRepositoryInteractor(
-    private val deviceRepo: DeviceRepository,
+    private val deviceRepo: BluetoothDeviceRepository,
     private val entityMapper: BluetoothDeviceEntityMapper
 ) {
 
@@ -12,7 +12,7 @@ class DeviceRepositoryInteractor(
         return entityMapper.map(device)
     }
 
-    fun getDeviceNames(): List<String> {
+    fun getAllDeviceNames(): List<String> {
         val deviceEntities = deviceRepo.getDeviceEntities()
         val deviceDomains =  entityMapper.map(deviceEntities)
         return deviceDomains.map { it.name }

@@ -2,12 +2,12 @@ package com.betty7.fingerband.alpha.bluetooth.data.entity
 
 import com.slambang.rcb.bluetooth.BluetoothProvider
 
-interface DeviceRepository {
+interface BluetoothDeviceRepository {
     fun getDeviceEntities(): List<BluetoothDeviceEntity>
     fun getDeviceEntity(deviceId: Int): BluetoothDeviceEntity
 }
 
-class DeviceRepositoryImpl : DeviceRepository {
+class BluetoothDeviceRepositoryImpl : BluetoothDeviceRepository {
 
     override fun getDeviceEntities() = KNOWN_DEVICES
 

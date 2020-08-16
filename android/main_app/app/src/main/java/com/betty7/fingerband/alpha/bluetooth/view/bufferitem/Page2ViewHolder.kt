@@ -1,50 +1,67 @@
 package com.betty7.fingerband.alpha.bluetooth.view.bufferitem
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.betty7.fingerband.alpha.R
-import com.betty7.fingerband.alpha.bluetooth.view.Page3Model
+import com.betty7.fingerband.alpha.bluetooth.view.Page2Model
 import com.betty7.fingerband.alpha.bluetooth.view.PageModel
-import com.warkiz.widget.IndicatorSeekBar
 
 class Page2ViewHolder internal constructor(
     itemView: View,
-    onResumeClicked: () -> Unit,
-    onVibrateUpdate: (Int) -> Unit
+    listener: BufferItemViewListener
 ) : BufferItemViewAdapter.BaseViewHolder(itemView) {
 
-    private val upTime: Chronometer = itemView.findViewById(R.id.page_2_up_time)
-    private val successRate: TextView = itemView.findViewById(R.id.page_2_success_rate)
-    private val errorRate: TextView = itemView.findViewById(R.id.page_2_error_rate)
-    private val resumeButton: TextView = itemView.findViewById(R.id.page_2_resume_button)
-    private val vibrateValue: IndicatorSeekBar = itemView.findViewById(R.id.page_2_vibrate_value)
+    private lateinit var model: Page2Model
+
+    private val editButton: ImageView = itemView.findViewById(R.id.page_1_edit_button)
+    private val maxSize: TextView = itemView.findViewById(R.id.page_1_max_bytes)
+    private val actualSize: TextView = itemView.findViewById(R.id.page_1_calculated_size)
+    private val latency: TextView = itemView.findViewById(R.id.page_1_latency)
+    private val underflowTime: TextView = itemView.findViewById(R.id.page_1_underflow_time)
+    private val refillCount: TextView = itemView.findViewById(R.id.page_1_refill_count)
+    private val refillSize: TextView = itemView.findViewById(R.id.page_1_refill_size)
+    private val windowSize: TextView = itemView.findViewById(R.id.page_1_window_size)
+    private val maxUnderflows: TextView = itemView.findViewById(R.id.page_1_max_underflows)
+    private val applyButton: View = itemView.findViewById(R.id.page_1_apply_button)
 
     init {
-        resumeButton.setOnClickListener {
-            onResumeClicked()
+        editButton.setOnClickListener {
+            listener.onEditConfig(model.id)
         }
 
-        vibrateValue.onSeekChangeListener = SeekBarValueObserver {
-            onVibrateUpdate(it)
+        applyButton.setOnClickListener {
+            listener.onApplyClicked(model.id)
         }
     }
 
     override fun bind(model: PageModel) {
-        model as Page3Model
+        this.model = model as Page2Model
 
-        if (model.isResumed) upTime.resume() else upTime.pause()
+        maxSize.text = model.config.maxSize
+        actualSize.text = model.config.actualSize
+        latency.text = model.config.latency
+        underflowTime.text = model.config.maxUnderflowTime
 
-        vibrateValue.max = model.maxVibrateValue.toFloat()
-        vibrateValue.isEnabled = model.resumeButtonEnabled
+        refillCount.text = model.config.refillCount.toString()
+        refillSize.text = model.config.refillSize.toString()
+        windowSize.text = model.config.windowSize.toString()
+        maxUnderflows.text = model.config.maxUnderflows.toString()
 
-        resumeButton.text = model.resumeButtonText
-        resumeButton.isEnabled = model.resumeButtonEnabled
+        listOf(applyButton, editButton)
+            .forEach {
+                it.isEnabled = model.applyButtonEnabled
+            }
 
-        successRate.text = model.successRate
-        errorRate.text = model.errorRate
+        when (model.applyButtonEnabled) {
+            true -> R.drawable.ic_pencil
+            false -> R.drawable.ic_pencil_grey
+        }.let {
+            editButton.setImageResource(it)
+        }
     }
 
     companion object {
-        const val layoutRes = R.layout.circular_buffer_view_page_2
+        const val layoutRes = R.layout.circular_buffer_view_page_1
     }
 }

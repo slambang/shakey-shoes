@@ -14,19 +14,24 @@ import com.betty7.fingerband.alpha.bluetooth.view.ItemHeaderModel
 import com.betty7.fingerband.alpha.bluetooth.view.RcbItemModel
 import kotlinx.android.synthetic.main.circular_buffer_view.view.*
 
+interface BufferItemViewListener {
+    fun onResumeClicked(deviceId: Int)
+    fun onConnectClicked(deviceId: Int)
+    fun onVibrateUpdate(deviceId: Int, value: Int)
+    fun onApplyClicked(deviceId: Int)
+    fun onProductUrlClicked(deviceId: Int)
+    fun onDeleteClicked(deviceId: Int)
+    fun onEditConfig(deviceId: Int)
+}
+
 class BufferItemView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    lateinit var onResumeClicked: (Int) -> Unit
-    lateinit var onConnectClicked: (Int) -> Unit
-    lateinit var onVibrateUpdate: (Int, Int) -> Unit
-    lateinit var onApplyClicked: (Int) -> Unit
-    lateinit var onProductUrlClicked: (Int) -> Unit
-    lateinit var onDeleteClicked: (Int) -> Unit
-    lateinit var onEditConfig: (Int) -> Unit
+    private lateinit var listener: BufferItemViewListener
 
-    private var bufferId: Int = -1
+    private lateinit var model: RcbItemModel
+
     private val pagerSnapHelper = PagerSnapHelper()
     private val recyclerAdapter = BufferItemViewAdapter(context)
 
@@ -38,12 +43,16 @@ class BufferItemView @JvmOverloads constructor(
 
     init {
         inflate(context, R.layout.circular_buffer_view, this)
-        bindAdapter()
         setupView()
     }
 
+    fun setListener(listener: BufferItemViewListener) {
+        this.listener = listener
+        recyclerAdapter.listener = listener
+    }
+
     fun bind(model: RcbItemModel) {
-        bufferId = model.id
+        this.model = model
         updateHeader(model.header)
         recyclerAdapter.updatePages(model.page1, model.page2, model.page3)
     }
@@ -66,38 +75,8 @@ class BufferItemView @JvmOverloads constructor(
             }
         }
 
-    private fun bindAdapter() {
-        recyclerAdapter.apply {
-            onProductUrlClicked = {
-                this@BufferItemView.onProductUrlClicked(bufferId)
-            }
-
-            onConnectClicked = {
-                this@BufferItemView.onConnectClicked(
-                    bufferId
-                )
-            }
-
-            onApplyClicked = {
-                this@BufferItemView.onApplyClicked(bufferId)
-            }
-
-            onResumeClicked = {
-                this@BufferItemView.onResumeClicked(bufferId)
-            }
-
-            onVibrateUpdate = {
-                this@BufferItemView.onVibrateUpdate(bufferId, it)
-            }
-
-            onEditConfig = {
-                this@BufferItemView.onEditConfig(bufferId)
-            }
-        }.also { buffer_view_recycler.adapter = it }
-    }
-
     private fun setupView() {
-        with (buffer_view_recycler) {
+        with(buffer_view_recycler) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
             addOnScrollListener(SimpleRecyclerScrollListener {
@@ -106,11 +85,12 @@ class BufferItemView @JvmOverloads constructor(
         }
 
         pagerSnapHelper.attachToRecyclerView(buffer_view_recycler)
-        buffer_view_indicator.attachToRecyclerView(buffer_view_recycler)
         buffer_view_recycler.setItemViewCacheSize(3)
+        buffer_view_recycler.adapter = recyclerAdapter
+        buffer_view_indicator.attachToRecyclerView(buffer_view_recycler)
 
         buffer_view_delete_button.setOnClickListener {
-            onDeleteClicked(bufferId)
+            listener.onDeleteClicked(model.id)
         }
     }
 

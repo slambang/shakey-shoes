@@ -20,17 +20,19 @@ abstract class RcbDemoActivityViewModel : ViewModel() {
 
     abstract fun onDeviceSelected(owner: LifecycleOwner, deviceId: Int)
     abstract fun onCreateBufferClicked()
+
     abstract fun onConnectBufferClicked(rcbServiceId: Int)
     abstract fun onConfigureBufferClicked(rcbServiceId: Int)
     abstract fun toggleBufferService(rcbServiceId: Int)
     abstract fun onResumeBufferClicked(rcbServiceId: Int)
     abstract fun onPauseBufferClicked(rcbServiceId: Int)
-    abstract fun onProjectUrlClicked()
     abstract fun onProductUrlClicked(deviceId: Int)
-    abstract fun onDeleteAllBuffersClicked()
     abstract fun onDeleteBufferItemClicked(rcbServiceId: Int)
 
-    abstract fun onBluetoothDenied()
+    // Menu events
+    abstract fun onProjectUrlClicked()
+    abstract fun onDeleteAllBuffersClicked()
+
     abstract fun setVibrateValue(rcbServiceId: Int, vibrateValue: Int)
     abstract fun checkConfig(
         rcbServiceId: Int,
