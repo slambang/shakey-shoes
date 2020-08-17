@@ -7,6 +7,12 @@ import com.slambang.rcb.service.RcbServiceConfig
 import com.slambang.rcb.service.RcbServiceListener
 import com.slambang.rcb.service.RcbState
 
+/**
+ * Responsibilities
+ * ----------------
+ * 1) Orchestrates n RcbService's and keeps RcbDomains updated
+ * 3) Connects RcbServices to RcbDataSources - TODO: Move this somewhere else! (OrchestratorInteractor?)
+ */
 class RcbServiceInteractorImpl(
     private val newRcbDataSource: () -> RcbDataSource,
     private val newRcbService: () -> RcbService,
@@ -16,28 +22,21 @@ class RcbServiceInteractorImpl(
     private val deviceDomains: MutableMap<Int, DeviceDomain> = mutableMapOf()
 ) : RcbServiceOrchestrator {
 
-    private val rcbServiceListener = object :
-        RcbServiceListener {
+    private val rcbServiceListener = object : RcbServiceListener {
         override fun onBufferServiceState(
             rcbService: RcbService,
             state: RcbState
-        ) {
-            onBufferServiceStateReceived(rcbService, state)
-        }
+        ) = onBufferServiceStateReceived(rcbService, state)
 
         override fun onBufferServiceFreeHeap(
             rcbService: RcbService,
             freeHeapBytes: Int
-        ) {
-            onBufferServiceHeapReceived(rcbService, freeHeapBytes)
-        }
+        ) = onBufferServiceHeapReceived(rcbService, freeHeapBytes)
 
         override fun onBufferServiceError(
             rcbService: RcbService,
             error: Throwable?
-        ) {
-            onBufferServiceErrorReceived(rcbService, error)
-        }
+        ) = onBufferServiceErrorReceived(rcbService, error)
     }
 
     private lateinit var rcbServiceStatusObserver: (DeviceDomain) -> Unit
@@ -55,32 +54,29 @@ class RcbServiceInteractorImpl(
         val rcbService = newRcbService()
         rcbServices[rcbService.id] = rcbService
         rcbDataSources[rcbService.id] = newRcbDataSource()
-        deviceDomains[rcbService.id] = DeviceDomain(rcbService.id)
         return rcbService.id
-    }
-
-    override fun beginBufferService(rcbServiceId: Int) {
-        requireDeviceDomain(rcbServiceId).also {
-            rcbServiceStatusObserver(it)
-            rcbServiceAccuracyObserver(it.accuracies)
-        }
     }
 
     override fun deleteBufferService(rcbServiceId: Int) {
         deviceDomains.remove(rcbServiceId)
+            ?: throw IllegalStateException("Device domain with id $rcbServiceId is not in the orchestrator")
+
         rcbServices.remove(rcbServiceId)?.stop()
+            ?: throw IllegalStateException("Rcb Service with id $rcbServiceId is not in the orchestrator")
+
         rcbDataSources.remove(rcbServiceId)
+            ?: throw IllegalStateException("Data source with id $rcbServiceId is not in the orchestrator")
     }
 
-    private fun onBufferConnecting(buffer: RcbService) =
-        requireDeviceDomain(buffer.id).also {
+    private fun onBufferConnecting(rcbService: RcbService) =
+        requireDeviceDomain(rcbService.id).also {
             it.status = RcbServiceState.CONNECTING
             rcbServiceStatusObserver(it)
         }
 
     override fun connectBufferService(rcbServiceId: Int, deviceDomain: DeviceDomain) {
 
-        deviceDomains[deviceDomain.id] = deviceDomain
+        deviceDomains[rcbServiceId] = deviceDomain
 
         requireBufferService(rcbServiceId).connect(
             deviceDomain.macAddress,
@@ -104,41 +100,41 @@ class RcbServiceInteractorImpl(
         )
     )
 
-    private fun onBufferRefill(buffer: RcbService) {
+    private fun onBufferRefill(rcbService: RcbService) {
 
-        val beatMap = requireDataSource(buffer.id)
-        for (i in 0 until buffer.config.refillSize) {
+        val beatMap = requireDataSource(rcbService.id)
+        for (i in 0 until rcbService.config.refillSize) {
             if (beatMap.hasNext()) {
-                buffer.sendBufferData(beatMap.next())
+                rcbService.sendBufferData(beatMap.next())
             }
         }
 
-        requireDeviceDomain(buffer.id).accuracies.also {
+        requireDeviceDomain(rcbService.id).accuracies.also {
             ++it.refillCount
             rcbServiceAccuracyObserver(it)
         }
     }
 
-    private fun onBufferReady(buffer: RcbService) {
+    private fun onBufferReady(rcbService: RcbService) {
 
-        for (i in 0 until buffer.config.numRefills) {
-            onBufferRefill(buffer)
+        for (i in 0 until rcbService.config.numRefills) {
+            onBufferRefill(rcbService)
         }
 
-        requireDeviceDomain(buffer.id).also {
+        requireDeviceDomain(rcbService.id).also {
             it.status = RcbServiceState.READY
             rcbServiceStatusObserver(it)
         }
     }
 
-    private fun onBufferDisconnected(buffer: RcbService) =
-        requireDeviceDomain(buffer.id).also {
+    private fun onBufferDisconnected(rcbService: RcbService) =
+        requireDeviceDomain(rcbService.id).also {
             it.status = RcbServiceState.DISCONNECTED
             rcbServiceStatusObserver(it)
         }
 
-    private fun onBufferUnderflow(buffer: RcbService) =
-        requireDeviceDomain(buffer.id).accuracies.also {
+    private fun onBufferUnderflow(rcbService: RcbService) =
+        requireDeviceDomain(rcbService.id).accuracies.also {
             ++it.underflowCount
             rcbServiceAccuracyObserver(it)
         }
@@ -157,8 +153,8 @@ class RcbServiceInteractorImpl(
     override fun resumeBufferService(rcbServiceId: Int) =
         requireBufferService(rcbServiceId).resume()
 
-    private fun onBufferResumed(buffer: RcbService) =
-        requireDeviceDomain(buffer.id).also {
+    private fun onBufferResumed(rcbService: RcbService) =
+        requireDeviceDomain(rcbService.id).also {
             it.status = RcbServiceState.RESUMED
             rcbServiceStatusObserver(it)
         }
@@ -169,24 +165,24 @@ class RcbServiceInteractorImpl(
     override fun stopBufferService(rcbServiceId: Int) =
         requireBufferService(rcbServiceId).stop()
 
-    private fun onBufferPaused(buffer: RcbService) =
-        requireDeviceDomain(buffer.id).also {
+    private fun onBufferPaused(rcbService: RcbService) =
+        requireDeviceDomain(rcbService.id).also {
             it.status = RcbServiceState.PAUSED
             rcbServiceStatusObserver(it)
         }
 
     private fun onBufferServiceStateReceived(
-        buffer: RcbService,
+        rcbService: RcbService,
         state: RcbState
     ) {
         when (state) {
-            RcbState.CONNECTING -> onBufferConnecting(buffer)
-            RcbState.READY -> onBufferReady(buffer)
-            RcbState.PAUSED -> onBufferPaused(buffer)
-            RcbState.RESUMED -> onBufferResumed(buffer)
-            RcbState.DISCONNECTED -> onBufferDisconnected(buffer)
-            RcbState.REFILL -> onBufferRefill(buffer)
-            RcbState.UNDERFLOW -> onBufferUnderflow(buffer)
+            RcbState.CONNECTING -> onBufferConnecting(rcbService)
+            RcbState.READY -> onBufferReady(rcbService)
+            RcbState.PAUSED -> onBufferPaused(rcbService)
+            RcbState.RESUMED -> onBufferResumed(rcbService)
+            RcbState.DISCONNECTED -> onBufferDisconnected(rcbService)
+            RcbState.REFILL -> onBufferRefill(rcbService)
+            RcbState.UNDERFLOW -> onBufferUnderflow(rcbService)
         }
     }
 

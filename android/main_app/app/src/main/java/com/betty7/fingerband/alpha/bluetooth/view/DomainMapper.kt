@@ -18,6 +18,7 @@ class DomainMapper(private val resources: ViewResources) {
         val errorPercent =
             if (totalFrames == 0) 0f else ((100f / totalFrames) * domain.underflowCount)
 
+        model.page3
         model.page3.successRate =
             resources.getString(R.string.buffer_item_accuracy_format, totalFrames, successPercent)
 
@@ -64,6 +65,14 @@ class DomainMapper(private val resources: ViewResources) {
             windowSizeMs * maxUnderflows
         )
     }
+
+    fun mapPage(deviceDomain: DeviceDomain) =
+        when (deviceDomain.status) {
+            RcbServiceState.ERROR -> 0
+            RcbServiceState.SETUP -> 1
+            RcbServiceState.READY -> 2
+            else -> null
+        }
 
     fun mapState(domainModel: DeviceDomain, model: RcbItemModel) {
         when (domainModel.status) {

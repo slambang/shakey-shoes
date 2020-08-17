@@ -36,15 +36,21 @@ class BufferItemRecyclerAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
 
-    fun updateItem(item: RcbItemModel) {
-        val index = requireIndex(item.id, false)
-        if (index == -1) {
-            items.add(item)
-            notifyItemInserted(items.size - 1)
-        } else {
-            items[index] = item
-            getViewHolder(index)?.bind(item)
-        }
+    fun setItems(items: List<RcbItemModel>) {
+        this.items.clear()
+        this.items.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    fun updateItem(item: RcbItemModel, index: Int, isNew: Boolean) {
+//        val index = requireIndex(item.id, false)
+//        if (index == -1) {
+//            items.add(item)
+//            notifyItemInserted(items.size - 1)
+//        } else {
+//            items[index] = item
+//            getViewHolder(index)?.bind(item)
+//        }
     }
 
     fun clearItems() {

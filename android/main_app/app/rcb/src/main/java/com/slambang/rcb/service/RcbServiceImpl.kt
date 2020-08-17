@@ -55,10 +55,18 @@ class RcbServiceImpl(
 
     override fun setConfig(config: RcbServiceConfig) {
         _config = config
+        transmitNumRefills(config)
+        transmitRefillSize(config)
+        transmitWindowSize(config)
+        transmitMaxUnderflows(config)
+    }
 
+    private fun transmitNumRefills(config: RcbServiceConfig) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(config.numRefills)
+    }
 
+    private fun transmitRefillSize(config: RcbServiceConfig) {
         val refillSizeBytes = config.refillSize.toByteArray()
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(refillSizeBytes[0].toInt())
@@ -68,10 +76,14 @@ class RcbServiceImpl(
         transmit(refillSizeBytes[2].toInt())
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(refillSizeBytes[3].toInt())
+    }
 
+    private fun transmitWindowSize(config: RcbServiceConfig) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(config.windowSizeMs)
+    }
 
+    private fun transmitMaxUnderflows(config: RcbServiceConfig) {
         val maxUnderflowsBytes = config.maxUnderflows.toByteArray()
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(maxUnderflowsBytes[0].toInt())
@@ -96,8 +108,15 @@ class RcbServiceImpl(
 
     override fun sendBufferData(data: Int) =
         transmit(
-            if (data == SIGNAL_OUT_COMMAND) {
-                data - 1
+            if (data >= SIGNAL_OUT_COMMAND) {
+                /*
+                 * Buffer data range is 0..254.
+                 * 255 is a reserved value used to indicated that the *next*
+                 * byte in the stream is a command.
+                 * This reduces the buffer payload by 50%, with the trade-off
+                 * that a buffer data value of 255 cannot be used.
+                 */
+                throw IllegalArgumentException("Buffer data value $data too large")
             } else {
                 data
             }

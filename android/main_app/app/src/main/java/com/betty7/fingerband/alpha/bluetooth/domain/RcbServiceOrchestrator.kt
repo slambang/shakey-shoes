@@ -8,7 +8,6 @@ interface RcbServiceOrchestrator {
     )
 
     fun createBufferService(): Int
-    fun beginBufferService(rcbServiceId: Int)
     fun deleteBufferService(rcbServiceId: Int)
 
     fun connectBufferService(rcbServiceId: Int, deviceDomain: DeviceDomain)

@@ -36,10 +36,15 @@ class BluetoothDevice private constructor(
         stateObserver: (state: BluetoothConnectionState) -> Unit
     ) {
         scheduler.scheduleDirect {
-            stateObserver(BluetoothConnectionState.CONNECTING)
-            if (checkBluetoothCapabilities(stateObserver)) {
-                observeBluetoothStates(stateObserver)
-                connectToRemoteDevice(macAddress, serviceUuid, stateObserver)
+            try {
+                stateObserver(BluetoothConnectionState.CONNECTING)
+                if (checkBluetoothCapabilities(stateObserver)) {
+                    observeBluetoothStates(stateObserver)
+                    connectToRemoteDevice(macAddress, serviceUuid, stateObserver)
+                }
+            } catch (error: Throwable) {
+                error.printStackTrace()
+                stateObserver(BluetoothConnectionState.GENERIC_ERROR)
             }
         }.also { subscriptions.add(it) }
     }

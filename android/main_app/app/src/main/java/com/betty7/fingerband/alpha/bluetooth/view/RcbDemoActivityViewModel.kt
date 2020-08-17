@@ -1,44 +1,43 @@
 package com.betty7.fingerband.alpha.bluetooth.view
 
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 abstract class RcbDemoActivityViewModel : ViewModel() {
 
-    abstract fun subscribe(
-        owner: LifecycleOwner,
-        showDeviceListObserver: (List<String>) -> Unit,
-        bufferItemObserver: (RcbItemModel) -> Unit,
-        launchUrlObserver: (String) -> Unit,
-        bufferItemPageObserver: (Int, Int) -> Unit
-    )
+    abstract val itemModelsLiveData: MutableLiveData<List<RcbItemModel>>
+    abstract val showDeviceListLiveData: SingleLiveEvent<List<String>>
+    abstract val launchUrlLiveData: SingleLiveEvent<String>
+    abstract val bufferItemPageLiveData: SingleLiveEvent<Pair<Int, Int>>
 
     // Lifecycle events
+    abstract fun onStart()
     abstract fun onPause()
-    abstract fun onResume()
     abstract fun onStop()
 
-    abstract fun onDeviceSelected(owner: LifecycleOwner, deviceId: Int)
-    abstract fun onCreateBufferClicked()
+    // Device events
+    abstract fun onDeviceSelected(deviceDomainId: Int)
+    abstract fun onProductUrlClicked(deviceDomainId: Int)
 
-    abstract fun onConnectBufferClicked(rcbServiceId: Int)
-    abstract fun onConfigureBufferClicked(rcbServiceId: Int)
-    abstract fun toggleBufferService(rcbServiceId: Int)
-    abstract fun onResumeBufferClicked(rcbServiceId: Int)
-    abstract fun onPauseBufferClicked(rcbServiceId: Int)
-    abstract fun onProductUrlClicked(deviceId: Int)
-    abstract fun onDeleteBufferItemClicked(rcbServiceId: Int)
-
-    // Menu events
-    abstract fun onProjectUrlClicked()
-    abstract fun onDeleteAllBuffersClicked()
-
-    abstract fun setVibrateValue(rcbServiceId: Int, vibrateValue: Int)
-    abstract fun checkConfig(
+    // Rcb events
+    abstract fun onCreateRcbClicked()
+    abstract fun onConnectRcbClicked(rcbServiceId: Int)
+    abstract fun onConfigureRbClicked(rcbServiceId: Int)
+    abstract fun toggleRcb(rcbServiceId: Int)
+    abstract fun onResumeRcbClicked(rcbServiceId: Int)
+    abstract fun onPauseRcbClicked(rcbServiceId: Int)
+    abstract fun onDeleteRcbItemClicked(rcbServiceId: Int)
+    abstract fun checkRcbConfig(
         rcbServiceId: Int,
         numberOfRefills: String,
         refillSize: String,
         windowSizeMs: String,
         maxUnderflows: String
     )
+
+    // Menu events
+    abstract fun onProjectUrlClicked()
+    abstract fun onDeleteAllBuffersClicked()
+
+    abstract fun setVibrateValue(rcbServiceId: Int, vibrateValue: Int)
 }

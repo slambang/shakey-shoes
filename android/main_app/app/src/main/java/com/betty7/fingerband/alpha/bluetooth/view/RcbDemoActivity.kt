@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.betty7.fingerband.alpha.R
@@ -17,16 +18,16 @@ import kotlinx.android.synthetic.main.activity_test.*
 class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
 
     override fun onResumeClicked(deviceId: Int) =
-        viewModel.toggleBufferService(deviceId)
+        viewModel.toggleRcb(deviceId)
 
     override fun onConnectClicked(deviceId: Int) =
-        viewModel.onConnectBufferClicked(deviceId)
+        viewModel.onConnectRcbClicked(deviceId)
 
     override fun onVibrateUpdate(deviceId: Int, value: Int) =
         viewModel.setVibrateValue(deviceId, value)
 
     override fun onApplyClicked(deviceId: Int) =
-        viewModel.onConnectBufferClicked(deviceId)
+        viewModel.onConnectRcbClicked(deviceId)
 
     override fun onProductUrlClicked(deviceId: Int) =
         viewModel.onProductUrlClicked(deviceId)
@@ -72,14 +73,26 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
         subscribeToViewModel()
     }
 
-    private fun subscribeToViewModel() =
-        viewModel.subscribe(
-            this,
-            ::displayDeviceList,
-            ::updateItem,
-            ::onLaunchUrl,
-            recyclerAdapter::setPage
-        ).also { viewModel.onResume() }
+    private fun subscribeToViewModel() {
+        viewModel.itemModelsLiveData.observe(this, Observer {
+            recyclerAdapter.setItems(it)
+            setDeleteAllEnabled(it.isNotEmpty())
+        })
+
+        viewModel.showDeviceListLiveData.observe(this, Observer {
+            displayDeviceList(it)
+        })
+
+        viewModel.launchUrlLiveData.observe(this, Observer {
+            onLaunchUrl(it)
+        })
+
+        viewModel.bufferItemPageLiveData.observe(this, Observer {
+            recyclerAdapter.setPage(it.first, it.second)
+        })
+
+        viewModel.onStart()
+    }
 
     override fun onPause() {
         super.onPause()
@@ -91,10 +104,10 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
         viewModel.onStop()
     }
 
-    private fun updateItem(item: RcbItemModel) {
-        recyclerAdapter.updateItem(item)
-        setDeleteAllEnabled(true)
-    }
+//    private fun updateItem(item: RcbItemModel, index: Int, isNew: Boolean) {
+//        recyclerAdapter.updateItem(item, index, isNew)
+//        setDeleteAllEnabled(true)
+//    }
 
     private fun onLaunchUrl(url: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -126,7 +139,7 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
             R.string.delete_buffer_dialog_message
         ) {
             recyclerAdapter.deleteItem(bufferId)
-            viewModel.onDeleteBufferItemClicked(bufferId)
+            viewModel.onDeleteRcbItemClicked(bufferId)
             setDeleteAllEnabled(recyclerAdapter.itemCount > 0)
         }
     }
@@ -157,7 +170,7 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
         AlertDialog.Builder(this)
             .setTitle(R.string.select_device_title)
             .setItems(deviceNames.toTypedArray()) { _, which ->
-                viewModel.onDeviceSelected(this, which)
+                viewModel.onDeviceSelected(which)
             }
             .setOnDismissListener { setAddBufferListener() }
             .create()
@@ -167,7 +180,7 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
     private fun setAddBufferListener() =
         add_buffer_button.setOnClickListener {
             it.setOnClickListener(null) // Prevent double-click
-            viewModel.onCreateBufferClicked()
+            viewModel.onCreateRcbClicked()
         }
 
     private fun displayConfig(model: RcbItemModel) {
@@ -187,5 +200,5 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
         refillSize: String,
         windowSize: String,
         maxUnderflows: String
-    ) = viewModel.checkConfig(bufferId, numRefills, refillSize, windowSize, maxUnderflows)
+    ) = viewModel.checkRcbConfig(bufferId, numRefills, refillSize, windowSize, maxUnderflows)
 }
