@@ -17,25 +17,25 @@ import kotlinx.android.synthetic.main.activity_test.*
 
 class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
 
-    override fun onResumeClicked(deviceId: Int) =
-        viewModel.toggleRcb(deviceId)
+    override fun onResumeClicked(modelId: Int) =
+        viewModel.toggleRcb(modelId)
 
-    override fun onConnectClicked(deviceId: Int) =
-        viewModel.onConnectRcbClicked(deviceId)
+    override fun onConnectClicked(modelId: Int) =
+        viewModel.onConnectRcbClicked(modelId)
 
-    override fun onVibrateUpdate(deviceId: Int, value: Int) =
-        viewModel.setVibrateValue(deviceId, value)
+    override fun onVibrateUpdate(modelId: Int, value: Int) =
+        viewModel.setVibrateValue(modelId, value)
 
-    override fun onApplyClicked(deviceId: Int) =
-        viewModel.onConnectRcbClicked(deviceId)
+    override fun onApplyClicked(modelId: Int) =
+        viewModel.onConnectRcbClicked(modelId)
 
-    override fun onProductUrlClicked(deviceId: Int) =
-        viewModel.onProductUrlClicked(deviceId)
+    override fun onProductUrlClicked(modelId: Int) =
+        viewModel.onProductUrlClicked(modelId)
 
-    override fun onDeleteClicked(deviceId: Int) =
-        confirmDeleteBuffer(deviceId)
+    override fun onDeleteClicked(modelId: Int) =
+        confirmDeleteBuffer(modelId)
 
-    override fun onEditConfig(deviceId: Int) {
+    override fun onEditConfig(modelId: Int) {
 //        ::displayConfig
     }
 
@@ -184,7 +184,7 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
     private fun displayConfig(model: RcbItemModel) {
         if (configDialog == null) {
             configDialog =
-                ConfigDialogView(model.id, model.header.deviceName, this, ::onConfigUpdated) {
+                ConfigDialogView(model, this, ::onConfigUpdated) {
                     configDialog = null
                 }
         }
@@ -193,10 +193,10 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
     }
 
     private fun onConfigUpdated(
-        bufferId: Int,
+        model: RcbItemModel,
         numRefills: String,
         refillSize: String,
         windowSize: String,
         maxUnderflows: String
-    ) = viewModel.checkRcbConfig(bufferId, numRefills, refillSize, windowSize, maxUnderflows)
+    ) = viewModel.checkRcbConfig(model.id, numRefills, refillSize, windowSize, maxUnderflows)
 }

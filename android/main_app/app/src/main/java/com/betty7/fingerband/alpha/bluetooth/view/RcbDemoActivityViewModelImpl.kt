@@ -20,7 +20,7 @@ class RcbDemoActivityViewModelImpl(
     override val itemModelsLiveData = MutableLiveData<List<RcbItemModel>>()
 
     // For fast lookup when we only have the rcb service id
-    private val serviceToModelMap = mutableMapOf<Int, RcbItemModel>()
+    private val modelMap = mutableMapOf<Int, RcbItemModel>()
 
     // For maintaining the order of items
     private val itemOrderedList = mutableListOf<RcbItemModel>()
@@ -29,7 +29,7 @@ class RcbDemoActivityViewModelImpl(
         rcbOrchestratorInteractor.subscribe(::onBufferServiceStatus, ::onBufferAccuracy)
 
     override fun checkRcbConfig(
-        rcbServiceId: Int,
+        modelId: Int,
         numberOfRefills: String,
         refillSize: String,
         windowSizeMs: String,
@@ -42,7 +42,7 @@ class RcbDemoActivityViewModelImpl(
                 0
             }
 
-        requireBufferItem(rcbServiceId).let {
+        requireBufferItemModel(modelId).let {
             domainMapper.mapConfig(
                 numberOfRefills.toSafeInt(),
                 refillSize.toSafeInt(),
@@ -62,12 +62,12 @@ class RcbDemoActivityViewModelImpl(
 
     override fun onDeviceSelected(deviceDomainId: Int) {
 
-        val (rcbServiceId, deviceDomain) = rcbOrchestratorInteractor.createRcbService(deviceDomainId)
+        val (modelId, deviceDomain) = rcbOrchestratorInteractor.createRcbService(deviceDomainId)
 
-        val model = RcbItemModel(rcbServiceId)
+        val model = RcbItemModel(modelId)
         domainMapper.mapSelectedDevice(deviceDomain, model)
 
-        serviceToModelMap[rcbServiceId] = model
+        modelMap[model.id] = model
         itemOrderedList.add(model)
 
         setBufferItemPage(deviceDomain, model)
@@ -77,13 +77,13 @@ class RcbDemoActivityViewModelImpl(
         emitModels()
     }
 
-    override fun onConnectRcbClicked(rcbServiceId: Int) =
-        rcbOrchestratorInteractor.connectBufferService(rcbServiceId)
+    override fun onConnectRcbClicked(modelId: Int) =
+        rcbOrchestratorInteractor.connectBufferService(modelId)
 
-    override fun onConfigureRbClicked(rcbServiceId: Int) =
-        requireBufferItem(rcbServiceId).let {
+    override fun onConfigureRbClicked(modelId: Int) =
+        requireBufferItemModel(modelId).let {
             rcbOrchestratorInteractor.configureRcbService(
-                rcbServiceId,
+                modelId,
                 it.page2.config.refillCount,
                 it.page2.config.refillSize,
                 it.page2.config.windowSize,
@@ -92,15 +92,15 @@ class RcbDemoActivityViewModelImpl(
         }
 
     private fun onBufferAccuracy(domain: DeviceAccuracyDomain) {
-        requireBufferItem(domain.id).let {
+        requireBufferItemModel(domain.id).let {
             domainMapper.mapAccuracies(domain, it)
         }.also {
             emitModels()
         }
     }
 
-    private fun onBufferServiceStatus(domain: DeviceDomain) {
-        requireBufferItem(domain.id).let {
+    private fun onBufferServiceStatus(domain: DeviceDomain) { // TODO Need service id here!
+        requireBufferItemModel(domain.id).let {
             setBufferItemPage(domain, it)
             domainMapper.mapState(domain, it)
         }.also {
@@ -108,7 +108,7 @@ class RcbDemoActivityViewModelImpl(
         }
     }
 
-    private fun setBufferItemPage(deviceDomain: DeviceDomain, model: RcbItemModel) =
+    private fun setBufferItemPage(deviceDomain: DeviceDomain, model: RcbItemModel) = // TODO Need service id here!
         domainMapper.mapPage(deviceDomain)?.let { page ->
             itemOrderedList.indexOfFirst {
                 it.id == model.id
@@ -117,23 +117,23 @@ class RcbDemoActivityViewModelImpl(
             }
         }
 
-    override fun setVibrateValue(rcbServiceId: Int, vibrateValue: Int) =
-        rcbOrchestratorInteractor.setVibrateValue(rcbServiceId, vibrateValue)
+    override fun setVibrateValue(modelId: Int, vibrateValue: Int) =
+        rcbOrchestratorInteractor.setVibrateValue(modelId, vibrateValue)
 
-    override fun toggleRcb(rcbServiceId: Int) =
-        requireBufferItem(rcbServiceId).let {
+    override fun toggleRcb(modelId: Int) =
+        requireBufferItemModel(modelId).let {
             rcbOrchestratorInteractor.toggleRcb(
-                rcbServiceId,
+                modelId,
                 it.page3.isResumed
             )
                 .also { emitModels() }
         }
 
-    override fun onResumeRcbClicked(rcbServiceId: Int) =
-        rcbOrchestratorInteractor.resumeRcbService(rcbServiceId)
+    override fun onResumeRcbClicked(modelId: Int) =
+        rcbOrchestratorInteractor.resumeRcbService(modelId)
 
-    override fun onPauseRcbClicked(rcbServiceId: Int) =
-        rcbOrchestratorInteractor.pauseRcbService(rcbServiceId)
+    override fun onPauseRcbClicked(modelId: Int) =
+        rcbOrchestratorInteractor.pauseRcbService(modelId)
 
     override fun onPause() =
         rcbOrchestratorInteractor.pauseAllRcbServices()
@@ -149,20 +149,20 @@ class RcbDemoActivityViewModelImpl(
 
     override fun onDeleteAllBuffersClicked() {
         rcbOrchestratorInteractor.deleteAllRcbServices()
-        serviceToModelMap.clear()
+        modelMap.clear()
         itemOrderedList.clear()
         emitModels()
     }
 
-    override fun onDeleteRcbItemClicked(rcbServiceId: Int) {
+    override fun onDeleteRcbItemClicked(modelId: Int) {
 
-        rcbOrchestratorInteractor.deleteRcbService(rcbServiceId)
+        rcbOrchestratorInteractor.deleteRcbService(modelId)
 
-        serviceToModelMap.remove(rcbServiceId)
-            ?: throw IllegalStateException("Service with id $rcbServiceId is not in the service map")
+        modelMap.remove(modelId)
+            ?: throw IllegalStateException("Service with id $modelId is not in the service map")
 
-        if (!itemOrderedList.removeAll { it.id == rcbServiceId }) {
-            throw IllegalStateException("Model with id $rcbServiceId is not in the ordered list")
+        if (!itemOrderedList.removeAll { it.id == modelId }) {
+            throw IllegalStateException("Model with id $modelId is not in the ordered list")
         }
 
         emitModels()
@@ -171,9 +171,9 @@ class RcbDemoActivityViewModelImpl(
     // Split into 2 model streams: Add & Update
     private fun emitModels() = itemModelsLiveData.postValue(itemOrderedList)
 
-    private fun requireBufferItem(rcbServiceId: Int): RcbItemModel =
-        serviceToModelMap[rcbServiceId]
-            ?: throw IllegalArgumentException("Invalid rcbServiceId: $rcbServiceId")
+    private fun requireBufferItemModel(modelId: Int): RcbItemModel =
+        modelMap[modelId]
+            ?: throw IllegalArgumentException("Invalid modelId: $modelId")
 
     companion object {
         private const val PROJECT_REPO_URL = "https://bitbucket.org/slambang2/fingerband"

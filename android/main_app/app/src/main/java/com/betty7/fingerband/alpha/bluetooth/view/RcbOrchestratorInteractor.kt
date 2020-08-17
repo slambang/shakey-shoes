@@ -17,13 +17,13 @@ class RcbOrchestratorInteractor constructor(
         rcbServiceStatusObserver: (DeviceDomain) -> Unit,
         rcbServiceAccuracyObserver: (DeviceAccuracyDomain) -> Unit
     ) {
-        rcbServiceOrchestrator.subscribe({ rcbServiceId, status ->
-            requireDeviceDomain(rcbServiceId).let {
+        rcbServiceOrchestrator.subscribe({ modelId, status ->
+            requireDeviceDomain(modelId).let {
                 it.status = status
                 rcbServiceStatusObserver(it)
             }
-        }, { rcbServiceId ->
-            requireDeviceDomain(rcbServiceId).let {
+        }, { modelId ->
+            requireDeviceDomain(modelId).let {
                 rcbServiceAccuracyObserver(it.accuracies)
             }
         })
@@ -32,47 +32,47 @@ class RcbOrchestratorInteractor constructor(
     fun getAvailableDeviceNames() = deviceRepoInteractor.getAvailableDeviceNames()
 
     fun createRcbService(deviceDomainId: Int): Pair<Int, DeviceDomain> {
-        val rcbServiceId = rcbServiceOrchestrator.createRcbService()
+        val modelId = rcbServiceOrchestrator.createRcbService()
         val deviceDomain = deviceRepoInteractor.getDeviceDomain(deviceDomainId)
-        domainMap[rcbServiceId] = deviceDomain
-        return rcbServiceId to deviceDomain
+        domainMap[modelId] = deviceDomain
+        return modelId to deviceDomain
     }
 
-    fun connectBufferService(rcbServiceId: Int) =
+    fun connectBufferService(modelId: Int) =
         rcbServiceOrchestrator.connectRcbService(
-            rcbServiceId,
-            requireDeviceDomain(rcbServiceId)
+            modelId,
+            requireDeviceDomain(modelId)
         )
 
     fun configureRcbService(
-        rcbServiceId: Int,
+        modelId: Int,
         numberOfRefills: Int,
         refillSize: Int,
         windowSizeMs: Int,
         maxUnderflows: Int
     ) = rcbServiceOrchestrator.configureRcbService(
-        rcbServiceId,
+        modelId,
         numberOfRefills,
         refillSize,
         windowSizeMs,
         maxUnderflows
     )
 
-    fun setVibrateValue(rcbServiceId: Int, vibrateValue: Int) =
-        rcbServiceOrchestrator.hackBufferValue(rcbServiceId, vibrateValue)
+    fun setVibrateValue(modelId: Int, vibrateValue: Int) =
+        rcbServiceOrchestrator.hackBufferValue(modelId, vibrateValue)
 
-    fun toggleRcb(rcbServiceId: Int, isResumed: Boolean) =
+    fun toggleRcb(modelId: Int, isResumed: Boolean) =
         if (isResumed) {
-            rcbServiceOrchestrator.pauseRcbService(rcbServiceId)
+            rcbServiceOrchestrator.pauseRcbService(modelId)
         } else {
-            rcbServiceOrchestrator.startRcbService(rcbServiceId)
+            rcbServiceOrchestrator.startRcbService(modelId)
         }
 
-    fun resumeRcbService(rcbServiceId: Int) =
-        rcbServiceOrchestrator.resumeRcbService(rcbServiceId)
+    fun resumeRcbService(modelId: Int) =
+        rcbServiceOrchestrator.resumeRcbService(modelId)
 
-    fun pauseRcbService(rcbServiceId: Int) =
-        rcbServiceOrchestrator.pauseRcbService(rcbServiceId)
+    fun pauseRcbService(modelId: Int) =
+        rcbServiceOrchestrator.pauseRcbService(modelId)
 
     fun pauseAllRcbServices() = domainMap.keys.forEach {
         pauseRcbService(it)
@@ -82,9 +82,9 @@ class RcbOrchestratorInteractor constructor(
         rcbServiceOrchestrator.stopRcbService(it)
     }
 
-    fun deleteRcbService(rcbServiceId: Int) {
-        rcbServiceOrchestrator.deleteRcbService(rcbServiceId)
-        domainMap.remove(rcbServiceId)
+    fun deleteRcbService(modelId: Int) {
+        rcbServiceOrchestrator.deleteRcbService(modelId)
+        domainMap.remove(modelId)
     }
 
     fun deleteAllRcbServices() = domainMap.keys.forEach {
@@ -93,7 +93,7 @@ class RcbOrchestratorInteractor constructor(
         domainMap.clear()
     }
 
-    private fun requireDeviceDomain(rcbServiceId: Int) =
-        domainMap[rcbServiceId]
-            ?: throw IllegalArgumentException("Invalid rcbServiceId")
+    private fun requireDeviceDomain(modelId: Int) =
+        domainMap[modelId]
+            ?: throw IllegalArgumentException("Invalid modelId")
 }

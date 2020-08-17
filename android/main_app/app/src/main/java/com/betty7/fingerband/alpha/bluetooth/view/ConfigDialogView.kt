@@ -10,10 +10,9 @@ import com.betty7.fingerband.alpha.R
 
 @SuppressLint("InflateParams")
 class ConfigDialogView(
-    private val bufferId: Int,
-    private val title: String,
+    private val model: RcbItemModel,
     private val context: Context,
-    private val applyValuesCallback: (Int, String, String, String, String) -> Unit,
+    private val applyValuesCallback: (RcbItemModel, String, String, String, String) -> Unit,
     private val onDismissCallback: () -> Unit
 ) {
     private val maxSize: TextView
@@ -45,7 +44,7 @@ class ConfigDialogView(
     private fun showDialog(view: View) =
         AlertDialog.Builder(context)
             .setView(view)
-            .setTitle(title)
+            .setTitle(model.header.deviceName)
             .setCancelable(true)
             .setPositiveButton(R.string.apply) { _, _ ->
                 applyValues()
@@ -55,7 +54,7 @@ class ConfigDialogView(
 
     private fun applyValues() =
         applyValuesCallback(
-            bufferId,
+            model,
             numRefills.text.toString(),
             refillSize.text.toString(),
             windowSize.text.toString(),

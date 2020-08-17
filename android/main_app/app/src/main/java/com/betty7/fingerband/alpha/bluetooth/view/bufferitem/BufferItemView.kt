@@ -15,13 +15,13 @@ import com.betty7.fingerband.alpha.bluetooth.view.RcbItemModel
 import kotlinx.android.synthetic.main.circular_buffer_view.view.*
 
 interface BufferItemViewListener {
-    fun onResumeClicked(deviceId: Int)
-    fun onConnectClicked(deviceId: Int)
-    fun onVibrateUpdate(deviceId: Int, value: Int)
-    fun onApplyClicked(deviceId: Int)
-    fun onProductUrlClicked(deviceId: Int)
-    fun onDeleteClicked(deviceId: Int)
-    fun onEditConfig(deviceId: Int)
+    fun onResumeClicked(modelId: Int)
+    fun onConnectClicked(modelId: Int)
+    fun onVibrateUpdate(modelId: Int, value: Int)
+    fun onApplyClicked(modelId: Int)
+    fun onProductUrlClicked(modelId: Int)
+    fun onDeleteClicked(modelId: Int)
+    fun onEditConfig(modelId: Int)
 }
 
 class BufferItemView @JvmOverloads constructor(

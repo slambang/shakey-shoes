@@ -21,14 +21,14 @@ abstract class RcbDemoActivityViewModel : ViewModel() {
 
     // Rcb events
     abstract fun onCreateRcbClicked()
-    abstract fun onConnectRcbClicked(rcbServiceId: Int)
-    abstract fun onConfigureRbClicked(rcbServiceId: Int)
-    abstract fun toggleRcb(rcbServiceId: Int)
-    abstract fun onResumeRcbClicked(rcbServiceId: Int)
-    abstract fun onPauseRcbClicked(rcbServiceId: Int)
-    abstract fun onDeleteRcbItemClicked(rcbServiceId: Int)
+    abstract fun onConnectRcbClicked(modelId: Int)
+    abstract fun onConfigureRbClicked(modelId: Int)
+    abstract fun toggleRcb(modelId: Int)
+    abstract fun onResumeRcbClicked(modelId: Int)
+    abstract fun onPauseRcbClicked(modelId: Int)
+    abstract fun onDeleteRcbItemClicked(modelId: Int)
     abstract fun checkRcbConfig(
-        rcbServiceId: Int,
+        modelId: Int,
         numberOfRefills: String,
         refillSize: String,
         windowSizeMs: String,
@@ -39,5 +39,5 @@ abstract class RcbDemoActivityViewModel : ViewModel() {
     abstract fun onProjectUrlClicked()
     abstract fun onDeleteAllBuffersClicked()
 
-    abstract fun setVibrateValue(rcbServiceId: Int, vibrateValue: Int)
+    abstract fun setVibrateValue(modelId: Int, vibrateValue: Int)
 }
