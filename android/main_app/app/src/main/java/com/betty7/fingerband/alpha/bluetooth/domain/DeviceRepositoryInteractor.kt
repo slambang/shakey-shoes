@@ -12,9 +12,11 @@ class DeviceRepositoryInteractor(
         return entityMapper.map(device)
     }
 
-    fun getAllDeviceNames(): List<String> {
-        val deviceEntities = deviceRepo.getDeviceEntities()
-        val deviceDomains =  entityMapper.map(deviceEntities)
-        return deviceDomains.map { it.name }
-    }
+    fun getAvailableDeviceNames(): List<String> =
+        deviceRepo.getDeviceEntities()
+            .map { entityMapper.map(it) }
+            .map { it.name }
+
+    fun getProductUrl(deviceId: Int) =
+        getDeviceDomain(deviceId).productUrl
 }

@@ -34,10 +34,15 @@ private fun provideViewModel(context: Context): RcbDemoActivityViewModelImpl {
 
     val resources = provideResources(context)
     val domainMapper = provideDeviceDomainMapper(resources)
-    val rcbServiceOrchestrator = provideRcbServiceOrchestrator(context)
     val deviceRepoInteractor = provideDeviceRepoInteractor()
+    val orchestratorInteractor = provideRcbOrchestratorInteractor(context, deviceRepoInteractor)
 
-    return RcbDemoActivityViewModelImpl(domainMapper, rcbServiceOrchestrator, deviceRepoInteractor)
+    return RcbDemoActivityViewModelImpl(domainMapper, deviceRepoInteractor, orchestratorInteractor)
+}
+
+private fun provideRcbOrchestratorInteractor(context: Context, repositoryInteractor: DeviceRepositoryInteractor): RcbOrchestratorInteractor {
+    val rcbServiceOrchestrator = provideRcbServiceOrchestrator(context)
+    return RcbOrchestratorInteractor(rcbServiceOrchestrator, repositoryInteractor)
 }
 
 private fun provideDeviceRepoInteractor(): DeviceRepositoryInteractor {

@@ -7,9 +7,6 @@ import com.betty7.fingerband.alpha.bluetooth.data.entity.HC05_WINGONEER
 
 class BluetoothDeviceEntityMapper {
 
-    fun map(entities: List<BluetoothDeviceEntity>): List<DeviceDomain> =
-        entities.map { map(it) }
-
     fun map(entity: BluetoothDeviceEntity): DeviceDomain {
 
         val productMap = requireProduct(entity.id)
@@ -23,7 +20,7 @@ class BluetoothDeviceEntityMapper {
             productMap.second,
             entity.baudRateBits / 10, // [1 start-bit, 8 data-bits, 1 stop-bit]
             0,
-            RcbServiceState.READY
+            RcbServiceState.DISCONNECTED
         )
     }
 

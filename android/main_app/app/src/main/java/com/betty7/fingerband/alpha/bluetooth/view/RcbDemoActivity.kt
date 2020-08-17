@@ -138,7 +138,6 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
             R.string.delete_buffer_dialog_title,
             R.string.delete_buffer_dialog_message
         ) {
-            recyclerAdapter.deleteItem(bufferId)
             viewModel.onDeleteRcbItemClicked(bufferId)
             setDeleteAllEnabled(recyclerAdapter.itemCount > 0)
         }
@@ -149,7 +148,6 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
             R.string.delete_all_buffers_dialog_title,
             R.string.delete_all_buffers_dialog_message
         ) {
-            recyclerAdapter.clearItems()
             viewModel.onDeleteAllBuffersClicked()
             setDeleteAllEnabled(false)
         }

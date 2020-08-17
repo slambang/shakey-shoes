@@ -3,15 +3,15 @@ package com.betty7.fingerband.alpha.bluetooth.domain
 interface RcbServiceOrchestrator {
 
     fun subscribe(
-        rcbServiceStatusObserver: (DeviceDomain) -> Unit,
-        rcbServiceAccuracyObserver: (DeviceAccuracyDomain) -> Unit
+        rcbServiceStatusObserver: (Int, RcbServiceState) -> Unit,
+        rcbServiceAccuracyObserver: (Int) -> Unit
     )
 
-    fun createBufferService(): Int
-    fun deleteBufferService(rcbServiceId: Int)
+    fun createRcbService(): Int
+    fun deleteRcbService(rcbServiceId: Int)
 
-    fun connectBufferService(rcbServiceId: Int, deviceDomain: DeviceDomain)
-    fun configureBufferService(
+    fun connectRcbService(rcbServiceId: Int, deviceDomain: DeviceDomain)
+    fun configureRcbService(
         rcbServiceId: Int,
         numberOfRefills: Int,
         refillSize: Int,
@@ -19,10 +19,10 @@ interface RcbServiceOrchestrator {
         maxUnderflows: Int
     )
 
-    fun startBufferService(rcbServiceId: Int)
-    fun resumeBufferService(rcbServiceId: Int)
-    fun pauseBufferService(rcbServiceId: Int)
-    fun stopBufferService(rcbServiceId: Int)
+    fun startRcbService(rcbServiceId: Int)
+    fun resumeRcbService(rcbServiceId: Int)
+    fun pauseRcbService(rcbServiceId: Int)
+    fun stopRcbService(rcbServiceId: Int)
 
     fun hackBufferValue(rcbServiceId: Int, value: Int)
 }
