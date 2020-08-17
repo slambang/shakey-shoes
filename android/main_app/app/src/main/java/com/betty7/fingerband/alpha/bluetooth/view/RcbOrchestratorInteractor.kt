@@ -54,22 +54,29 @@ class RcbOrchestratorInteractor constructor(
         refillSize: Int,
         windowSizeMs: Int,
         maxUnderflows: Int
-    ) = rcbServiceOrchestrator.configureRcbService(
-        domainId,
-        numberOfRefills,
-        refillSize,
-        windowSizeMs,
-        maxUnderflows
-    )
+    ) {
+        val rcbServiceId = requireRcbServiceId(domainId)
+        rcbServiceOrchestrator.configureRcbService(
+            rcbServiceId,
+            numberOfRefills,
+            refillSize,
+            windowSizeMs,
+            maxUnderflows
+        )
+    }
 
     fun setVibrateValue(domainId: Int, vibrateValue: Int) =
-        rcbServiceOrchestrator.hackBufferValue(domainId, vibrateValue)
+        requireRcbServiceId(domainId).let {
+            rcbServiceOrchestrator.hackBufferValue(it, vibrateValue)
+        }
 
     fun toggleRcb(domainId: Int, isResumed: Boolean) =
-        if (isResumed) {
-            rcbServiceOrchestrator.pauseRcbService(domainId)
-        } else {
-            rcbServiceOrchestrator.startRcbService(domainId)
+        requireRcbServiceId(domainId).let {
+            if (isResumed) {
+                rcbServiceOrchestrator.pauseRcbService(it)
+            } else {
+                rcbServiceOrchestrator.startRcbService(it)
+            }
         }
 
     fun resumeRcbService(domainId: Int) =

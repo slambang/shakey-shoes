@@ -27,7 +27,7 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
         viewModel.setVibrateValue(modelId, value)
 
     override fun onApplyClicked(modelId: Int) =
-        viewModel.onConnectRcbClicked(modelId)
+        viewModel.onConfigureRbClicked(modelId)
 
     override fun onProductUrlClicked(modelId: Int) =
         viewModel.onProductUrlClicked(modelId)

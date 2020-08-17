@@ -1,11 +1,9 @@
 package com.betty7.fingerband.alpha.bluetooth.view
 
-import android.annotation.SuppressLint
 import com.betty7.fingerband.alpha.R
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceAccuracyDomain
 import com.betty7.fingerband.alpha.bluetooth.domain.DeviceDomain
-import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceState
-import java.util.*
+import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceStatus
 
 class DomainMapper(
     private val resources: ViewResources
@@ -75,15 +73,15 @@ class DomainMapper(
 
     fun mapPage(deviceDomain: DeviceDomain) =
         when (deviceDomain.status) {
-            RcbServiceState.ERROR -> 0
-            RcbServiceState.SETUP -> 1
-            RcbServiceState.READY -> 2
+            is RcbServiceStatus.Error -> 0
+            is RcbServiceStatus.Setup -> 1
+            is RcbServiceStatus.Ready -> 2
             else -> null
         }
 
     fun mapState(domainModel: DeviceDomain, model: RcbItemModel) {
         when (domainModel.status) {
-            RcbServiceState.DISCONNECTED -> {
+            is RcbServiceStatus.Disconnected -> {
 
                 model.page3.resumeButtonText = resources.getString(R.string.resume)
                 setMaxSize(model, domainModel.freeHeapBytes)
@@ -96,31 +94,31 @@ class DomainMapper(
                     model
                 )
             }
-            RcbServiceState.CONNECTING -> {
+            is RcbServiceStatus.Connecting -> {
                 model.header.isConnecting = true
                 model.page1.connectButtonEnabled = false
             }
-            RcbServiceState.SETUP -> {
+            is RcbServiceStatus.Setup -> {
                 setMaxSize(model, domainModel.freeHeapBytes)
                 model.header.isConnected = true
                 model.header.isConnecting = false
                 model.page2.applyButtonEnabled = true
             }
-            RcbServiceState.READY -> {
+            is RcbServiceStatus.Ready -> {
                 model.page1.connectButtonEnabled = false
                 model.page2.applyButtonEnabled = false
                 model.page3.resumeButtonEnabled = true
             }
-            RcbServiceState.ERROR -> {
+            is RcbServiceStatus.Error -> {
                 model.header.isConnecting = false
                 model.page1.connectButtonEnabled = true
                 model.page3.isResumed = false
             }
-            RcbServiceState.PAUSED -> {
+            is RcbServiceStatus.Paused -> {
                 model.page3.isResumed = false
                 model.page3.resumeButtonText = resources.getString(R.string.resume)
             }
-            RcbServiceState.RESUMED -> {
+            is RcbServiceStatus.Resumed -> {
                 model.page3.isResumed = true
                 model.page3.resumeButtonText = resources.getString(R.string.pause)
             }
@@ -129,7 +127,7 @@ class DomainMapper(
         val isConnected = isConnected(domainModel.status)
         model.header.isConnected = isConnected
 
-        model.page1.status = getStatus(domainModel.status)
+        model.page1.status = mapStatus(domainModel.status)
         model.page1.connectButtonEnabled = !isConnected
         when (isConnected) {
             true -> R.string.disconnect
@@ -139,14 +137,15 @@ class DomainMapper(
         }
     }
 
-    @SuppressLint("DefaultLocale")
-    private fun getStatus(status: RcbServiceState) =
-        status.name.toLowerCase(Locale.getDefault()).capitalize().also {
-            return if (status == RcbServiceState.ERROR) {
-                "$it (${status.message})"
-            } else {
-                it
-            }
+    private fun mapStatus(status: RcbServiceStatus) =
+        when (status) {
+            is RcbServiceStatus.Disconnected -> resources.getString(R.string.disconnected)
+            is RcbServiceStatus.Connecting -> resources.getString(R.string.connecting)
+            is RcbServiceStatus.Setup -> resources.getString(R.string.setup)
+            is RcbServiceStatus.Ready -> resources.getString(R.string.ready)
+            is RcbServiceStatus.Paused -> resources.getString(R.string.paused)
+            is RcbServiceStatus.Resumed -> resources.getString(R.string.resumed)
+            is RcbServiceStatus.Error -> resources.getString(R.string.error, status.message)
         }
 
     private fun setMaxSize(model: RcbItemModel, maxSize: Int) {
@@ -156,8 +155,8 @@ class DomainMapper(
         )
     }
 
-    private fun isConnected(status: RcbServiceState) =
-        (status != RcbServiceState.CONNECTING &&
-                status != RcbServiceState.DISCONNECTED &&
-                status != RcbServiceState.ERROR)
+    private fun isConnected(status: RcbServiceStatus) =
+        (status !is RcbServiceStatus.Connecting &&
+                status !is RcbServiceStatus.Disconnected &&
+                status !is RcbServiceStatus.Error)
 }

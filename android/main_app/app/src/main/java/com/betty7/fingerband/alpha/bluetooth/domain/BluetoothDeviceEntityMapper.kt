@@ -20,7 +20,7 @@ class BluetoothDeviceEntityMapper {
             productMap.second,
             entity.baudRateBits / 10, // [1 start-bit, 8 data-bits, 1 stop-bit]
             0,
-            RcbServiceState.DISCONNECTED
+            RcbServiceStatus.Disconnected
         )
     }
 

@@ -27,6 +27,14 @@
     <string name="dismiss">Dismiss</string>
     <string name="config">Config</string>
 
+    <string name="disconnected">Disconnected</string>
+    <string name="connecting">Connecting</string>
+    <string name="setup">Setup</string>
+    <string name="ready">Ready</string>
+    <string name="paused">Paused</string>
+    <string name="resumed">Resumed</string>
+    <string name="error">Error: %1$s</string>
+
     <string name="delete">Delete</string>
     <string name="delete_buffer_dialog_title">Delete buffer?</string>
     <string name="delete_buffer_dialog_message">This will disconnect the remote device</string>

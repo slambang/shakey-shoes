@@ -38,11 +38,11 @@ class RcbServiceInteractorImpl(
         ) = onBufferServiceErrorReceived(rcbService, error)
     }
 
-    private lateinit var rcbServiceStatusObserver: (Int, RcbServiceState) -> Unit
+    private lateinit var rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit
     private lateinit var rcbServiceAccuracyObserver: (Int) -> Unit
 
     override fun subscribe(
-        rcbServiceStatusObserver: (Int, RcbServiceState) -> Unit,
+        rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit,
         rcbServiceAccuracyObserver: (Int) -> Unit
     ) {
         this.rcbServiceStatusObserver = rcbServiceStatusObserver
@@ -65,7 +65,7 @@ class RcbServiceInteractorImpl(
     }
 
     private fun onBufferConnecting(rcbService: RcbService) =
-        rcbServiceStatusObserver(rcbService.id, RcbServiceState.CONNECTING)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Connecting)
 
     override fun connectRcbService(rcbServiceId: Int, macAddress: String, serviceUuid: String) =
         requireBufferService(rcbServiceId).connect(
@@ -107,11 +107,11 @@ class RcbServiceInteractorImpl(
             onBufferRefill(rcbService)
         }
 
-        rcbServiceStatusObserver(rcbService.id, RcbServiceState.READY)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Ready)
     }
 
     private fun onBufferDisconnected(rcbService: RcbService) =
-        rcbServiceStatusObserver(rcbService.id, RcbServiceState.DISCONNECTED)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Disconnected)
 
     private fun onBufferUnderflow(rcbService: RcbService) =
         rcbServiceAccuracyObserver(rcbService.id)
@@ -131,7 +131,7 @@ class RcbServiceInteractorImpl(
         requireBufferService(rcbServiceId).resume()
 
     private fun onBufferResumed(rcbService: RcbService) =
-        rcbServiceStatusObserver(rcbService.id, RcbServiceState.RESUMED)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Resumed)
 
     override fun pauseRcbService(rcbServiceId: Int) =
         requireBufferService(rcbServiceId).pause()
@@ -140,7 +140,7 @@ class RcbServiceInteractorImpl(
         requireBufferService(rcbServiceId).stop()
 
     private fun onBufferPaused(rcbService: RcbService) =
-        rcbServiceStatusObserver(rcbService.id, RcbServiceState.PAUSED)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Paused)
 
     private fun onBufferServiceStateReceived(
         rcbService: RcbService,
@@ -161,8 +161,7 @@ class RcbServiceInteractorImpl(
         rcbService: RcbService,
         freeHeapBytes: Int
     ) {
-//            it.freeHeapBytes = freeHeapBytes
-            rcbServiceStatusObserver(rcbService.id, RcbServiceState.SETUP)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Setup(freeHeapBytes))
     }
 
     private fun onBufferServiceErrorReceived(
@@ -170,7 +169,10 @@ class RcbServiceInteractorImpl(
         error: Throwable?
     ) {
         error?.printStackTrace()
-        rcbServiceStatusObserver(rcbService.id, RcbServiceState.ERROR.with(message = error?.message ?: "Unknown"))
+        rcbServiceStatusObserver(
+            rcbService.id,
+            RcbServiceStatus.Error(message = error?.message ?: "Unknown")
+        )
     }
 
     private fun requireDataSource(id: Int) =

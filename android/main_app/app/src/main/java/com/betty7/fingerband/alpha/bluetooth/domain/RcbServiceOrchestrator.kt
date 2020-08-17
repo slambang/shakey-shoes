@@ -3,7 +3,7 @@ package com.betty7.fingerband.alpha.bluetooth.domain
 interface RcbServiceOrchestrator {
 
     fun subscribe(
-        rcbServiceStatusObserver: (Int, RcbServiceState) -> Unit,
+        rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit,
         rcbServiceAccuracyObserver: (Int) -> Unit
     )
 
