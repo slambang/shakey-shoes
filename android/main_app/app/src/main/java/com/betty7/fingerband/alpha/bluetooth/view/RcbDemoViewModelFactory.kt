@@ -29,15 +29,21 @@ class RcbDemoViewModelFactory constructor(
         }
 }
 
-// TODO Koin
 private fun provideViewModel(context: Context): RcbDemoActivityViewModelImpl {
 
+    val deviceRepo = provideDeviceRepository()
     val resources = provideResources(context)
-    val domainMapper = provideDeviceDomainMapper(resources)
-    val deviceRepoInteractor = provideDeviceRepoInteractor()
-    val orchestratorInteractor = provideRcbOrchestratorInteractor(context, deviceRepoInteractor)
 
-    return RcbDemoActivityViewModelImpl(domainMapper, deviceRepoInteractor, orchestratorInteractor)
+    val domainMapper = provideDeviceDomainMapper(resources)
+    val deviceRepoInteractor = provideDeviceRepoInteractor(deviceRepo)
+    val orchestratorInteractor = provideRcbOrchestratorInteractor(context, deviceRepoInteractor)
+    val productUrlMapper = provideProductUrlMapper(deviceRepoInteractor)
+
+    return RcbDemoActivityViewModelImpl(domainMapper, productUrlMapper, orchestratorInteractor)
+}
+
+fun provideProductUrlMapper(deviceRepoInteractor: DeviceRepositoryInteractor): ProductUrlMapper {
+    return ProductUrlMapper(deviceRepoInteractor)
 }
 
 private fun provideRcbOrchestratorInteractor(context: Context, repositoryInteractor: DeviceRepositoryInteractor): RcbOrchestratorInteractor {
@@ -45,9 +51,8 @@ private fun provideRcbOrchestratorInteractor(context: Context, repositoryInterac
     return RcbOrchestratorInteractor(rcbServiceOrchestrator, repositoryInteractor)
 }
 
-private fun provideDeviceRepoInteractor(): DeviceRepositoryInteractor {
+private fun provideDeviceRepoInteractor(deviceRepo: BluetoothDeviceRepository): DeviceRepositoryInteractor {
     val entityMapper = provideDeviceEntityMapper()
-    val deviceRepo = provideDeviceRepository()
     return DeviceRepositoryInteractor(deviceRepo, entityMapper)
 }
 

@@ -17,13 +17,13 @@ class RcbOrchestratorInteractor constructor(
         rcbServiceStatusObserver: (DeviceDomain) -> Unit,
         rcbServiceAccuracyObserver: (DeviceAccuracyDomain) -> Unit
     ) {
-        rcbServiceOrchestrator.subscribe({ modelId, status ->
-            requireDeviceDomain(modelId).let {
+        rcbServiceOrchestrator.subscribe({ domainId, status ->
+            requireDeviceDomain(domainId).let {
                 it.status = status
                 rcbServiceStatusObserver(it)
             }
-        }, { modelId ->
-            requireDeviceDomain(modelId).let {
+        }, { domainId ->
+            requireDeviceDomain(domainId).let { // TODO needs to be rcb service id!
                 rcbServiceAccuracyObserver(it.accuracies)
             }
         })
@@ -31,48 +31,52 @@ class RcbOrchestratorInteractor constructor(
 
     fun getAvailableDeviceNames() = deviceRepoInteractor.getAvailableDeviceNames()
 
-    fun createRcbService(deviceDomainId: Int): Pair<Int, DeviceDomain> {
-        val modelId = rcbServiceOrchestrator.createRcbService()
-        val deviceDomain = deviceRepoInteractor.getDeviceDomain(deviceDomainId)
-        domainMap[modelId] = deviceDomain
-        return modelId to deviceDomain
+    fun createRcbService(deviceDomainId: Int): DeviceDomain {
+        val rcbServiceId = rcbServiceOrchestrator.createRcbService()
+        val deviceDomain = deviceRepoInteractor.takeDevice(deviceDomainId)
+        domainMap[rcbServiceId] = deviceDomain
+        return deviceDomain
     }
 
-    fun connectBufferService(modelId: Int) =
+    fun connectBufferService(domainId: Int) {
+        val rcbServiceId = requireRcbServiceId(domainId)
+        val domain = requireDeviceDomain(rcbServiceId)
         rcbServiceOrchestrator.connectRcbService(
-            modelId,
-            requireDeviceDomain(modelId)
+            rcbServiceId,
+            domain.macAddress,
+            domain.serviceUuid
         )
+    }
 
     fun configureRcbService(
-        modelId: Int,
+        domainId: Int,
         numberOfRefills: Int,
         refillSize: Int,
         windowSizeMs: Int,
         maxUnderflows: Int
     ) = rcbServiceOrchestrator.configureRcbService(
-        modelId,
+        domainId,
         numberOfRefills,
         refillSize,
         windowSizeMs,
         maxUnderflows
     )
 
-    fun setVibrateValue(modelId: Int, vibrateValue: Int) =
-        rcbServiceOrchestrator.hackBufferValue(modelId, vibrateValue)
+    fun setVibrateValue(domainId: Int, vibrateValue: Int) =
+        rcbServiceOrchestrator.hackBufferValue(domainId, vibrateValue)
 
-    fun toggleRcb(modelId: Int, isResumed: Boolean) =
+    fun toggleRcb(domainId: Int, isResumed: Boolean) =
         if (isResumed) {
-            rcbServiceOrchestrator.pauseRcbService(modelId)
+            rcbServiceOrchestrator.pauseRcbService(domainId)
         } else {
-            rcbServiceOrchestrator.startRcbService(modelId)
+            rcbServiceOrchestrator.startRcbService(domainId)
         }
 
-    fun resumeRcbService(modelId: Int) =
-        rcbServiceOrchestrator.resumeRcbService(modelId)
+    fun resumeRcbService(domainId: Int) =
+        rcbServiceOrchestrator.resumeRcbService(domainId)
 
-    fun pauseRcbService(modelId: Int) =
-        rcbServiceOrchestrator.pauseRcbService(modelId)
+    fun pauseRcbService(domainId: Int) =
+        rcbServiceOrchestrator.pauseRcbService(domainId)
 
     fun pauseAllRcbServices() = domainMap.keys.forEach {
         pauseRcbService(it)
@@ -82,18 +86,34 @@ class RcbOrchestratorInteractor constructor(
         rcbServiceOrchestrator.stopRcbService(it)
     }
 
-    fun deleteRcbService(modelId: Int) {
-        rcbServiceOrchestrator.deleteRcbService(modelId)
-        domainMap.remove(modelId)
+    fun deleteRcbService(deviceDomainId: Int) {
+
+        val rcbServiceId = requireRcbServiceId(deviceDomainId)
+        rcbServiceOrchestrator.deleteRcbService(rcbServiceId)
+
+        domainMap.remove(rcbServiceId)?.let {
+            deviceRepoInteractor.returnDevice(it.id)
+        } ?: throw IllegalArgumentException("No device for service id $rcbServiceId")
     }
 
-    fun deleteAllRcbServices() = domainMap.keys.forEach {
-        rcbServiceOrchestrator.deleteRcbService(it)
+    fun deleteAllRcbServices() = domainMap.forEach {
+        rcbServiceOrchestrator.deleteRcbService(it.key)
+        deviceRepoInteractor.returnDevice(it.value.id)
     }.also {
         domainMap.clear()
     }
 
-    private fun requireDeviceDomain(modelId: Int) =
-        domainMap[modelId]
-            ?: throw IllegalArgumentException("Invalid modelId")
+    private fun requireDeviceDomain(rcbServiceId: Int) =
+        domainMap[rcbServiceId]
+            ?: throw IllegalArgumentException("Invalid rcbServiceId")
+
+    private fun requireRcbServiceId(deviceDomainId: Int): Int {
+        for (entry in domainMap) {
+            if (entry.value.id == deviceDomainId) {
+                return entry.key
+            }
+        }
+
+        throw IllegalArgumentException("Invalid rcbServiceId")
+    }
 }

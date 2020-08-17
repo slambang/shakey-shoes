@@ -6,27 +6,25 @@ import java.lang.IllegalStateException
 
 typealias A = List<Pair<Int, Pair<RcbItemModel, Int>>>
 
-// Responsible for mapping device domains to item models
+// Responsible for mapping device-domains to item-models
 class RcbDemoActivityViewModelImpl(
     private val domainMapper: DomainMapper,
-    private val repoInteractor: DeviceRepositoryInteractor,
+    private val productUrlMapper: ProductUrlMapper,
     private val rcbOrchestratorInteractor: RcbOrchestratorInteractor
 ) : RcbDemoActivityViewModel() {
 
     // LiveData
-    override val showDeviceListLiveData: SingleLiveEvent<List<String>> = SingleLiveEvent()
+    override val showDeviceListLiveData: SingleLiveEvent<List<Pair<Int, String>>> =
+        SingleLiveEvent()
     override val launchUrlLiveData: SingleLiveEvent<String> = SingleLiveEvent()
     override val bufferItemPageLiveData: SingleLiveEvent<Pair<Int, Int>> = SingleLiveEvent()
     override val itemModelsLiveData = MutableLiveData<List<RcbItemModel>>()
-
-    // For fast lookup when we only have the rcb service id
-    private val modelMap = mutableMapOf<Int, RcbItemModel>()
 
     // For maintaining the order of items
     private val itemOrderedList = mutableListOf<RcbItemModel>()
 
     override fun onStart() =
-        rcbOrchestratorInteractor.subscribe(::onBufferServiceStatus, ::onBufferAccuracy)
+        rcbOrchestratorInteractor.subscribe(::onDomainUpdated, ::onRcbServiceAccuracy)
 
     override fun checkRcbConfig(
         modelId: Int,
@@ -55,24 +53,20 @@ class RcbDemoActivityViewModelImpl(
         }
     }
 
-    override fun onCreateRcbClicked() {
-        val deviceNames = rcbOrchestratorInteractor.getAvailableDeviceNames()
-        showDeviceListLiveData.postValue(deviceNames)
+    override fun onCreateRcbServiceClicked() {
+        val availableDeviceNames = rcbOrchestratorInteractor.getAvailableDeviceNames()
+        showDeviceListLiveData.postValue(availableDeviceNames)
     }
 
     override fun onDeviceSelected(deviceDomainId: Int) {
 
-        val (modelId, deviceDomain) = rcbOrchestratorInteractor.createRcbService(deviceDomainId)
+        val deviceDomain = rcbOrchestratorInteractor.createRcbService(deviceDomainId)
+        val rcbItemModel = domainMapper.mapSelectedDevice(deviceDomain)
 
-        val model = RcbItemModel(modelId)
-        domainMapper.mapSelectedDevice(deviceDomain, model)
-
-        modelMap[model.id] = model
-        itemOrderedList.add(model)
-
-        setBufferItemPage(deviceDomain, model)
-        domainMapper.mapState(deviceDomain, model)
-        domainMapper.mapAccuracies(deviceDomain.accuracies, model)
+        itemOrderedList.add(rcbItemModel)
+        setBufferItemPage(deviceDomain, rcbItemModel)
+        domainMapper.mapState(deviceDomain, rcbItemModel)
+        domainMapper.mapAccuracies(deviceDomain.accuracies, rcbItemModel)
 
         emitModels()
     }
@@ -91,24 +85,22 @@ class RcbDemoActivityViewModelImpl(
             )
         }
 
-    private fun onBufferAccuracy(domain: DeviceAccuracyDomain) {
+    private fun onRcbServiceAccuracy(domain: DeviceAccuracyDomain) =
         requireBufferItemModel(domain.id).let {
             domainMapper.mapAccuracies(domain, it)
         }.also {
             emitModels()
         }
-    }
 
-    private fun onBufferServiceStatus(domain: DeviceDomain) { // TODO Need service id here!
+    private fun onDomainUpdated(domain: DeviceDomain) =
         requireBufferItemModel(domain.id).let {
             setBufferItemPage(domain, it)
             domainMapper.mapState(domain, it)
         }.also {
             emitModels()
         }
-    }
 
-    private fun setBufferItemPage(deviceDomain: DeviceDomain, model: RcbItemModel) = // TODO Need service id here!
+    private fun setBufferItemPage(deviceDomain: DeviceDomain, model: RcbItemModel) =
         domainMapper.mapPage(deviceDomain)?.let { page ->
             itemOrderedList.indexOfFirst {
                 it.id == model.id
@@ -144,12 +136,11 @@ class RcbDemoActivityViewModelImpl(
     override fun onProjectUrlClicked() =
         launchUrlLiveData.postValue(PROJECT_REPO_URL)
 
-    override fun onProductUrlClicked(deviceDomainId: Int) =
-        launchUrlLiveData.postValue(repoInteractor.getProductUrl(deviceDomainId))
+    override fun onProductUrlClicked(modelId: Int) =
+        launchUrlLiveData.postValue(productUrlMapper.map(modelId))
 
     override fun onDeleteAllBuffersClicked() {
         rcbOrchestratorInteractor.deleteAllRcbServices()
-        modelMap.clear()
         itemOrderedList.clear()
         emitModels()
     }
@@ -157,9 +148,6 @@ class RcbDemoActivityViewModelImpl(
     override fun onDeleteRcbItemClicked(modelId: Int) {
 
         rcbOrchestratorInteractor.deleteRcbService(modelId)
-
-        modelMap.remove(modelId)
-            ?: throw IllegalStateException("Service with id $modelId is not in the service map")
 
         if (!itemOrderedList.removeAll { it.id == modelId }) {
             throw IllegalStateException("Model with id $modelId is not in the ordered list")
@@ -172,7 +160,7 @@ class RcbDemoActivityViewModelImpl(
     private fun emitModels() = itemModelsLiveData.postValue(itemOrderedList)
 
     private fun requireBufferItemModel(modelId: Int): RcbItemModel =
-        modelMap[modelId]
+        itemOrderedList.find { it.id == modelId }
             ?: throw IllegalArgumentException("Invalid modelId: $modelId")
 
     companion object {

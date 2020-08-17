@@ -10,7 +10,7 @@ interface RcbServiceOrchestrator {
     fun createRcbService(): Int
     fun deleteRcbService(rcbServiceId: Int)
 
-    fun connectRcbService(rcbServiceId: Int, deviceDomain: DeviceDomain)
+    fun connectRcbService(rcbServiceId: Int, macAddress: String, serviceUuid: String)
     fun configureRcbService(
         rcbServiceId: Int,
         numberOfRefills: Int,

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 abstract class RcbDemoActivityViewModel : ViewModel() {
 
     abstract val itemModelsLiveData: MutableLiveData<List<RcbItemModel>>
-    abstract val showDeviceListLiveData: SingleLiveEvent<List<String>>
+    abstract val showDeviceListLiveData: SingleLiveEvent<List<Pair<Int, String>>>
     abstract val launchUrlLiveData: SingleLiveEvent<String>
     abstract val bufferItemPageLiveData: SingleLiveEvent<Pair<Int, Int>>
 
@@ -17,10 +17,10 @@ abstract class RcbDemoActivityViewModel : ViewModel() {
 
     // Device events
     abstract fun onDeviceSelected(deviceDomainId: Int)
-    abstract fun onProductUrlClicked(deviceDomainId: Int)
+    abstract fun onProductUrlClicked(modelId: Int)
 
     // Rcb events
-    abstract fun onCreateRcbClicked()
+    abstract fun onCreateRcbServiceClicked()
     abstract fun onConnectRcbClicked(modelId: Int)
     abstract fun onConfigureRbClicked(modelId: Int)
     abstract fun toggleRcb(modelId: Int)

@@ -7,7 +7,9 @@ import com.betty7.fingerband.alpha.bluetooth.domain.DeviceDomain
 import com.betty7.fingerband.alpha.bluetooth.domain.RcbServiceState
 import java.util.*
 
-class DomainMapper(private val resources: ViewResources) {
+class DomainMapper(
+    private val resources: ViewResources
+) {
 
     fun mapAccuracies(domain: DeviceAccuracyDomain, model: RcbItemModel) {
 
@@ -29,13 +31,18 @@ class DomainMapper(private val resources: ViewResources) {
         )
     }
 
-    fun mapSelectedDevice(domainModel: DeviceDomain, model: RcbItemModel) {
-        model.selectedDeviceId = domainModel.id
-        model.header.deviceName = domainModel.name
-        model.page1.baudRateBytes =
+    fun mapSelectedDevice(domainModel: DeviceDomain): RcbItemModel {
+
+        val rcbItemModel = RcbItemModel(domainModel.id)
+
+        rcbItemModel.selectedDeviceId = domainModel.id
+        rcbItemModel.header.deviceName = domainModel.name
+        rcbItemModel.page1.baudRateBytes =
             resources.getString(R.string.buffer_item_page_0_baud, domainModel.baudRateBytes)
-        model.page1.macAddress = domainModel.macAddress
-        model.page1.pairingPin = domainModel.pairingPin
+        rcbItemModel.page1.macAddress = domainModel.macAddress
+        rcbItemModel.page1.pairingPin = domainModel.pairingPin
+
+        return rcbItemModel
     }
 
     fun mapConfig(

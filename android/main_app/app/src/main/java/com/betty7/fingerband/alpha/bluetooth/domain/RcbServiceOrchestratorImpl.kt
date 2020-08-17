@@ -67,10 +67,10 @@ class RcbServiceInteractorImpl(
     private fun onBufferConnecting(rcbService: RcbService) =
         rcbServiceStatusObserver(rcbService.id, RcbServiceState.CONNECTING)
 
-    override fun connectRcbService(rcbServiceId: Int, deviceDomain: DeviceDomain) =
+    override fun connectRcbService(rcbServiceId: Int, macAddress: String, serviceUuid: String) =
         requireBufferService(rcbServiceId).connect(
-            deviceDomain.macAddress,
-            deviceDomain.serviceUuid,
+            macAddress,
+            serviceUuid,
             rcbServiceListener
         )
 

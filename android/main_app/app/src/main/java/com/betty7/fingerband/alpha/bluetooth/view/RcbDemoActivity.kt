@@ -164,11 +164,14 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
         menu.findItem(R.id.rcb_activity_menu_delete_all).isEnabled = enabled
     }
 
-    private fun displayDeviceList(deviceNames: List<String>) {
+    private fun displayDeviceList(devices: List<Pair<Int, String>>) {
+
+        val deviceNames = devices.map { it.second }
+
         AlertDialog.Builder(this)
             .setTitle(R.string.select_device_title)
             .setItems(deviceNames.toTypedArray()) { _, which ->
-                viewModel.onDeviceSelected(which)
+                viewModel.onDeviceSelected(devices[which].first)
             }
             .setOnDismissListener { setAddBufferListener() }
             .create()
@@ -178,7 +181,7 @@ class RcbDemoActivity : BluetoothPermissionActivity(), BufferItemViewListener {
     private fun setAddBufferListener() =
         add_buffer_button.setOnClickListener {
             it.setOnClickListener(null) // Prevent double-click
-            viewModel.onCreateRcbClicked()
+            viewModel.onCreateRcbServiceClicked()
         }
 
     private fun displayConfig(model: RcbItemModel) {

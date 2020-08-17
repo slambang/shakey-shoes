@@ -9,6 +9,7 @@ class RcbServiceImpl(
     private val bluetoothConnection: BluetoothConnection
 ) : RcbService {
 
+    // Hmm...
     override var id = ID.incrementAndGet()
 
     private lateinit var _config: RcbServiceConfig
