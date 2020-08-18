@@ -15,25 +15,8 @@ import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-abstract class SplashViewModel : ViewModel() {
-
-    abstract val viewState: LiveData<SplashViewState>
-
-    abstract fun onStart()
-
-    abstract fun onPause()
-
-    abstract fun onPermissionButtonClicked()
-
-    abstract fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: List<String>,
-        grantResults: List<Int>
-    )
-}
-
 // TODO: Improve threading here
-class SplashViewModelImpl @Inject constructor(
+class SplashViewModel @Inject constructor(
     private val navigator: SplashNavigator,
     private val bluetoothProvider: BluetoothProvider,
     private val permissionManager: RuntimePermissionManager,
@@ -42,12 +25,12 @@ class SplashViewModelImpl @Inject constructor(
     private val schedulers: SchedulerProvider,
     private val disposables: CompositeDisposable,
     private val _viewState: MutableLiveData<SplashViewState>
-) : SplashViewModel() {
+) : ViewModel() {
 
-    override val viewState: LiveData<SplashViewState>
+    val viewState: LiveData<SplashViewState>
         get() = _viewState
 
-    override fun onStart() {
+    fun onStart() {
         checkDeviceReadiness()
             .delaySubscription(SPLASH_DELAY_MS, TimeUnit.MILLISECONDS)
             .subscribeOn(schedulers.io)
@@ -55,7 +38,7 @@ class SplashViewModelImpl @Inject constructor(
             .also { disposables.add(it) }
     }
 
-    override fun onPause() = onCleared()
+    fun onPause() = onCleared()
 
     private fun checkDeviceReadiness() =
         Single.fromCallable {
@@ -66,7 +49,7 @@ class SplashViewModelImpl @Inject constructor(
             }
         }
 
-    override fun onRequestPermissionsResult(
+    fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: List<String>,
         grantResults: List<Int>
@@ -80,7 +63,7 @@ class SplashViewModelImpl @Inject constructor(
             }
     }
 
-    override fun onPermissionButtonClicked() =
+    fun onPermissionButtonClicked() =
         if (permissionManager.canReRequestPermissions) {
             permissionManager.requestPermissions()
         } else {

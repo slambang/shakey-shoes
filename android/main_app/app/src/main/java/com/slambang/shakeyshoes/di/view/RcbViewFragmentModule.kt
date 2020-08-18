@@ -65,9 +65,6 @@ class RcbViewFragmentModule {
     interface Bindings {
 
         @Binds
-        fun bindViewModel(viewModel: RcbViewModelImpl): RcbViewModel
-
-        @Binds
         fun bindDeviceRepo(repo: BluetoothDeviceRepositoryImpl): BluetoothDeviceRepository
 
         @Binds

@@ -32,9 +32,6 @@ class SplashViewFragmentModule {
     interface Bindings {
 
         @Binds
-        fun bindViewModel(viewModel: SplashViewModelImpl): SplashViewModel
-
-        @Binds
         fun bindBluetoothMessageMapper(viewModel: BluetoothMessageMapperImpl): BluetoothMessageMapper
 
         @Binds
