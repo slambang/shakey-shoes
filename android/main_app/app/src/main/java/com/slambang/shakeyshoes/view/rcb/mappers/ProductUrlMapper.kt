@@ -8,5 +8,5 @@ class ProductUrlMapper @Inject constructor(
 ) {
 
     fun map(deviceId: Int) =
-        deviceRepoInteractor.getDevice(deviceId).productUrl
+        deviceRepoInteractor.peekDevice(deviceId).productUrl
 }

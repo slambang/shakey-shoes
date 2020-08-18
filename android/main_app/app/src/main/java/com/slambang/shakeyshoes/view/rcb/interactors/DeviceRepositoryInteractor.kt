@@ -12,20 +12,19 @@ class DeviceRepositoryInteractor @Inject constructor(
     private val reservedDevices: MutableSet<Int>
 ) {
 
-    fun getDevice(deviceId: Int): BluetoothDeviceDomain {
+    fun peekDevice(deviceId: Int): BluetoothDeviceDomain {
         val device = deviceRepo.getDeviceEntity(deviceId)
-        setDeviceReserved(device.id, false)
         return entityMapper.map(device)
     }
 
     fun reserveDevice(deviceId: Int): BluetoothDeviceDomain {
         val device = deviceRepo.getDeviceEntity(deviceId)
-        setDeviceReserved(device.id, false)
+        setDeviceReserved(device.id, true)
         return entityMapper.map(device)
     }
 
     fun returnDevice(deviceId: Int) =
-        setDeviceReserved(deviceId, true)
+        setDeviceReserved(deviceId, false)
 
     fun getAvailableDeviceNames(): List<Pair<Int, String>> =
         deviceRepo.getDeviceEntities()
@@ -35,9 +34,9 @@ class DeviceRepositoryInteractor @Inject constructor(
 
     private fun setDeviceReserved(deviceId: Int, isReserved: Boolean) {
         val result = if (isReserved) {
-            reservedDevices.remove(deviceId)
-        } else {
             reservedDevices.add(deviceId)
+        } else {
+            reservedDevices.remove(deviceId)
         }
         if (!result)
             throw IllegalArgumentException("Error setting device reserved $isReserved for device $deviceId")
