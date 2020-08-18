@@ -1,4 +1,4 @@
-I have 2 workig iteration of hardware for this project: 
+I have 2 working iterations of hardware for this project: 
 - __Mk0:__ An initial (but working!) mess of wires, components and solder
 - __Mk1:__ A more refined and compact prototype (and far more pleasing to the eye!)
 
