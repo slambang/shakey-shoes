@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.slambang.shakeyshoes.R
 import com.slambang.shakeyshoes.view.base.BaseViewFragment
 import com.slambang.shakeyshoes.view.rcb.rcb_item_view.BufferItemViewListener
 import com.slambang.shakeyshoes.view.setAppCompatToolbar
+import kotlinx.android.synthetic.main.fragment_rcb.*
 
 
 class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener {
@@ -35,10 +37,14 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
 
     override fun onResume() {
         super.onResume()
-        observeViewModel() // Hmm... probably not the right place!
+        observeViewModel()
     }
 
     private fun observeViewModel() {
+        observe(viewModel.bluetoothStatusLiveData) {
+            toolbar.subtitle = it
+        }
+
         observe(viewModel.removeAllBuffersLiveData) {
             recyclerAdapter.clearItems()
         }
@@ -63,7 +69,11 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
             recyclerAdapter.setPage(it.first, it.second)
         }
 
-        viewModel.onStart()
+        observe(viewModel.errorLiveData) {
+            showSnackbar(it)
+        }
+
+        viewModel.onResume()
     }
 
     override fun initView(root: View) {
@@ -163,6 +173,9 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
     override fun onEditConfig(modelId: Int) {
 //        ::displayConfig
     }
+
+    private fun showSnackbar(message: String) =
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)

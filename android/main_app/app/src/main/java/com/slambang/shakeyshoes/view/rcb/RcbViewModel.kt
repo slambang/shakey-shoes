@@ -18,6 +18,9 @@ class RcbViewModel @Inject constructor(
     private val schedulers: SchedulerProvider,
     private val disposables: CompositeDisposable,
 
+    private val bluetoothInteractor: BluetoothInteractor,
+
+
     private val domainMapper: DomainMapper,
     private val productUrlMapper: ProductUrlMapper,
     private val rcbOrchestratorInteractor: RcbOrchestratorInteractor,
@@ -25,6 +28,7 @@ class RcbViewModel @Inject constructor(
 
     // LiveData
     private val _itemModelsLiveData: MutableLiveData<List<RcbItemModel>>,
+    private val _bluetoothStatusLiveData: MutableLiveData<String>,
     private val _removeAllBuffersLiveData: SingleLiveEvent<Unit>,
     private val _removeAllMenuOptionEnabledLiveData: SingleLiveEvent<Boolean>,
     private val _showDeviceListLiveData: SingleLiveEvent<List<Pair<Int, String>>>,
@@ -39,25 +43,44 @@ class RcbViewModel @Inject constructor(
     val removeAllBuffersLiveData: LiveData<Unit>
         get() = _removeAllBuffersLiveData
 
-    val showDeviceListLiveData: SingleLiveEvent<List<Pair<Int, String>>>
+    val showDeviceListLiveData: LiveData<List<Pair<Int, String>>>
         get() = _showDeviceListLiveData
 
-    val bufferItemPageLiveData: SingleLiveEvent<Pair<Int, Int>>
+    val bufferItemPageLiveData: LiveData<Pair<Int, Int>>
         get() = _bufferItemPageLiveData
 
-    val itemModelsLiveData: MutableLiveData<List<RcbItemModel>>
+    val itemModelsLiveData: LiveData<List<RcbItemModel>>
         get() = _itemModelsLiveData
 
-    val itemDeletedLiveData: SingleLiveEvent<Int>
+    val itemDeletedLiveData: LiveData<Int>
         get() = _itemDeletedLiveData
+
+    val bluetoothStatusLiveData: LiveData<String>
+        get() = _bluetoothStatusLiveData
 
     val errorLiveData: LiveData<String>
         get() = _errorLiveData
 
+    fun onResume() {
+        observeBluetoothState()
+        rcbOrchestratorInteractor.subscribe(::onDomainUpdated, ::onRcbServiceAccuracy)
+    }
+
+    private fun observeBluetoothState() {
+        bluetoothInteractor.observeBluetoothStatus()
+            .subscribeOn(schedulers.io)
+            .subscribe({
+                _bluetoothStatusLiveData.postValue(it)
+            }, {
+                _errorLiveData.postValue(it.message)
+            })
+            .also { disposables.add(it) }
+    }
+
     // TODO Threading
     fun onAddRcbClicked() {
         val availableDeviceNames = rcbOrchestratorInteractor.getAvailableDeviceNames()
-        showDeviceListLiveData.postValue(availableDeviceNames)
+        _showDeviceListLiveData.postValue(availableDeviceNames)
     }
 
     // TODO Threading
@@ -141,10 +164,6 @@ class RcbViewModel @Inject constructor(
     }
 
     // TODO Threading
-    fun onStart() =
-        rcbOrchestratorInteractor.subscribe(::onDomainUpdated, ::onRcbServiceAccuracy)
-
-    // TODO Threading
     fun onPause() =
         rcbOrchestratorInteractor.pauseAllRcbServices()
 
@@ -186,6 +205,10 @@ class RcbViewModel @Inject constructor(
     fun setVibrateValue(modelId: Int, vibrateValue: Int) =
         rcbOrchestratorInteractor.setVibrateValue(modelId, vibrateValue)
 
+    override fun onCleared() {
+        disposables.clear()
+    }
+
     private fun displayErrorMessage(error: Throwable) {
         _errorLiveData.postValue("An error occurred: ${error.message}") // Add mapper
     }
@@ -215,7 +238,7 @@ class RcbViewModel @Inject constructor(
         }
 
     // Split into 2 model streams: Add & Update
-    private fun emitModels() = itemModelsLiveData.postValue(orderedItemList)
+    private fun emitModels() = _itemModelsLiveData.postValue(orderedItemList)
 
     private fun requireBufferItemModel(modelId: Int): RcbItemModel =
         orderedItemList.find { it.id == modelId }

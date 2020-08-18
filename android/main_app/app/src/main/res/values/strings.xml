@@ -8,8 +8,9 @@
     <string name="permission_read_external_storage">Read external storage</string>
     <string name="permission_write_external_storage">Write external storage</string>
 
-    <string name="bluetooth_not_available">Bluetooth is not available on this device</string>
-    <string name="bluetooth_not_enabled">Bluetooth is not enabled</string>
+    <string name="bluetooth_not_available">Bluetooth: Not available</string>
+    <string name="bluetooth_not_enabled">Bluetooth: On</string>
+    <string name="bluetooth_not_disabled">Bluetooth: Off</string>
     <string name="permissions_denied_list">Required permissions denied: %1$s</string>
     <string name="permission_button_enable">Enable permissions</string>
     <string name="permission_button_visit_settings">App settings</string>

@@ -10,6 +10,8 @@ import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
 import com.slambang.shakeyshoes.view.rcb.*
+import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
+import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -33,6 +35,9 @@ class RcbViewFragmentModule {
 
     @Provides
     fun provideItemModelsLiveData(): MutableLiveData<List<RcbItemModel>> = MutableLiveData()
+
+    @Provides
+    fun provideBluetoothStatusLiveData(): MutableLiveData<String> = MutableLiveData()
 
     @Provides
     fun provideRemoveAllBuffersLiveData(): SingleLiveEvent<Unit> = SingleLiveEvent()
@@ -63,6 +68,9 @@ class RcbViewFragmentModule {
 
     @Module
     interface Bindings {
+
+        @Binds
+        fun bindBluetoothMessageMapper(viewModel: BluetoothMessageMapperImpl): BluetoothMessageMapper
 
         @Binds
         fun bindDeviceRepo(repo: BluetoothDeviceRepositoryImpl): BluetoothDeviceRepository

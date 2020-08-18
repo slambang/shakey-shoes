@@ -9,9 +9,6 @@ class BluetoothProviderImpl(
     private val rxBluetooth: RxBluetooth
 ) : BluetoothProvider {
 
-    override val isBluetoothReady: Boolean
-        get() = true//isBluetoothAvailable && isBluetoothEnabled
-
     override val isBluetoothAvailable
         get() = rxBluetooth.isBluetoothAvailable
 

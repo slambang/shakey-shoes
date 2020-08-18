@@ -3,6 +3,7 @@ package com.slambang.shakeyshoes.view.splash
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.google.android.material.snackbar.Snackbar
 import com.slambang.shakeyshoes.R
 import com.slambang.shakeyshoes.view.base.BaseViewFragment
 
@@ -33,6 +34,11 @@ class SplashViewFragment : BaseViewFragment<SplashViewModel>() {
         observe(viewModel.viewState) {
             showWarningMessage(it)
         }
+
+        observe(viewModel.snackbarState) {
+            showSnackbar(it)
+        }
+
         viewModel.onStart()
     }
 
@@ -53,6 +59,9 @@ class SplashViewFragment : BaseViewFragment<SplashViewModel>() {
             isVisible = state.showPermissionButton
         }
     }
+
+    private fun showSnackbar(message: String) =
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
 
     override fun onRequestPermissionsResult(
         requestCode: Int,

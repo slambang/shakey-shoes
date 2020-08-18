@@ -5,7 +5,6 @@ import io.reactivex.Flowable
 
 interface BluetoothProvider {
 
-    val isBluetoothReady: Boolean
     val isBluetoothAvailable: Boolean
     val isBluetoothEnabled: Boolean
     val bondedDevices: Set<BluetoothDevice>?

@@ -4,8 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.slambang.shakeyshoes.util.permissions.RuntimePermissionManager
 import com.slambang.shakeyshoes.util.permissions.RuntimePermissionManagerImpl
 import com.slambang.shakeyshoes.view.splash.*
-import com.slambang.shakeyshoes.view.splash.mappers.BluetoothMessageMapper
-import com.slambang.shakeyshoes.view.splash.mappers.BluetoothMessageMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,13 +24,13 @@ class SplashViewFragmentModule {
     fun provideStatesLiveData(): MutableLiveData<SplashViewState> = MutableLiveData()
 
     @Provides
+    fun provideSnackbarLiveData(): MutableLiveData<String> = MutableLiveData()
+
+    @Provides
     fun provideDisposable(): CompositeDisposable = CompositeDisposable()
 
     @Module
     interface Bindings {
-
-        @Binds
-        fun bindBluetoothMessageMapper(viewModel: BluetoothMessageMapperImpl): BluetoothMessageMapper
 
         @Binds
         fun provideNavigator(navigator: SplashNavigatorImpl): SplashNavigator
