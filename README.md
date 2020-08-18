@@ -1,10 +1,13 @@
 What is it?
 -----------
-A hardware/software project that vibrates wireless devices (aka, a pair of shoes) in time to the music being listened to by the user.  
+A hardware/software project that vibrates wireless devices (aka, a pair of shoes) in time to the music being listened to by the user. 
 The end result is that it feels like you're standing next to a giant, loud speaker. Why not?
 
 The prototype almost ready. It has required huge amounts of research, experimentation, and trial & error.  
-My first goal since the beginning was "just get something working", and I'm almost there.
+My first goal since the beginning was "just get something working", and I'm almost there.  
+
+**Note**  
+The [main_app](android/main_app) is undergoing an extensive rewrite. Please see the [main_app_update](https://github.com/slambang/shakey_shoes/tree/origin/main_app_update) branch.
 
 Components
 ----------
