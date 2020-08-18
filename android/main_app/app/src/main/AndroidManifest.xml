@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.betty7.fingerband.alpha">
+    package="com.slambang.shakeyshoes">
 
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- Runtime permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
@@ -14,37 +17,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true">
+        android:name=".App">
 
         <activity
-            android:name=".bluetooth.view.RcbDemoActivity"
-            android:label="@string/title_activity_rcb_demo"
+            android:name=".view.MainActivity"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity
-            android:name=".audio.FingerbandActivity"
-            android:label="Fingerband Activity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleInstance">
-
-            <intent-filter android:label="labels">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="fingerband"
-                    android:host="alpha" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

@@ -9,6 +9,7 @@
 **/.cxx/
 
 android/main_app/build/
+android/main_app/rcb/build/
 
 android/audio_test/samples/build/
 android/audio_test/samples/audio-device/build

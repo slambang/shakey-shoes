@@ -1,8 +1,16 @@
 <resources>
-    <string name="app_name">RCB Demo</string>
-    <string name="title_activity_rcb_demo">RCB Demo</string>
+    <string name="app_name">Shakey Shoes</string>
+    <string name="action_rcb_menu">Menu</string>
 
-    <string name="bluetooth_denied">Bluetooth denied</string>
+    <string name="permission_fine_location">Access fine location</string>
+    <string name="permission_read_external_storage">Read external storage</string>
+    <string name="permission_write_external_storage">Write external storage</string>
+
+    <string name="bluetooth_not_available">Bluetooth is not available on this device</string>
+    <string name="bluetooth_not_enabled">Bluetooth is not enabled</string>
+    <string name="permissions_denied_list">Required permissions denied: %1$s</string>
+    <string name="permission_button_enable">Enable permissions</string>
+    <string name="permission_button_visit_settings">App settings</string>
 
     <string name="project_repo">Visit project repo</string>
     <string name="delete_all_buffers">Delete all buffers</string>

@@ -1,4 +1,3 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="buffer_view_margin">56dp</dimen>
 </resources>

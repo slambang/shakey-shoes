@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splash_fragment">
+
+    <fragment
+        android:id="@+id/splash_fragment"
+        android:name="com.slambang.shakeyshoes.view.splash.SplashViewFragment"
+        android:label="Splash View"
+        tools:layout="@layout/fragment_splash">
+
+        <action
+            android:id="@+id/action_splash_fragment_to_rcb_fragment"
+            app:destination="@id/rcb_fragment"
+            app:popUpTo="@id/splash_fragment"
+            app:popUpToInclusive="true"
+            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/rcb_fragment"
+        android:name="com.slambang.shakeyshoes.view.rcb.RcbViewFragment"
+        android:label="RCB View"
+        tools:layout="@layout/fragment_rcb">
+    </fragment>
+</navigation>
