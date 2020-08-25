@@ -12,7 +12,7 @@ class RequirePermissionSettingsException : Exception()
 
 class RequestingPermissionException : Exception()
 
-class PermissionInteractor @Inject constructor(
+class PermissionUseCase @Inject constructor(
     private val permissionManager: RuntimePermissionManager,
     private val permissionMessageMapper: PermissionDeniedMessageMapper
 ) {

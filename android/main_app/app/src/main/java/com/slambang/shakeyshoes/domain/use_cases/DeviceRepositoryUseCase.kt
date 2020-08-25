@@ -1,29 +1,31 @@
-package com.slambang.shakeyshoes.view.rcb.interactors
+package com.slambang.shakeyshoes.domain.use_cases
 
-import com.slambang.shakeyshoes.domain.BluetoothDeviceEntityMapper
-import com.slambang.shakeyshoes.data.entity.BluetoothDeviceRepository
+import com.slambang.shakeyshoes.entity.BluetoothDeviceEntityMapper
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
+import com.slambang.shakeyshoes.entity.BluetoothDeviceRepository
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class DeviceRepositoryInteractor @Inject constructor(
+@Singleton
+class DeviceRepositoryUseCase @Inject constructor(
     private val deviceRepo: BluetoothDeviceRepository,
     private val entityMapper: BluetoothDeviceEntityMapper,
     private val reservedDevices: MutableSet<Int>
-) {
+) { // Add interface
 
     fun peekDevice(deviceId: Int): BluetoothDeviceDomain {
         val device = deviceRepo.getDeviceEntity(deviceId)
         return entityMapper.map(device)
     }
 
-    fun reserveDevice(deviceId: Int): BluetoothDeviceDomain {
+    fun popDevice(deviceId: Int): BluetoothDeviceDomain {
         val device = deviceRepo.getDeviceEntity(deviceId)
         setDeviceReserved(device.id, true)
         return entityMapper.map(device)
     }
 
-    fun returnDevice(deviceId: Int) =
+    fun pushDevice(deviceId: Int) =
         setDeviceReserved(deviceId, false)
 
     fun getAvailableDeviceNames(): List<Pair<Int, String>> =

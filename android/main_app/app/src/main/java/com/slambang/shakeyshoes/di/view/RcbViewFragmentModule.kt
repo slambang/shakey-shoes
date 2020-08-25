@@ -3,11 +3,11 @@ package com.slambang.shakeyshoes.di.view
 import androidx.lifecycle.MutableLiveData
 import com.slambang.rcb.service.RcbService
 import com.slambang.shakeyshoes.data.audio.RcbDataSource
-import com.slambang.shakeyshoes.data.entity.BluetoothDeviceRepository
-import com.slambang.shakeyshoes.data.entity.BluetoothDeviceRepositoryImpl
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
+import com.slambang.shakeyshoes.entity.BluetoothDeviceRepository
+import com.slambang.shakeyshoes.entity.BluetoothDeviceRepositoryImpl
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
 import com.slambang.shakeyshoes.view.rcb.*
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper

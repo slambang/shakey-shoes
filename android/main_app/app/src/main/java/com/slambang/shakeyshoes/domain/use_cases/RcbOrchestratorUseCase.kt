@@ -1,4 +1,4 @@
-package com.slambang.shakeyshoes.view.rcb.interactors
+package com.slambang.shakeyshoes.domain.use_cases
 
 import com.slambang.shakeyshoes.domain.BluetoothDeviceAccuracyDomain
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
@@ -8,11 +8,11 @@ import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 // Responsible for mapping rcb service id's to device domains
-class RcbOrchestratorInteractor @Inject constructor(
+class RcbOrchestratorUseCase @Inject constructor(
     private val rcbServiceOrchestrator: RcbServiceOrchestrator,
-    private val deviceRepoInteractor: DeviceRepositoryInteractor, // Hmm... interactor used here?
+    private val deviceRepoUseCase: DeviceRepositoryUseCase,
     private val domainMap: MutableMap<Int, BluetoothDeviceDomain>
-) { // add interface here
+) { // add interface
 
     private lateinit var rcbServiceStatusObserver: (BluetoothDeviceDomain) -> Unit
     private lateinit var rcbServiceAccuracyObserver: (BluetoothDeviceAccuracyDomain) -> Unit
@@ -48,7 +48,10 @@ class RcbOrchestratorInteractor @Inject constructor(
         }
     }
 
-    private fun emitAccuracyUpdate(rcbServiceId: Int, transformer: (BluetoothDeviceAccuracyDomain) -> Unit) {
+    private fun emitAccuracyUpdate(
+        rcbServiceId: Int,
+        transformer: (BluetoothDeviceAccuracyDomain) -> Unit
+    ) {
         requireDeviceDomain(rcbServiceId).accuracies.apply {
             transformer(this)
         }.also {
@@ -56,11 +59,11 @@ class RcbOrchestratorInteractor @Inject constructor(
         }
     }
 
-    fun getAvailableDeviceNames() = deviceRepoInteractor.getAvailableDeviceNames()
+    fun getAvailableDeviceNames() = deviceRepoUseCase.getAvailableDeviceNames()
 
     fun createRcbService(deviceDomainId: Int): BluetoothDeviceDomain {
         val rcbServiceId = rcbServiceOrchestrator.createRcbService()
-        val deviceDomain = deviceRepoInteractor.reserveDevice(deviceDomainId)
+        val deviceDomain = deviceRepoUseCase.popDevice(deviceDomainId)
         domainMap[rcbServiceId] = deviceDomain
         return deviceDomain
     }
@@ -123,16 +126,16 @@ class RcbOrchestratorInteractor @Inject constructor(
     fun deleteRcbService(deviceDomainId: Int) {
 
         val rcbServiceId = requireRcbServiceId(deviceDomainId)
-        rcbServiceOrchestrator.deleteRcbService(rcbServiceId)
+        rcbServiceOrchestrator.removeRcbService(rcbServiceId)
 
         domainMap.remove(rcbServiceId)?.let {
-            deviceRepoInteractor.returnDevice(it.id)
+            deviceRepoUseCase.pushDevice(it.id)
         } ?: throw IllegalArgumentException("No device for service id $rcbServiceId")
     }
 
     fun deleteAllRcbServices() = domainMap.forEach {
-        rcbServiceOrchestrator.deleteRcbService(it.key)
-        deviceRepoInteractor.returnDevice(it.value.id)
+        rcbServiceOrchestrator.removeRcbService(it.key)
+        deviceRepoUseCase.pushDevice(it.value.id)
     }.also {
         domainMap.clear()
     }

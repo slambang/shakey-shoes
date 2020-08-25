@@ -3,7 +3,7 @@ package com.slambang.shakeyshoes.domain
 import com.slambang.rcb.service.RcbServiceError
 import javax.inject.Inject
 
-class RcbServiceStatusErrorDomainMapper @Inject constructor() {
+class RcbServiceStatusMapper @Inject constructor() {
 
     fun map(error: RcbServiceError): RcbServiceStatus =
         when (error) {

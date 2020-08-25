@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(
     private val navigator: SplashNavigator,
-    private val permissionInteractor: PermissionInteractor,
+    private val permissionUseCase: PermissionUseCase,
     private val schedulers: SchedulerProvider,
     private val disposables: CompositeDisposable,
     private val _viewState: MutableLiveData<SplashViewState>,
@@ -27,7 +27,7 @@ class SplashViewModel @Inject constructor(
     fun onStart() {
         _viewState.postValue(SplashViewState.DEFAULT)
 
-        permissionInteractor.checkPermissions()
+        permissionUseCase.checkPermissions()
             .delaySubscription(SPLASH_DELAY_MS, TimeUnit.MILLISECONDS)
             .genericSubscribe()
     }
@@ -39,12 +39,12 @@ class SplashViewModel @Inject constructor(
         permissions: List<String>,
         grantResults: List<Int>
     ) {
-        permissionInteractor.checkPermissionResult(requestCode, permissions, grantResults)
+        permissionUseCase.checkPermissionResult(requestCode, permissions, grantResults)
             .genericSubscribe()
     }
 
     fun onPermissionButtonClicked() {
-        permissionInteractor.reRequestPermission()
+        permissionUseCase.reRequestPermission()
             .genericSubscribe()
     }
 

@@ -1,4 +1,4 @@
-package com.slambang.shakeyshoes.data.entity
+package com.slambang.shakeyshoes.entity
 
 sealed class BluetoothDeviceEntity(
     val id: Int,

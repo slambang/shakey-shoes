@@ -7,7 +7,7 @@ import com.slambang.shakeyshoes.domain.BluetoothDeviceAccuracyDomain
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.util.SchedulerProvider
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
-import com.slambang.shakeyshoes.view.rcb.interactors.RcbOrchestratorInteractor
+import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCase
 import com.slambang.shakeyshoes.view.rcb.mappers.*
 import io.reactivex.disposables.CompositeDisposable
 import java.lang.IllegalStateException
@@ -18,12 +18,12 @@ class RcbViewModel @Inject constructor(
     private val schedulers: SchedulerProvider,
     private val disposables: CompositeDisposable,
 
-    private val bluetoothInteractor: BluetoothInteractor,
+    private val bluetoothUseCase: BluetoothUseCase,
 
 
     private val domainMapper: DomainMapper,
     private val productUrlMapper: ProductUrlMapper,
-    private val rcbOrchestratorInteractor: RcbOrchestratorInteractor,
+    private val rcbOrchestratorUseCase: RcbOrchestratorUseCase,
     private val orderedItemList: MutableList<RcbItemModel> = mutableListOf(),
 
     // LiveData
@@ -63,11 +63,11 @@ class RcbViewModel @Inject constructor(
 
     fun onResume() {
         observeBluetoothState()
-        rcbOrchestratorInteractor.subscribe(::onDomainUpdated, ::onRcbServiceAccuracy)
+        rcbOrchestratorUseCase.subscribe(::onDomainUpdated, ::onRcbServiceAccuracy)
     }
 
     private fun observeBluetoothState() {
-        bluetoothInteractor.observeBluetoothStatus()
+        bluetoothUseCase.observeBluetoothStatus()
             .subscribeOn(schedulers.io)
             .subscribe({
                 _bluetoothStatusLiveData.postValue(it)
@@ -79,18 +79,18 @@ class RcbViewModel @Inject constructor(
 
     // TODO Threading
     fun onAddRcbClicked() {
-        val availableDeviceNames = rcbOrchestratorInteractor.getAvailableDeviceNames()
+        val availableDeviceNames = rcbOrchestratorUseCase.getAvailableDeviceNames()
         _showDeviceListLiveData.postValue(availableDeviceNames)
     }
 
     // TODO Threading
     fun onConnectRcbClicked(modelId: Int) =
-        rcbOrchestratorInteractor.connectBufferService(modelId)
+        rcbOrchestratorUseCase.connectBufferService(modelId)
 
     // TODO Threading
     fun onConfigureRbClicked(modelId: Int) =
         requireBufferItemModel(modelId).let {
-            rcbOrchestratorInteractor.configureRcbService(
+            rcbOrchestratorUseCase.configureRcbService(
                 modelId,
                 it.page2.config.refillCount,
                 it.page2.config.refillSize,
@@ -102,7 +102,7 @@ class RcbViewModel @Inject constructor(
     // TODO Threading
     fun toggleRcb(modelId: Int) =
         requireBufferItemModel(modelId).let {
-            rcbOrchestratorInteractor.toggleRcb(
+            rcbOrchestratorUseCase.toggleRcb(
                 modelId,
                 it.page3.isResumed
             )
@@ -111,16 +111,16 @@ class RcbViewModel @Inject constructor(
 
     // TODO Threading
     fun onPauseRcbClicked(modelId: Int) =
-        rcbOrchestratorInteractor.pauseRcbService(modelId)
+        rcbOrchestratorUseCase.pauseRcbService(modelId)
 
     // TODO Threading
     fun onResumeRcbClicked(modelId: Int) =
-        rcbOrchestratorInteractor.resumeRcbService(modelId)
+        rcbOrchestratorUseCase.resumeRcbService(modelId)
 
     // TODO Threading
     fun onRemoveRcbItemClicked(modelId: Int) {
 
-        rcbOrchestratorInteractor.deleteRcbService(modelId)
+        rcbOrchestratorUseCase.deleteRcbService(modelId)
 
         val index = orderedItemList.indexOfFirst {
             it.id == modelId
@@ -165,16 +165,16 @@ class RcbViewModel @Inject constructor(
 
     // TODO Threading
     fun onPause() =
-        rcbOrchestratorInteractor.pauseAllRcbServices()
+        rcbOrchestratorUseCase.pauseAllRcbServices()
 
     // TODO Threading
     fun onStop() =
-        rcbOrchestratorInteractor.stopAllRcbServices()
+        rcbOrchestratorUseCase.stopAllRcbServices()
 
     // TODO Threading
     fun onRcbDeviceSelected(deviceDomainId: Int) {
 
-        val deviceDomain = rcbOrchestratorInteractor.createRcbService(deviceDomainId)
+        val deviceDomain = rcbOrchestratorUseCase.createRcbService(deviceDomainId)
         val rcbItemModel = domainMapper.mapSelectedDevice(deviceDomain)
 
         orderedItemList.add(rcbItemModel)
@@ -195,7 +195,7 @@ class RcbViewModel @Inject constructor(
 
     // TODO Threading
     fun onRemoveAllRcbsClicked() {
-        rcbOrchestratorInteractor.deleteAllRcbServices()
+        rcbOrchestratorUseCase.deleteAllRcbServices()
         orderedItemList.clear()
         _removeAllBuffersLiveData.postValue(Unit)
         _removeAllMenuOptionEnabledLiveData.postValue(false)
@@ -203,7 +203,7 @@ class RcbViewModel @Inject constructor(
 
     // TODO Threading
     fun setVibrateValue(modelId: Int, vibrateValue: Int) =
-        rcbOrchestratorInteractor.setVibrateValue(modelId, vibrateValue)
+        rcbOrchestratorUseCase.setVibrateValue(modelId, vibrateValue)
 
     override fun onCleared() {
         disposables.clear()

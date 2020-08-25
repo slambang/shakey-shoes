@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket
 import com.slambang.rcb.bluetooth.BluetoothConnection
 import com.slambang.rcb.bluetooth.BluetoothConnectionState
 import java.io.IOException
+import java.lang.IllegalStateException
 import java.util.concurrent.atomic.AtomicInteger
 
 class RcbServiceImpl(
@@ -16,7 +17,7 @@ class RcbServiceImpl(
 
     private var wasStopped = false
 
-    private lateinit var bluetoothSocket: BluetoothSocket
+    private var bluetoothSocket: BluetoothSocket? = null
 
     override fun connect(
         macAddress: String,
@@ -72,7 +73,8 @@ class RcbServiceImpl(
 
     override fun stop() {
         wasStopped = true
-        bluetoothSocket.close()
+        bluetoothSocket?.close()
+        bluetoothSocket = null
         bluetoothConnection.close()
     }
 
@@ -87,7 +89,7 @@ class RcbServiceImpl(
 
     private fun listenForSignals(listener: RcbServiceListener) =
         try {
-            while (bluetoothSocket.isConnected) {
+            while (requireSocket().isConnected) {
                 waitForSignal(listener)
             }
         } catch (error: IOException) {
@@ -101,7 +103,7 @@ class RcbServiceImpl(
 
     private fun waitForSignal(listener: RcbServiceListener) {
 
-        val value = bluetoothSocket.inputStream.read()
+        val value = requireSocket().inputStream.read()
 
         stateMapper.a(value)?.let {
             listener.onBufferServiceState(this, it)
@@ -110,13 +112,13 @@ class RcbServiceImpl(
 
     private fun awaitFreeHeap(listener: RcbServiceListener) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONNECT)
-        val freeRamBytes = bluetoothSocket.inputStream.readInt()
+        val freeRamBytes = requireSocket().inputStream.readInt()
         listener.onBufferServiceFreeHeap(this, freeRamBytes)
     }
 
     private fun transmit(data: Int) {
-        if (bluetoothSocket.isConnected) {
-            bluetoothSocket.outputStream.write(data)
+        if (requireSocket().isConnected) {
+            requireSocket().outputStream.write(data)
         }
     }
 
@@ -124,6 +126,9 @@ class RcbServiceImpl(
         transmit(SIGNAL_OUT_COMMAND)
         transmit(command)
     }
+
+    private fun requireSocket() =
+        bluetoothSocket ?: throw IllegalStateException("Required Bluetooth socket")
 
     companion object {
         private val ID = AtomicInteger(-1)

@@ -13,7 +13,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
     private val rcbServiceFactory: RcbServiceFactory,
     private val rcbDataSources: MutableMap<Int, RcbDataSource>,
     private val rcbServices: MutableMap<Int, RcbService>,
-    private val errorDomainMapper: RcbServiceStatusErrorDomainMapper
+    private val serviceStatusMapper: RcbServiceStatusMapper
 ) : RcbServiceOrchestrator {
 
     private val rcbServiceListener = object : RcbServiceListener {
@@ -47,7 +47,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         return rcbService.id
     }
 
-    override fun deleteRcbService(rcbServiceId: Int) {
+    override fun removeRcbService(rcbServiceId: Int) {
         rcbServices.remove(rcbServiceId)?.stop()
             ?: throw IllegalStateException("Rcb Service with id $rcbServiceId is not in the orchestrator")
 
@@ -160,7 +160,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         rcbService: RcbService,
         error: RcbServiceError
     ) {
-        val mappedError = errorDomainMapper.map(error)
+        val mappedError = serviceStatusMapper.map(error)
         rcbServiceStatusObserver(rcbService.id, mappedError)
     }
 

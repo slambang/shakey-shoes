@@ -11,7 +11,7 @@ import io.reactivex.disposables.CompositeDisposable
  * The idea here is to have mocked input/output streams to act as an Arduino device.
  * This class will vibrate the user's device instead.
  */
-class MockBluetoothDevice(
+class MockBluetoothConnection(
     private val scheduler: Scheduler,
     private val subscriptions: CompositeDisposable
 ) : BluetoothConnection {

@@ -10,9 +10,7 @@ data class BluetoothDeviceDomain(
     val baudRateBytes: Int = 0,
     var freeHeapBytes: Int = 0,
     var status: RcbServiceStatus = RcbServiceStatus.Disconnected,
-    val accuracies: BluetoothDeviceAccuracyDomain = BluetoothDeviceAccuracyDomain(
-        id
-    )
+    val accuracies: BluetoothDeviceAccuracyDomain = BluetoothDeviceAccuracyDomain(id)
 )
 
 data class BluetoothDeviceAccuracyDomain(

@@ -1,6 +1,6 @@
-package com.slambang.shakeyshoes.domain
+package com.slambang.shakeyshoes.entity
 
-import com.slambang.shakeyshoes.data.entity.BluetoothDeviceEntity
+import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import javax.inject.Inject
 
 class BluetoothDeviceEntityMapper @Inject constructor() {

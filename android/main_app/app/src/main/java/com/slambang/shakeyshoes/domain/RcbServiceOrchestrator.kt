@@ -5,7 +5,7 @@ interface RcbServiceOrchestrator {
     fun subscribe(rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit)
 
     fun createRcbService(): Int
-    fun deleteRcbService(rcbServiceId: Int)
+    fun removeRcbService(rcbServiceId: Int)
 
     fun connectRcbService(rcbServiceId: Int, macAddress: String, serviceUuid: String)
     fun configureRcbService(
