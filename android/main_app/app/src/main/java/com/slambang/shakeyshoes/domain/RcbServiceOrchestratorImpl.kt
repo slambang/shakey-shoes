@@ -47,6 +47,8 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         return rcbService.id
     }
 
+    // Bug: If we close the stream while still creating the socket, we land here
+    // Which calls all the way back to the observer. Observer has already removed the RCB service
     override fun removeRcbService(rcbServiceId: Int) {
         rcbServices.remove(rcbServiceId)?.stop()
             ?: throw IllegalStateException("Rcb Service with id $rcbServiceId is not in the orchestrator")

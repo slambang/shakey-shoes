@@ -57,8 +57,6 @@ class BluetoothConnectionImpl private constructor(
                 BluetoothConnectionState.Connected(it)
             } ?: throw IllegalStateException("Unable to create Bluetooth socket")
         } catch (error: Throwable) {
-            // Bug: If we close the stream while still creating the socket, we land here
-            // Which calls all the way back to the observer. Observer has already removed the RCB service
             BluetoothConnectionState.Error(error)
         }
 
@@ -67,13 +65,10 @@ class BluetoothConnectionImpl private constructor(
             scheduler: Scheduler,
             bluetoothProvider: BluetoothProvider,
             subscriptions: CompositeDisposable
-        ): BluetoothConnection {
-
-            return BluetoothConnectionImpl(
-                scheduler,
-                bluetoothProvider,
-                subscriptions
-            )
-        }
+        ) = BluetoothConnectionImpl(
+            scheduler,
+            bluetoothProvider,
+            subscriptions
+        )
     }
 }
