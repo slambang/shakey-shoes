@@ -3,7 +3,7 @@ package com.slambang.shakeyshoes.di.app
 import android.app.Application
 import android.content.Context
 import com.slambang.bluetooth_connection.BluetoothProvider
-import com.slambang.bluetooth_connection.BluetoothProviderFactory
+import com.slambang.bluetooth_connection.BluetoothProviderImpl
 import com.slambang.shakeyshoes.di.scope.ApplicationContext
 import com.slambang.shakeyshoes.entity.BluetoothDeviceRepository
 import com.slambang.shakeyshoes.entity.BluetoothDeviceRepositoryImpl
@@ -22,7 +22,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideBluetoothProvider(@ApplicationContext context: Context) : BluetoothProvider =
-        BluetoothProviderFactory.newInstance(context)
+        BluetoothProviderImpl.newInstance(context)
 
     @Module
     interface Bindings {

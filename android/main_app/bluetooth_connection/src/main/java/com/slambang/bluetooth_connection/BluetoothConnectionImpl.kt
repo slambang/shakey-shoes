@@ -65,10 +65,9 @@ class BluetoothConnectionImpl private constructor(
     companion object {
         fun newInstance(
             scheduler: Scheduler,
-            bluetoothProvider: BluetoothProvider
+            bluetoothProvider: BluetoothProvider,
+            subscriptions: CompositeDisposable
         ): BluetoothConnection {
-
-            val subscriptions = CompositeDisposable()
 
             return BluetoothConnectionImpl(
                 scheduler,

@@ -25,10 +25,13 @@ class RcbServiceFactory @Inject constructor(
 
     fun newRcbService(): RcbService {
 
+        // Inject from Dagger
+        val subscriptions = CompositeDisposable()
+
         val bluetoothConnection = if (isEmulator) {
-            MockBluetoothConnection(scheduler, CompositeDisposable())
+            MockBluetoothConnection(scheduler, subscriptions)
         } else {
-            BluetoothConnectionImpl.newInstance(scheduler, bluetoothProvider)
+            BluetoothConnectionImpl.newInstance(scheduler, bluetoothProvider, subscriptions)
         }
 
         val stateMapper = RcbStateMapper()
