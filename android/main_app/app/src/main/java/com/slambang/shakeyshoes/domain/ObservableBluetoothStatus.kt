@@ -1,4 +1,4 @@
-package com.slambang.shakeyshoes.util
+package com.slambang.shakeyshoes.domain
 
 import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver

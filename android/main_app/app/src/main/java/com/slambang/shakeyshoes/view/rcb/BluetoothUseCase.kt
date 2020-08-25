@@ -1,6 +1,6 @@
 package com.slambang.shakeyshoes.view.rcb
 
-import com.slambang.shakeyshoes.util.ObservableBluetoothStatus
+import com.slambang.shakeyshoes.domain.ObservableBluetoothStatus
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
 import io.reactivex.Observable
 import javax.inject.Inject

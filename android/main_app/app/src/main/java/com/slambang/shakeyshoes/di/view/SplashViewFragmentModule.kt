@@ -1,8 +1,8 @@
 package com.slambang.shakeyshoes.di.view
 
 import androidx.lifecycle.MutableLiveData
-import com.slambang.shakeyshoes.util.permissions.RuntimePermissionManager
-import com.slambang.shakeyshoes.util.permissions.RuntimePermissionManagerImpl
+import com.slambang.shakeyshoes.domain.permissions.RuntimePermissionManager
+import com.slambang.shakeyshoes.domain.permissions.RuntimePermissionManagerImpl
 import com.slambang.shakeyshoes.view.splash.*
 import dagger.Binds
 import dagger.Module

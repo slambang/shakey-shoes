@@ -1,7 +1,7 @@
 package com.slambang.shakeyshoes.view.rcb.mappers
 
 import com.slambang.shakeyshoes.R
-import com.slambang.shakeyshoes.util.BluetoothStatus
+import com.slambang.shakeyshoes.domain.BluetoothStatus
 import com.slambang.shakeyshoes.util.StringProvider
 import javax.inject.Inject
 

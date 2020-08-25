@@ -1,4 +1,4 @@
-package com.slambang.shakeyshoes.util.permissions
+package com.slambang.shakeyshoes.domain.permissions
 
 sealed class PermissionResultDomain {
 

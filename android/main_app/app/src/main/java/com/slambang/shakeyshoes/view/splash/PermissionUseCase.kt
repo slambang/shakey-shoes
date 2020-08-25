@@ -1,7 +1,7 @@
 package com.slambang.shakeyshoes.view.splash
 
-import com.slambang.shakeyshoes.util.permissions.PermissionResultDomain
-import com.slambang.shakeyshoes.util.permissions.RuntimePermissionManager
+import com.slambang.shakeyshoes.domain.permissions.PermissionResultDomain
+import com.slambang.shakeyshoes.domain.permissions.RuntimePermissionManager
 import com.slambang.shakeyshoes.view.splash.mappers.PermissionDeniedMessageMapper
 import io.reactivex.Single
 import javax.inject.Inject

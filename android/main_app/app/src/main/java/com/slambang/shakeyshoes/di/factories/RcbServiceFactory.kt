@@ -1,13 +1,12 @@
 package com.slambang.shakeyshoes.di.factories
 
-import android.content.Context
 import android.os.Build
 import com.slambang.bluetooth_connection.BluetoothConnectionImpl
+import com.slambang.bluetooth_connection.BluetoothProvider
 import com.slambang.rcb_service.RcbService
 import com.slambang.rcb_service.RcbServiceErrorMapper
 import com.slambang.rcb_service.RcbServiceImpl
 import com.slambang.rcb_service.RcbStateMapper
-import com.slambang.shakeyshoes.di.scope.ApplicationContext
 import com.slambang.shakeyshoes.domain.MockBluetoothConnection
 import com.slambang.shakeyshoes.util.SchedulerProvider
 import io.reactivex.Scheduler
@@ -15,7 +14,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class RcbServiceFactory @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val bluetoothProvider: BluetoothProvider,
     private val schedulerProvider: SchedulerProvider
 ) {
     private val scheduler: Scheduler
@@ -29,7 +28,7 @@ class RcbServiceFactory @Inject constructor(
         val bluetoothConnection = if (isEmulator) {
             MockBluetoothConnection(scheduler, CompositeDisposable())
         } else {
-            BluetoothConnectionImpl.newInstance(context, scheduler)
+            BluetoothConnectionImpl.newInstance(scheduler, bluetoothProvider)
         }
 
         val stateMapper = RcbStateMapper()

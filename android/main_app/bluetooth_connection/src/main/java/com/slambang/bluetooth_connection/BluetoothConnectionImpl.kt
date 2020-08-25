@@ -1,8 +1,6 @@
 package com.slambang.bluetooth_connection
 
 import android.bluetooth.BluetoothDevice
-import android.content.Context
-import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
@@ -66,17 +64,15 @@ class BluetoothConnectionImpl private constructor(
 
     companion object {
         fun newInstance(
-            context: Context,
-            scheduler: Scheduler
+            scheduler: Scheduler,
+            bluetoothProvider: BluetoothProvider
         ): BluetoothConnection {
 
             val subscriptions = CompositeDisposable()
-            val rxBluetooth = RxBluetooth(context)
-            val provider = BluetoothProviderImpl(rxBluetooth)
 
             return BluetoothConnectionImpl(
                 scheduler,
-                provider,
+                bluetoothProvider,
                 subscriptions
             )
         }
