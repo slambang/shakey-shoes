@@ -2,11 +2,11 @@ package com.slambang.shakeyshoes.di.factories
 
 import android.content.Context
 import android.os.Build
-import com.slambang.rcb.bluetooth.BluetoothConnectionImpl
-import com.slambang.rcb.service.RcbServiceErrorMapper
-import com.slambang.rcb.service.RcbService
-import com.slambang.rcb.service.RcbServiceImpl
-import com.slambang.rcb.service.RcbStateMapper
+import com.slambang.bluetooth_connection.BluetoothConnectionImpl
+import com.slambang.rcb_service.RcbService
+import com.slambang.rcb_service.RcbServiceErrorMapper
+import com.slambang.rcb_service.RcbServiceImpl
+import com.slambang.rcb_service.RcbStateMapper
 import com.slambang.shakeyshoes.di.scope.ApplicationContext
 import com.slambang.shakeyshoes.domain.MockBluetoothConnection
 import com.slambang.shakeyshoes.util.SchedulerProvider

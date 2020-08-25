@@ -1,6 +1,6 @@
 package com.slambang.shakeyshoes.domain
 
-import com.slambang.rcb.service.*
+import com.slambang.rcb_service.*
 import com.slambang.shakeyshoes.data.audio.RcbDataSource
 import com.slambang.shakeyshoes.data.audio.SettableRcbDataSource
 import com.slambang.shakeyshoes.di.factories.RcbDataFactory

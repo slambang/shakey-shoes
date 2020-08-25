@@ -33,6 +33,6 @@ class SplashViewFragmentModule {
     interface Bindings {
 
         @Binds
-        fun provideNavigator(navigator: SplashNavigatorImpl): SplashNavigator
+        fun provideNavigator(impl: SplashNavigatorImpl): SplashNavigator
     }
 }

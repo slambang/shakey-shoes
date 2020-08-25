@@ -1,8 +1,8 @@
 package com.slambang.shakeyshoes.domain
 
 import android.bluetooth.BluetoothSocket
-import com.slambang.rcb.bluetooth.BluetoothConnection
-import com.slambang.rcb.bluetooth.BluetoothConnectionState
+import com.slambang.bluetooth_connection.BluetoothConnection
+import com.slambang.bluetooth_connection.BluetoothConnectionState
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 

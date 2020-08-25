@@ -12,8 +12,7 @@ interface BluetoothDeviceRepository {
  * The project does not yet support automatic discovery of Bluetooth devices.
  * For now we hardcode each known device and its properties.
  */
-class BluetoothDeviceRepositoryImpl @Inject constructor() :
-    BluetoothDeviceRepository {
+class BluetoothDeviceRepositoryImpl @Inject constructor() : BluetoothDeviceRepository {
 
     override fun getDeviceEntities() = ALL_KNOWN_DEVICES
 

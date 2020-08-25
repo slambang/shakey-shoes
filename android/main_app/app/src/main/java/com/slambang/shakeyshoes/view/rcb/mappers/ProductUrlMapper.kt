@@ -1,10 +1,10 @@
 package com.slambang.shakeyshoes.view.rcb.mappers
 
-import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCase
+import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCaseImpl
 import javax.inject.Inject
 
 class ProductUrlMapper @Inject constructor(
-    private val deviceRepoUseCase: DeviceRepositoryUseCase
+    private val deviceRepoUseCase: DeviceRepositoryUseCaseImpl
 ) {
 
     fun map(deviceId: Int) =

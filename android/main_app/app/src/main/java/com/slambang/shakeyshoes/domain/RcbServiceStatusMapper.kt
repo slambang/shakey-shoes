@@ -1,6 +1,6 @@
 package com.slambang.shakeyshoes.domain
 
-import com.slambang.rcb.service.RcbServiceError
+import com.slambang.rcb_service.RcbServiceError
 import javax.inject.Inject
 
 class RcbServiceStatusMapper @Inject constructor() {

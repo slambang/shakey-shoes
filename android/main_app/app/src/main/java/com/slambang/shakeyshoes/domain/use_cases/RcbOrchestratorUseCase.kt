@@ -4,13 +4,12 @@ import com.slambang.shakeyshoes.domain.BluetoothDeviceAccuracyDomain
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
 import com.slambang.shakeyshoes.domain.RcbServiceStatus
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 // Responsible for mapping rcb service id's to device domains
 class RcbOrchestratorUseCase @Inject constructor(
     private val rcbServiceOrchestrator: RcbServiceOrchestrator,
-    private val deviceRepoUseCase: DeviceRepositoryUseCase,
+    private val deviceRepoUseCase: DeviceRepositoryUseCaseImpl,
     private val domainMap: MutableMap<Int, BluetoothDeviceDomain>
 ) { // add interface
 

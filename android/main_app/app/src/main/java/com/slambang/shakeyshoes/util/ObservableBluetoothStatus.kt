@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.slambang.rcb.bluetooth.BluetoothProvider
 import com.slambang.shakeyshoes.di.scope.ApplicationContext
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
@@ -19,7 +18,7 @@ enum class BluetoothStatus {
 
 class ObservableBluetoothStatus @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val bluetoothProvider: BluetoothProvider
+    private val bluetoothProvider: com.slambang.bluetooth_connection.BluetoothProvider
 ) {
 
     private lateinit var emitter: ObservableEmitter<BluetoothStatus>

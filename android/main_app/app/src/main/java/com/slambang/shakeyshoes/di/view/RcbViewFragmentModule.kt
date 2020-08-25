@@ -1,15 +1,18 @@
 package com.slambang.shakeyshoes.di.view
 
 import androidx.lifecycle.MutableLiveData
-import com.slambang.rcb.service.RcbService
+import com.slambang.rcb_service.RcbService
 import com.slambang.shakeyshoes.data.audio.RcbDataSource
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
-import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
-import com.slambang.shakeyshoes.entity.BluetoothDeviceRepository
-import com.slambang.shakeyshoes.entity.BluetoothDeviceRepositoryImpl
+import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
+import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCase
+import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCaseImpl
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
-import com.slambang.shakeyshoes.view.rcb.*
+import com.slambang.shakeyshoes.view.rcb.RcbItemModel
+import com.slambang.shakeyshoes.view.rcb.RcbNavigator
+import com.slambang.shakeyshoes.view.rcb.RcbNavigatorImpl
+import com.slambang.shakeyshoes.view.rcb.RcbViewModel
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapperImpl
 import dagger.Binds
@@ -70,15 +73,15 @@ class RcbViewFragmentModule {
     interface Bindings {
 
         @Binds
-        fun bindBluetoothMessageMapper(viewModel: BluetoothMessageMapperImpl): BluetoothMessageMapper
+        fun bindBluetoothMessageMapper(impl: BluetoothMessageMapperImpl): BluetoothMessageMapper
 
         @Binds
-        fun bindDeviceRepo(repo: BluetoothDeviceRepositoryImpl): BluetoothDeviceRepository
+        fun bindDeviceRepositoryUseCase(impl: DeviceRepositoryUseCaseImpl): DeviceRepositoryUseCase
 
         @Binds
-        fun provideNavigator(navigator: RcbNavigatorImpl): RcbNavigator
+        fun provideNavigator(impl: RcbNavigatorImpl): RcbNavigator
 
         @Binds
-        fun provideRcbServiceOrchestrator(orchestrator: RcbServiceOrchestratorImpl): RcbServiceOrchestrator
+        fun provideRcbServiceOrchestrator(impl: RcbServiceOrchestratorImpl): RcbServiceOrchestrator
     }
 }

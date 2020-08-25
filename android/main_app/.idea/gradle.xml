@@ -12,7 +12,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/rcb" />
+            <option value="$PROJECT_DIR$/bluetooth_connection" />
+            <option value="$PROJECT_DIR$/rcb_service" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
