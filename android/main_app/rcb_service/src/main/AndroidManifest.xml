@@ -1,6 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.slambang.rcb">
-
-    /
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+<manifest
+    package="com.slambang.rcb_service">
 </manifest>
