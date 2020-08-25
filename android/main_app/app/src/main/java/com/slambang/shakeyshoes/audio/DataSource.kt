@@ -1,6 +1,6 @@
-package com.slambang.shakeyshoes.data.audio
+package com.slambang.shakeyshoes.audio
 
-interface RcbDataSource : Iterator<Int> {
+interface DataSource : Iterator<Int> {
 
     /**
      * Check if there is an element available.

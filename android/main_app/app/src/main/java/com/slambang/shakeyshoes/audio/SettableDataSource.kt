@@ -1,8 +1,8 @@
-package com.slambang.shakeyshoes.data.audio
+package com.slambang.shakeyshoes.audio
 
-class SettableRcbDataSource(
+class SettableDataSource(
     initialValue: Int
-) : RcbDataSource {
+) : DataSource {
 
     var value = initialValue
 

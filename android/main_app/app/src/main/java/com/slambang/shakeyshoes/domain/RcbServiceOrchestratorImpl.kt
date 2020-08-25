@@ -1,8 +1,8 @@
 package com.slambang.shakeyshoes.domain
 
 import com.slambang.rcb_service.*
-import com.slambang.shakeyshoes.data.audio.RcbDataSource
-import com.slambang.shakeyshoes.data.audio.SettableRcbDataSource
+import com.slambang.shakeyshoes.audio.DataSource
+import com.slambang.shakeyshoes.audio.SettableDataSource
 import com.slambang.shakeyshoes.di.factories.RcbDataFactory
 import com.slambang.shakeyshoes.di.factories.RcbServiceFactory
 import javax.inject.Inject
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class RcbServiceOrchestratorImpl @Inject constructor(
     private val rcbDataFactory: RcbDataFactory,
     private val rcbServiceFactory: RcbServiceFactory,
-    private val rcbDataSources: MutableMap<Int, RcbDataSource>,
+    private val dataSources: MutableMap<Int, DataSource>,
     private val rcbServices: MutableMap<Int, RcbService>,
     private val serviceStatusMapper: RcbServiceStatusMapper
 ) : RcbServiceOrchestrator {
@@ -43,7 +43,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
     override fun createRcbService(): Int {
         val rcbService = rcbServiceFactory.newRcbService()
         rcbServices[rcbService.id] = rcbService
-        rcbDataSources[rcbService.id] = rcbDataFactory.newRcbDataSource()
+        dataSources[rcbService.id] = rcbDataFactory.newRcbDataSource()
         return rcbService.id
     }
 
@@ -51,7 +51,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         rcbServices.remove(rcbServiceId)?.stop()
             ?: throw IllegalStateException("Rcb Service with id $rcbServiceId is not in the orchestrator")
 
-        rcbDataSources.remove(rcbServiceId)
+        dataSources.remove(rcbServiceId)
             ?: throw IllegalStateException("Data source with id $rcbServiceId is not in the orchestrator")
     }
 
@@ -110,7 +110,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
 
     override fun hackBufferValue(rcbServiceId: Int, value: Int) {
         requireDataSource(rcbServiceId).also {
-            if (it is SettableRcbDataSource) {
+            if (it is SettableDataSource) {
                 it.value = value
             }
         }
@@ -165,7 +165,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
     }
 
     private fun requireDataSource(id: Int) =
-        rcbDataSources[id] ?: throw IllegalArgumentException("Required data source: $id")
+        dataSources[id] ?: throw IllegalArgumentException("Required data source: $id")
 
     private fun requireBufferService(id: Int) =
         rcbServices[id] ?: throw IllegalArgumentException("Required buffer service: $id")

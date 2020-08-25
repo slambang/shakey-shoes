@@ -2,7 +2,7 @@ package com.slambang.shakeyshoes.di.view
 
 import androidx.lifecycle.MutableLiveData
 import com.slambang.rcb_service.RcbService
-import com.slambang.shakeyshoes.data.audio.RcbDataSource
+import com.slambang.shakeyshoes.audio.DataSource
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
@@ -64,7 +64,7 @@ class RcbViewFragmentModule {
     fun provideDomainMap(): MutableMap<Int, BluetoothDeviceDomain> = mutableMapOf()
 
     @Provides
-    fun provideRcbDataSources(): MutableMap<Int, RcbDataSource> = mutableMapOf()
+    fun provideRcbDataSources(): MutableMap<Int, DataSource> = mutableMapOf()
 
     @Provides
     fun provideRcbServices(): MutableMap<Int, RcbService> = mutableMapOf()
