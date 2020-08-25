@@ -2,10 +2,7 @@ package com.slambang.shakeyshoes.domain
 
 interface RcbServiceOrchestrator {
 
-    fun subscribe(
-        rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit,
-        rcbServiceAccuracyObserver: (Int) -> Unit
-    )
+    fun subscribe(rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit)
 
     fun createRcbService(): Int
     fun deleteRcbService(rcbServiceId: Int)

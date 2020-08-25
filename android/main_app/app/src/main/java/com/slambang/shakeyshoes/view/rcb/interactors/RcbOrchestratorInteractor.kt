@@ -3,6 +3,7 @@ package com.slambang.shakeyshoes.view.rcb.interactors
 import com.slambang.shakeyshoes.domain.BluetoothDeviceAccuracyDomain
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
+import com.slambang.shakeyshoes.domain.RcbServiceStatus
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -13,20 +14,46 @@ class RcbOrchestratorInteractor @Inject constructor(
     private val domainMap: MutableMap<Int, BluetoothDeviceDomain>
 ) { // add interface here
 
+    private lateinit var rcbServiceStatusObserver: (BluetoothDeviceDomain) -> Unit
+    private lateinit var rcbServiceAccuracyObserver: (BluetoothDeviceAccuracyDomain) -> Unit
+
     fun subscribe(
         rcbServiceStatusObserver: (BluetoothDeviceDomain) -> Unit,
         rcbServiceAccuracyObserver: (BluetoothDeviceAccuracyDomain) -> Unit
     ) {
-        rcbServiceOrchestrator.subscribe(
-            rcbServiceStatusObserver = { domainId, status ->
-                requireDeviceDomain(domainId).let {
+        this.rcbServiceStatusObserver = rcbServiceStatusObserver
+        this.rcbServiceAccuracyObserver = rcbServiceAccuracyObserver
+        rcbServiceOrchestrator.subscribe(::onRcbStatusUpdate)
+    }
+
+    private fun onRcbStatusUpdate(rcbServiceId: Int, status: RcbServiceStatus) {
+
+        when (status) {
+            RcbServiceStatus.Refill -> {
+                emitAccuracyUpdate(rcbServiceId) {
+                    it.refillCount++
+                }
+            }
+            RcbServiceStatus.Underflow -> {
+                emitAccuracyUpdate(rcbServiceId) {
+                    it.underflowCount++
+                }
+            }
+            else -> {
+                requireDeviceDomain(rcbServiceId).let {
                     it.status = status
                     rcbServiceStatusObserver(it)
                 }
-            },
-            rcbServiceAccuracyObserver = { domainId ->
-                rcbServiceAccuracyObserver(requireDeviceDomain(domainId).accuracies)
-            })
+            }
+        }
+    }
+
+    private fun emitAccuracyUpdate(rcbServiceId: Int, transformer: (BluetoothDeviceAccuracyDomain) -> Unit) {
+        requireDeviceDomain(rcbServiceId).accuracies.apply {
+            transformer(this)
+        }.also {
+            rcbServiceAccuracyObserver(it)
+        }
     }
 
     fun getAvailableDeviceNames() = deviceRepoInteractor.getAvailableDeviceNames()

@@ -1,10 +1,22 @@
 package com.slambang.rcb.bluetooth
 
-enum class BluetoothConnectionState {
-    UNAVAILABLE,
-    DISABLED,
-    CONNECTION_ERROR,
-    CONNECTING,
-    CONNECTED,
-    GENERIC_ERROR
+import android.bluetooth.BluetoothSocket
+
+sealed class BluetoothConnectionState {
+
+    object Connecting : BluetoothConnectionState()
+
+    data class  Connected(
+        val bluetoothSocket: BluetoothSocket
+    ) : BluetoothConnectionState()
+
+    object NotFound : BluetoothConnectionState()
+
+    object Unavailable : BluetoothConnectionState()
+
+    object Disabled : BluetoothConnectionState()
+
+    data class Error(
+        val cause: Throwable? = null
+    ) : BluetoothConnectionState()
 }

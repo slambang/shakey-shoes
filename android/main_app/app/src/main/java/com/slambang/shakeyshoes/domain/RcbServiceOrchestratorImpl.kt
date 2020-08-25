@@ -12,7 +12,8 @@ class RcbServiceOrchestratorImpl @Inject constructor(
     private val rcbDataFactory: RcbDataFactory,
     private val rcbServiceFactory: RcbServiceFactory,
     private val rcbDataSources: MutableMap<Int, RcbDataSource>,
-    private val rcbServices: MutableMap<Int, RcbService>
+    private val rcbServices: MutableMap<Int, RcbService>,
+    private val errorDomainMapper: RcbServiceStatusErrorDomainMapper
 ) : RcbServiceOrchestrator {
 
     private val rcbServiceListener = object : RcbServiceListener {
@@ -28,19 +29,15 @@ class RcbServiceOrchestratorImpl @Inject constructor(
 
         override fun onBufferServiceError(
             rcbService: RcbService,
-            error: Throwable?
+            error: RcbServiceError
         ) = onBufferServiceErrorReceived(rcbService, error)
     }
 
+    private lateinit var config: RcbServiceConfig
     private lateinit var rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit
-    private lateinit var rcbServiceAccuracyObserver: (Int) -> Unit
 
-    override fun subscribe(
-        rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit,
-        rcbServiceAccuracyObserver: (Int) -> Unit
-    ) {
+    override fun subscribe(rcbServiceStatusObserver: (Int, RcbServiceStatus) -> Unit) {
         this.rcbServiceStatusObserver = rcbServiceStatusObserver
-        this.rcbServiceAccuracyObserver = rcbServiceAccuracyObserver
     }
 
     override fun createRcbService(): Int {
@@ -74,30 +71,31 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         refillSize: Int,
         windowSizeMs: Int,
         maxUnderflows: Int
-    ) = requireBufferService(rcbServiceId).setConfig(
-        RcbServiceConfig(
+    ) {
+        config = RcbServiceConfig(
             numberOfRefills,
             refillSize,
             windowSizeMs,
             maxUnderflows
         )
-    )
+        requireBufferService(rcbServiceId).transmitConfig(config)
+    }
 
     private fun onBufferRefill(rcbService: RcbService) {
 
         val beatMap = requireDataSource(rcbService.id)
-        for (i in 0 until rcbService.config.refillSize) {
+        for (i in 0 until config.refillSize) {
             if (beatMap.hasNext()) {
                 rcbService.sendBufferData(beatMap.next())
             }
         }
 
-        rcbServiceAccuracyObserver(rcbService.id)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Refill)
     }
 
     private fun onBufferReady(rcbService: RcbService) {
 
-        for (i in 0 until rcbService.config.numRefills) {
+        for (i in 0 until config.numRefills) {
             onBufferRefill(rcbService)
         }
 
@@ -108,7 +106,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Disconnected)
 
     private fun onBufferUnderflow(rcbService: RcbService) =
-        rcbServiceAccuracyObserver(rcbService.id)
+        rcbServiceStatusObserver(rcbService.id, RcbServiceStatus.Underflow)
 
     override fun hackBufferValue(rcbServiceId: Int, value: Int) {
         requireDataSource(rcbServiceId).also {
@@ -160,13 +158,10 @@ class RcbServiceOrchestratorImpl @Inject constructor(
 
     private fun onBufferServiceErrorReceived(
         rcbService: RcbService,
-        error: Throwable?
+        error: RcbServiceError
     ) {
-        error?.printStackTrace()
-        rcbServiceStatusObserver(
-            rcbService.id,
-            RcbServiceStatus.Error(message = error?.message ?: "Unknown")
-        )
+        val mappedError = errorDomainMapper.map(error)
+        rcbServiceStatusObserver(rcbService.id, mappedError)
     }
 
     private fun requireDataSource(id: Int) =

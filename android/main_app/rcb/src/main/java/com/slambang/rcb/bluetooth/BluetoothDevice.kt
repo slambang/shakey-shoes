@@ -1,117 +1,75 @@
 package com.slambang.rcb.bluetooth
 
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothSocket
 import android.content.Context
 import com.github.ivbaranov.rxbluetooth.RxBluetooth
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
-import java.io.InputStream
-import java.io.OutputStream
 import java.util.*
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
-// Hmmm... this class isn't very testable!
 class BluetoothDevice private constructor(
     private val scheduler: Scheduler,
     private val bluetoothProvider: BluetoothProvider,
     private val subscriptions: CompositeDisposable
 ) : BluetoothConnection {
 
-    private var bluetoothSocket: BluetoothSocket? = null
+    private var closeLatch: CountDownLatch? = null
 
-    override val isConnected: Boolean
-        get() = bluetoothSocket?.isConnected ?: false
-
-    override val inputStream: InputStream
-        get() = requireBluetoothSocket().inputStream
-
-    override val outputStream: OutputStream
-        get() = requireBluetoothSocket().outputStream
-
-    override fun start(
+    override fun open(
         macAddress: String,
         serviceUuid: String,
         stateObserver: (state: BluetoothConnectionState) -> Unit
     ) {
+        closeLatch = CountDownLatch(1)
+
         scheduler.scheduleDirect {
-            stateObserver(BluetoothConnectionState.CONNECTING)
-            if (checkBluetoothCapabilities(stateObserver)) {
-                observeBluetoothStates(stateObserver)
-                connectToRemoteDevice(macAddress, serviceUuid, stateObserver)
+
+            stateObserver(BluetoothConnectionState.Connecting)
+
+            when {
+                !bluetoothProvider.isBluetoothAvailable -> BluetoothConnectionState.Unavailable
+                !bluetoothProvider.isBluetoothEnabled -> BluetoothConnectionState.Disabled
+                else -> connectToDevice(macAddress, serviceUuid)
+            }.let {
+                stateObserver(it)
             }
+
+            closeLatch?.countDown()
         }.also { subscriptions.add(it) }
     }
 
-    // TODO: We need to wait for the scheduled task to finish here. Latch?
-    override fun stop() {
-        try {
-            if (isConnected) {
-                requireBluetoothSocket().close()
-                bluetoothSocket = null
-            }
-        } finally {
-            subscriptions.clear()
-        }
+    override fun close() {
+        subscriptions.clear()
+        closeLatch?.await(500, TimeUnit.MILLISECONDS)
     }
 
-    private fun checkBluetoothCapabilities(stateObserver: (state: BluetoothConnectionState) -> Unit) =
-        if (!bluetoothProvider.isBluetoothAvailable) {
-            stateObserver(BluetoothConnectionState.UNAVAILABLE)
-            false
-        } else if (!bluetoothProvider.isBluetoothEnabled) {
-            stateObserver(BluetoothConnectionState.DISABLED)
-            false
-        } else {
-            true
-        }
-
-    private fun connectToRemoteDevice(
+    private fun connectToDevice(
         macAddress: String,
-        serviceUuid: String,
-        stateObserver: (state: BluetoothConnectionState) -> Unit
-    ) = bluetoothProvider.bondedDevices?.firstOrNull {
-        it.address == macAddress
-    }?.let {
-        createSocket(serviceUuid, it, stateObserver)
-        stateObserver(BluetoothConnectionState.CONNECTED) // TODO: This will block here!
-    } ?: stateObserver(BluetoothConnectionState.CONNECTION_ERROR)
+        serviceUuid: String
+    ): BluetoothConnectionState {
 
-    /*
-     * Hmmm...
-     * We are subscribing on the calling thread, which comes from the scheduler.
-     * How does this affect the error handler below?
-     */
-    private fun observeBluetoothStates(stateObserver: (state: BluetoothConnectionState) -> Unit) =
-        bluetoothProvider.bluetoothState
-            .subscribe({
-                when (it) {
-                    BluetoothAdapter.STATE_TURNING_OFF -> stateObserver(BluetoothConnectionState.DISABLED)
-                    else -> {
-                    }
-                }
-            },
-                {
-                    it.printStackTrace()
-                    stateObserver(BluetoothConnectionState.GENERIC_ERROR)
-                })
-            .also { subscriptions.add(it) }
+        val device = bluetoothProvider.bondedDevices?.firstOrNull {
+            it.address == macAddress
+        } ?: return BluetoothConnectionState.NotFound
+
+        return createSocket(serviceUuid, device)
+    }
 
     private fun createSocket(
         serviceUuid: String,
-        device: BluetoothDevice,
-        stateObserver: (state: BluetoothConnectionState) -> Unit
-    ) = try {
-        val uuid = UUID.fromString(serviceUuid)
-        bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(uuid)
-        bluetoothSocket?.connect()
-    } catch (error: Throwable) {
-        error.printStackTrace()
-        stateObserver(BluetoothConnectionState.GENERIC_ERROR)
-    }
-
-    private fun requireBluetoothSocket() =
-        bluetoothSocket ?: throw IllegalStateException("Required bluetooth socket")
+        device: BluetoothDevice
+    ): BluetoothConnectionState =
+        try {
+            val uuid = UUID.fromString(serviceUuid)
+            device.createInsecureRfcommSocketToServiceRecord(uuid)?.let {
+                it.connect()
+                BluetoothConnectionState.Connected(it)
+            } ?: throw IllegalStateException("Unable to create Bluetooth socket")
+        } catch (error: Throwable) {
+            BluetoothConnectionState.Error(error)
+        }
 
     companion object {
         fun newInstance(

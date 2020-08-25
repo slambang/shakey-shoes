@@ -1,11 +1,10 @@
 package com.slambang.shakeyshoes.domain
 
+import android.bluetooth.BluetoothSocket
 import com.slambang.rcb.bluetooth.BluetoothConnection
 import com.slambang.rcb.bluetooth.BluetoothConnectionState
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
-import java.io.InputStream
-import java.io.OutputStream
 
 /**
  * WIP
@@ -19,28 +18,21 @@ class MockBluetoothDevice(
 
     private var isMockConnected = false
 
-    override val isConnected: Boolean
-        get() = isMockConnected
+    private lateinit var bluetoothSocket: BluetoothSocket
 
-    override val inputStream: InputStream
-        get() = TODO("Not yet implemented")
-
-    override val outputStream: OutputStream
-        get() = TODO("Not yet implemented")
-
-    override fun start(
+    override fun open(
         macAddress: String,
         serviceUuid: String,
         stateObserver: (state: BluetoothConnectionState) -> Unit
     ) {
         scheduler.scheduleDirect {
-            stateObserver(BluetoothConnectionState.CONNECTING)
+            stateObserver(BluetoothConnectionState.Connecting)
             Thread.sleep(2000)
-            stateObserver(BluetoothConnectionState.CONNECTED)
+            stateObserver(BluetoothConnectionState.Connected(bluetoothSocket))
         }.also { subscriptions.add(it) }
     }
 
-    override fun stop() {
+    override fun close() {
         isMockConnected = false
     }
 }

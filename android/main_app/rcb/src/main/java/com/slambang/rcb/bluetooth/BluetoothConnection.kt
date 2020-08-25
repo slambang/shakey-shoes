@@ -1,19 +1,12 @@
 package com.slambang.rcb.bluetooth
 
-import java.io.InputStream
-import java.io.OutputStream
-
 interface BluetoothConnection {
 
-    val isConnected: Boolean
-    val inputStream: InputStream
-    val outputStream: OutputStream
-
-    fun start(
+    fun open(
         macAddress: String,
         serviceUuid: String,
         stateObserver: (state: BluetoothConnectionState) -> Unit
     )
 
-    fun stop()
+    fun close()
 }

@@ -2,8 +2,10 @@ package com.slambang.shakeyshoes.di.factories
 
 import android.content.Context
 import com.slambang.rcb.bluetooth.BluetoothDevice
+import com.slambang.rcb.service.RcbServiceErrorMapper
 import com.slambang.rcb.service.RcbService
 import com.slambang.rcb.service.RcbServiceImpl
+import com.slambang.rcb.service.RcbStateMapper
 import com.slambang.shakeyshoes.di.scope.ApplicationContext
 import com.slambang.shakeyshoes.domain.MockBluetoothDevice
 import com.slambang.shakeyshoes.util.SchedulerProvider
@@ -29,7 +31,9 @@ class RcbServiceFactory @Inject constructor(
             BluetoothDevice.newInstance(context, scheduler)
         }
 
-        return RcbServiceImpl(bluetoothDevice)
+        val stateMapper = RcbStateMapper()
+        val errorMapper = RcbServiceErrorMapper()
+        return RcbServiceImpl(bluetoothDevice, errorMapper, stateMapper)
     }
 
     companion object {

@@ -3,14 +3,13 @@ package com.slambang.rcb.service
 interface RcbService {
 
     val id: Int
-    val config: RcbServiceConfig
 
     fun connect(
         macAddress: String,
         serviceUuid: String, listener: RcbServiceListener
     )
 
-    fun setConfig(config: RcbServiceConfig)
+    fun transmitConfig(config: RcbServiceConfig)
     fun reset()
     fun resume()
     fun pause()

@@ -113,7 +113,7 @@ class DomainMapper @Inject constructor(
                 model.page2.applyButtonEnabled = false
                 model.page3.resumeButtonEnabled = true
             }
-            is RcbServiceStatus.Error -> {
+            is RcbServiceStatus.Error, is RcbServiceStatus.NotFound, is RcbServiceStatus.Disabled, is RcbServiceStatus.Unavailable -> {
                 model.header.isConnecting = false
                 model.page1.connectButtonEnabled = true
                 model.page3.isResumed = false
@@ -131,7 +131,10 @@ class DomainMapper @Inject constructor(
         val isConnected = isConnected(domainModel.status)
         model.header.isConnected = isConnected
 
-        model.page1.status = mapStatus(domainModel.status)
+        mapStatus(domainModel.status)?.let {
+            model.page1.status = it
+        }
+
         model.page1.connectButtonEnabled = !isConnected
         when (isConnected) {
             true -> R.string.disconnect
@@ -141,15 +144,23 @@ class DomainMapper @Inject constructor(
         }
     }
 
-    private fun mapStatus(status: RcbServiceStatus) =
+    private fun mapStatus(status: RcbServiceStatus): String? =
         when (status) {
             is RcbServiceStatus.Disconnected -> strings.getString(R.string.disconnected)
             is RcbServiceStatus.Connecting -> strings.getString(R.string.connecting)
             is RcbServiceStatus.Setup -> strings.getString(R.string.setup)
             is RcbServiceStatus.Ready -> strings.getString(R.string.ready)
             is RcbServiceStatus.Paused -> strings.getString(R.string.paused)
+            is RcbServiceStatus.Unavailable -> strings.getString(R.string.unavailable)
+            is RcbServiceStatus.Disabled -> strings.getString(R.string.disabled)
+            is RcbServiceStatus.NotFound -> strings.getString(R.string.not_found)
             is RcbServiceStatus.Resumed -> strings.getString(R.string.resumed)
-            is RcbServiceStatus.Error -> strings.getString(R.string.error, status.message)
+            is RcbServiceStatus.Error -> strings.getString(
+                R.string.error,
+                status.cause?.message ?: "Unknown"
+            )
+            is RcbServiceStatus.Unknown -> strings.getString(R.string.unknown)
+            else -> null
         }
 
     private fun setMaxSize(model: RcbItemModel, maxSize: Int) {
@@ -162,5 +173,8 @@ class DomainMapper @Inject constructor(
     private fun isConnected(status: RcbServiceStatus) =
         (status !is RcbServiceStatus.Connecting &&
                 status !is RcbServiceStatus.Disconnected &&
-                status !is RcbServiceStatus.Error)
+                status !is RcbServiceStatus.Error &&
+                status !is RcbServiceStatus.NotFound &&
+                status !is RcbServiceStatus.Disabled &&
+                status !is RcbServiceStatus.Unavailable)
 }
