@@ -2,7 +2,7 @@ package com.slambang.rcb_service
 
 class RcbStateMapper {
 
-    fun a(signalIn: Int): RcbState? =
+    fun map(signalIn: Int): RcbState? =
         when (signalIn) {
             SIGNAL_IN_READY -> RcbState.READY
             SIGNAL_IN_PAUSED -> RcbState.PAUSED

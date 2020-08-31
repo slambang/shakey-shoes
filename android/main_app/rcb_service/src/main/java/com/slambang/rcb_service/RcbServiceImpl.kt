@@ -104,7 +104,7 @@ class RcbServiceImpl(
 
         val value = requireSocket().inputStream.read()
 
-        stateMapper.a(value)?.let {
+        stateMapper.map(value)?.let {
             listener.onBufferServiceState(this, it)
         } ?: throw IllegalArgumentException("Invalid SIGNAL_IN: $value")
     }
