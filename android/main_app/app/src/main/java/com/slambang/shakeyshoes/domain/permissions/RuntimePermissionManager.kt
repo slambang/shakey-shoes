@@ -1,11 +1,9 @@
 package com.slambang.shakeyshoes.domain.permissions
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import javax.inject.Inject
 
 interface RuntimePermissionManager {
 
@@ -21,8 +19,10 @@ interface RuntimePermissionManager {
     ): PermissionResultDomain
 }
 
-class RuntimePermissionManagerImpl @Inject constructor(
-    private val fragment: Fragment
+// This needs to be decoupled from Android classes for easy unit testing.
+class RuntimePermissionManagerImpl constructor(
+    private val fragment: Fragment,
+    private val requiredPermissions: List<String>
 ) : RuntimePermissionManager {
 
     override val canReRequestPermissions: Boolean
@@ -36,19 +36,19 @@ class RuntimePermissionManagerImpl @Inject constructor(
         }
 
     private fun checkRuntimePermissionsGranted(): Boolean =
-        REQUIRED_RUNTIME_PERMISSIONS.none {
+        requiredPermissions.none {
             ContextCompat.checkSelfPermission(
                 fragment.requireActivity(),
                 it
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_DENIED
         }
 
     override fun requestPermissions() =
-        REQUIRED_RUNTIME_PERMISSIONS.filter {
+        requiredPermissions.filter {
             ContextCompat.checkSelfPermission(
                 fragment.requireActivity(),
                 it
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_DENIED
         }.let {
             fragment.requestPermissions(
                 it.toTypedArray(),
@@ -67,9 +67,9 @@ class RuntimePermissionManagerImpl @Inject constructor(
         }
 
         val deniedPermissions = mutableListOf<String>()
-        for (i in grantResults.indices) {
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                deniedPermissions.add(permissions[i])
+        grantResults.forEachIndexed { index, grantResult ->
+            if (grantResult == PackageManager.PERMISSION_DENIED) {
+                deniedPermissions.add(permissions[index])
             }
         }
 
@@ -81,12 +81,5 @@ class RuntimePermissionManagerImpl @Inject constructor(
 
     companion object {
         private const val PERMISSION_MANAGER_REQUEST_CODE = 0
-
-        // These should be injected
-        private val REQUIRED_RUNTIME_PERMISSIONS = arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
     }
 }
