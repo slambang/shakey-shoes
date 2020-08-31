@@ -14,10 +14,14 @@ import com.slambang.shakeyshoes.util.StringsProviderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.Bindings::class])
 class AppModule {
+
+    @Provides
+    fun provideDisposable(): CompositeDisposable = CompositeDisposable()
 
     @Provides
     @Singleton

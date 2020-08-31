@@ -15,7 +15,10 @@ import javax.inject.Inject
 
 class RcbServiceFactory @Inject constructor(
     private val bluetoothProvider: BluetoothProvider,
-    private val schedulerProvider: SchedulerProvider
+    private val schedulerProvider: SchedulerProvider,
+    private val rcbStateMapper: RcbStateMapper,
+    private val rcbServiceErrorMapper: RcbServiceErrorMapper,
+    private val subscriptions: CompositeDisposable
 ) {
     private val scheduler: Scheduler
         get() = schedulerProvider.newThread
@@ -23,21 +26,19 @@ class RcbServiceFactory @Inject constructor(
     private val isEmulator: Boolean
         get() = KNOWN_EMULATOR_HARDWARE.contains(Build.HARDWARE)
 
-    fun newRcbService(): RcbService {
+    fun newRcbService(): RcbService =
+        RcbServiceImpl(
+            getBluetoothConnection(),
+            rcbServiceErrorMapper,
+            rcbStateMapper
+        )
 
-        // Inject from Dagger
-        val subscriptions = CompositeDisposable()
-
-        val bluetoothConnection = if (isEmulator) {
+    private fun getBluetoothConnection() =
+        if (isEmulator) {
             MockBluetoothConnection(scheduler, subscriptions)
         } else {
             BluetoothConnectionImpl.newInstance(scheduler, bluetoothProvider, subscriptions)
         }
-
-        val stateMapper = RcbStateMapper()
-        val errorMapper = RcbServiceErrorMapper()
-        return RcbServiceImpl(bluetoothConnection, errorMapper, stateMapper)
-    }
 
     companion object {
         private val KNOWN_EMULATOR_HARDWARE = listOf<String>(

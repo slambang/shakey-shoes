@@ -7,7 +7,6 @@ import com.slambang.shakeyshoes.view.splash.*
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import io.reactivex.disposables.CompositeDisposable
 
 @Module(includes = [SplashViewFragmentModule.Bindings::class])
 class SplashViewFragmentModule {
@@ -25,9 +24,6 @@ class SplashViewFragmentModule {
 
     @Provides
     fun provideSnackbarLiveData(): MutableLiveData<String> = MutableLiveData()
-
-    @Provides
-    fun provideDisposable(): CompositeDisposable = CompositeDisposable()
 
     @Module
     interface Bindings {

@@ -18,7 +18,6 @@ import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import io.reactivex.disposables.CompositeDisposable
 
 @Module(includes = [RcbViewFragmentModule.Bindings::class])
 class RcbViewFragmentModule {
@@ -26,9 +25,6 @@ class RcbViewFragmentModule {
     @Provides
     fun provideRcbViewModelFactory(viewModel: RcbViewModel): ViewModelProviderFactory<RcbViewModel> =
         ViewModelProviderFactory(viewModel)
-
-    @Provides
-    fun provideDisposable(): CompositeDisposable = CompositeDisposable()
 
     @Provides
     fun provideShowDeviceListLiveData(): SingleLiveEvent<List<Pair<Int, String>>> = SingleLiveEvent()

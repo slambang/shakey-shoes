@@ -15,6 +15,7 @@ import javax.inject.Singleton
         AppModule::class,
         AndroidInjectionModule::class,
         AndroidSupportInjectionModule::class,
+        RcbServiceModule::class,
         FragmentBuilder::class
     ]
 )
