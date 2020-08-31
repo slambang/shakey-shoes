@@ -37,6 +37,7 @@ class RcbServiceFactory @Inject constructor(
         if (isEmulator) {
             MockBluetoothConnection(scheduler, subscriptions)
         } else {
+            // Would be nice to to have `Impl` in the name here
             BluetoothConnectionImpl.newInstance(scheduler, bluetoothProvider, subscriptions)
         }
 

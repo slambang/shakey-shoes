@@ -41,18 +41,18 @@ class RcbServiceImpl(
     }
 
     override fun transmitConfig(config: RcbServiceConfig) {
-        transmitByte(config.numRefills)
-        transmitInt(config.refillSize)
-        transmitByte(config.windowSizeMs)
-        transmitInt(config.maxUnderflows)
+        transmitConfigByte(config.numRefills)
+        transmitConfigInt(config.refillSize)
+        transmitConfigByte(config.windowSizeMs)
+        transmitConfigInt(config.maxUnderflows)
     }
 
-    private fun transmitByte(value: Int) {
+    private fun transmitConfigByte(value: Int) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(value)
     }
 
-    private fun transmitInt(value: Int) {
+    private fun transmitConfigInt(value: Int) {
         val byteArray = value.toByteArray()
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(byteArray[0].toInt())
@@ -77,14 +77,31 @@ class RcbServiceImpl(
         bluetoothConnection.close()
     }
 
+    /*
+     * `data` must be in the range 0..254. 255 is reserved as a command prefix.
+     *
+     * When streaming buffer (not command) data, we need the transfer to be as fast
+     * as possible. In Android we do not have the ability to make efficient use of
+     * packets/sizes, so the least we can do is reduce the payload as much as possible.
+     *
+     * If we did not have this reserved value we would need to prefix any data value
+     * with some other value, so the service knows what to do with the data (command or
+     * streaming). Or, we can only prefix command data (with the value 255), which the
+     * service checks for each time it receives any data. If it receives 255, it knows
+     * a command is coming next. Otherwise it will treat what it receives as streaming/buffer
+     * data.
+     *
+     * This trick reduces the streaming/buffer data payload by 50%.
+     */
     override fun sendBufferData(data: Int) =
-        transmit(
-            if (data == SIGNAL_OUT_COMMAND) {
-                data - 1
-            } else {
-                data
-            }
-        )
+        transmit(validateData(data))
+
+    private fun validateData(data: Int): Int =
+        if (data < DATA_MINIMUM_VALUE || data >= SIGNAL_OUT_COMMAND_PREFIX) {
+            throw IllegalArgumentException("Illegal data value $data")
+        } else {
+            data
+        }
 
     private fun listenForSignals(listener: RcbServiceListener) =
         try {
@@ -102,27 +119,30 @@ class RcbServiceImpl(
 
     private fun waitForSignal(listener: RcbServiceListener) {
 
-        val value = requireSocket().inputStream.read()
+        val signal = read()
 
-        stateMapper.map(value)?.let {
+        stateMapper.map(signal)?.let {
             listener.onBufferServiceState(this, it)
-        } ?: throw IllegalArgumentException("Invalid SIGNAL_IN: $value")
+        } ?: throw IllegalArgumentException("Unknown signal value $signal")
     }
 
     private fun awaitFreeHeap(listener: RcbServiceListener) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONNECT)
-        val freeRamBytes = requireSocket().inputStream.readInt()
+        val freeRamBytes = read()
         listener.onBufferServiceFreeHeap(this, freeRamBytes)
     }
 
-    private fun transmit(data: Int) {
-        if (requireSocket().isConnected) {
-            requireSocket().outputStream.write(data)
-        }
-    }
+    private fun read(): Int =
+        requireSocket().inputStream.readInt()
+
+    private fun write(data: Int) =
+        requireSocket().outputStream.write(data)
+
+    private fun transmit(data: Int) =
+        write(data)
 
     private fun transmitCommand(command: Int) {
-        transmit(SIGNAL_OUT_COMMAND)
+        transmit(SIGNAL_OUT_COMMAND_PREFIX)
         transmit(command)
     }
 
@@ -132,7 +152,8 @@ class RcbServiceImpl(
     companion object {
         private val ID = AtomicInteger(-1)
 
-        private const val SIGNAL_OUT_COMMAND = 255
+        private const val DATA_MINIMUM_VALUE = 0
+        private const val SIGNAL_OUT_COMMAND_PREFIX = 255
         private const val SIGNAL_OUT_COMMAND_CONNECT = 2
         private const val SIGNAL_OUT_COMMAND_RESET = 3
         private const val SIGNAL_OUT_COMMAND_CONFIG = 4
