@@ -11,6 +11,13 @@ class BluetoothConnectionImpl private constructor(
     private val subscriptions: CompositeDisposable
 ) : BluetoothConnection {
 
+    /*
+     * This could be better: return a custom emitter that the caller subscribes to.
+     * This removes the `Scheduler` and `CompositeDisposable` dependency.
+     * This also allows us to subscribe to `BluetoothProvider.bluetoothState` and emit events.
+     *
+     * Note: This may introduce performance overhead. Do this change later, after more refactoring!
+     */
     override fun open(
         macAddress: String,
         serviceUuid: String,
@@ -61,11 +68,12 @@ class BluetoothConnectionImpl private constructor(
         }
 
     companion object {
+
         fun newInstance(
             scheduler: Scheduler,
             bluetoothProvider: BluetoothProvider,
             subscriptions: CompositeDisposable
-        ) = BluetoothConnectionImpl(
+        ) : BluetoothConnection = BluetoothConnectionImpl(
             scheduler,
             bluetoothProvider,
             subscriptions
