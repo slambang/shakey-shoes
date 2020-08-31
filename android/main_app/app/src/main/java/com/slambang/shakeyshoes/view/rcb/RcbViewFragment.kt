@@ -97,7 +97,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
     }
 
     private fun initAddRcbButton(root: View) {
-        addRcbButton = root.findViewById<View>(R.id.add_rcb_button)
+        addRcbButton = root.findViewById(R.id.add_rcb_button)
         setAddRcbClickListener()
     }
 

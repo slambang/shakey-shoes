@@ -1,10 +1,11 @@
 package com.slambang.shakeyshoes.view.base
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.slambang.shakeyshoes.di.view.ViewModelProviderFactory
@@ -39,7 +40,7 @@ abstract class BaseViewFragment<ViewModelType : ViewModel> : Fragment() {
     protected inline fun <reified T : Any> observe(
         liveData: LiveData<T>,
         crossinline observer: (T) -> Unit
-    ) = liveData.observe(viewLifecycleOwner, Observer {
+    ) = liveData.observe(viewLifecycleOwner, {
         observer(it)
     })
 
