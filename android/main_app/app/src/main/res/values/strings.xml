@@ -47,8 +47,8 @@
     <string name="unavailable">Bluetooth unavailable</string>
     <string name="disabled">Bluetooth disabled</string>
     <string name="not_found">Device not found</string>
-    <string name="unknown">An unknown error occurred</string>
-    <string name="error">Error: %1$s</string>
+    <string name="unknown_error">Error: Unknown</string>
+    <string name="error_template">Error: %1$s</string>
 
     <string name="delete">Delete</string>
     <string name="delete_buffer_dialog_title">Delete buffer?</string>

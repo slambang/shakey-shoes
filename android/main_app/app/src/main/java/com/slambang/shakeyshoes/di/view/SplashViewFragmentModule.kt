@@ -14,8 +14,8 @@ import javax.inject.Named
 class SplashViewFragmentModule {
 
     @Provides
-    fun provideSplashViewModelFactory(viewModel: SplashViewModel): ViewModelProviderFactory<SplashViewModel> =
-        ViewModelProviderFactory(viewModel)
+    fun provideSplashViewModelFactory(viewModelImpl: SplashViewModelImpl): ViewModelProviderFactory<SplashViewModelImpl> =
+        ViewModelProviderFactory(viewModelImpl)
 
     @Provides
     fun provideRuntimePermissionsManager(
@@ -34,6 +34,6 @@ class SplashViewFragmentModule {
     interface Bindings {
 
         @Binds
-        fun provideNavigator(impl: SplashNavigatorImpl): SplashNavigator
+        fun bindNavigator(impl: SplashNavigatorImpl): SplashNavigator
     }
 }

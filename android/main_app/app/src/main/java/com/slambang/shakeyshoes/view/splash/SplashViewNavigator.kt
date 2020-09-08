@@ -9,19 +9,22 @@ import javax.inject.Inject
 
 interface SplashNavigator {
 
-    fun navigateToAppPermissions()
-
     fun navigateToRcbView()
+
+    fun navigateToAppPermissions()
 }
 
 class SplashNavigatorImpl @Inject constructor(
     private val fragment: SplashViewFragment
 ) : SplashNavigator {
 
+    override fun navigateToRcbView() =
+        fragment.findNavController().navigate(R.id.action_splash_fragment_to_rcb_fragment)
+
     override fun navigateToAppPermissions() {
         Intent(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.parse("package:" + fragment.context?.packageName)
+            Uri.parse("package:${fragment.context?.packageName}")
         ).apply {
             addCategory(Intent.CATEGORY_DEFAULT)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -29,7 +32,4 @@ class SplashNavigatorImpl @Inject constructor(
             fragment.startActivity(it)
         }
     }
-
-    override fun navigateToRcbView() =
-        fragment.findNavController().navigate(R.id.action_splash_fragment_to_rcb_fragment)
 }

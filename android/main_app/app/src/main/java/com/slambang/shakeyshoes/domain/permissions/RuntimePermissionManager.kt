@@ -74,8 +74,8 @@ class RuntimePermissionManagerImpl constructor(
         }
 
         return when (deniedPermissions.isEmpty()) {
-            true -> PermissionResultDomain.PermissionGranted
-            false -> PermissionResultDomain.PermissionDenied(deniedPermissions)
+            true -> PermissionResultDomain.Granted
+            false -> PermissionResultDomain.Denied(deniedPermissions)
         }
     }
 

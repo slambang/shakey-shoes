@@ -2,9 +2,9 @@ package com.slambang.shakeyshoes.domain.permissions
 
 sealed class PermissionResultDomain {
 
-    object PermissionGranted : PermissionResultDomain()
+    object Granted : PermissionResultDomain()
 
-    data class PermissionDenied(
+    data class Denied(
         val deniedPermissions: List<String>
     ) : PermissionResultDomain()
 }

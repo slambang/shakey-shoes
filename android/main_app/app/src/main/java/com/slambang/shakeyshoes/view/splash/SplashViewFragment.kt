@@ -7,11 +7,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.slambang.shakeyshoes.R
 import com.slambang.shakeyshoes.view.base.BaseViewFragment
 
-class SplashViewFragment : BaseViewFragment<SplashViewModel>() {
+class SplashViewFragment : BaseViewFragment<SplashViewModelImpl>() {
 
     override val layoutResId = R.layout.fragment_splash
 
-    private val viewModel by lazy { get<SplashViewModel>() }
+    private val viewModel by lazy { get<SplashViewModelImpl>() }
 
     private lateinit var messageTextView: TextView
     private lateinit var grantPermissionButton: TextView
@@ -28,6 +28,7 @@ class SplashViewFragment : BaseViewFragment<SplashViewModel>() {
     override fun onStart() {
         super.onStart()
         observeViewModel()
+        viewModel.onStart()
     }
 
     private fun observeViewModel() {
@@ -35,11 +36,9 @@ class SplashViewFragment : BaseViewFragment<SplashViewModel>() {
             showWarningMessage(it)
         }
 
-        observe(viewModel.snackbarState) {
-            showSnackbar(it)
+        observe(viewModel.snackBarState) {
+            showSnackBar(it)
         }
-
-        viewModel.onStart()
     }
 
     override fun onPause() {
@@ -60,7 +59,7 @@ class SplashViewFragment : BaseViewFragment<SplashViewModel>() {
         }
     }
 
-    private fun showSnackbar(message: String) =
+    private fun showSnackBar(message: String) =
         Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
 
     override fun onRequestPermissionsResult(

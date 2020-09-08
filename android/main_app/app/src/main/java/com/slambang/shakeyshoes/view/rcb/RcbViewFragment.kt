@@ -15,11 +15,11 @@ import com.slambang.shakeyshoes.view.setAppCompatToolbar
 import kotlinx.android.synthetic.main.fragment_rcb.*
 
 
-class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener {
+class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewListener {
 
     override val layoutResId = R.layout.fragment_rcb
 
-    private val viewModel by lazy { get<RcbViewModel>() }
+    private val viewModel by lazy { get<RcbViewModelImpl>() }
 
     private lateinit var addRcbButton: View
     private lateinit var deleteAllBuffersMenuItem: MenuItem
@@ -38,6 +38,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
     override fun onResume() {
         super.onResume()
         observeViewModel()
+        viewModel.onResume()
     }
 
     private fun observeViewModel() {
@@ -70,10 +71,8 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
         }
 
         observe(viewModel.errorLiveData) {
-            showSnackbar(it)
+            showSnackBar(it)
         }
-
-        viewModel.onResume()
     }
 
     override fun initView(root: View) {
@@ -84,11 +83,12 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
 
     private fun initRecycler(root: View) {
         root.findViewById<RecyclerView>(R.id.rcb_list).apply {
+
             val linearLayoutManager = LinearLayoutManager(context)
 
             adapter = recyclerAdapter
-            itemAnimator = DefaultItemAnimator()
             layoutManager = linearLayoutManager
+            itemAnimator = DefaultItemAnimator()
 
             addItemDecoration(
                 DividerItemDecoration(context, linearLayoutManager.orientation)
@@ -103,11 +103,11 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
 
     private fun displayDeviceList(devices: List<Pair<Int, String>>) {
 
-        val deviceNames = devices.map { it.second }
+        val deviceNames = devices.map { it.second }.toTypedArray()
 
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.select_device_title)
-            .setItems(deviceNames.toTypedArray()) { _, which ->
+            .setItems(deviceNames) { _, which ->
                 viewModel.onRcbDeviceSelected(devices[which].first)
             }
             .setOnDismissListener { setAddRcbClickListener() }
@@ -153,13 +153,13 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
             .show()
 
     override fun onResumeClicked(modelId: Int) =
-        viewModel.toggleRcb(modelId)
+        viewModel.onToggleRcb(modelId)
 
     override fun onConnectClicked(modelId: Int) =
         viewModel.onConnectRcbClicked(modelId)
 
     override fun onVibrateUpdate(modelId: Int, value: Int) =
-        viewModel.setVibrateValue(modelId, value)
+        viewModel.onSetVibrateValue(modelId, value)
 
     override fun onApplyClicked(modelId: Int) =
         viewModel.onConfigureRbClicked(modelId)
@@ -174,8 +174,8 @@ class RcbViewFragment : BaseViewFragment<RcbViewModel>(), BufferItemViewListener
 //        ::displayConfig
     }
 
-    private fun showSnackbar(message: String) =
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG).show()
+    private fun showSnackBar(message: String) =
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_INDEFINITE).show()
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)

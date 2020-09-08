@@ -12,9 +12,10 @@ class BluetoothConnectionImpl private constructor(
 ) : BluetoothConnection {
 
     /*
-     * This could be better: return a custom emitter that the caller subscribes to.
+     * This could be better: convert to Rx.
      * This removes the `Scheduler` and `CompositeDisposable` dependency.
      * This also allows us to subscribe to `BluetoothProvider.bluetoothState` and emit events.
+     * Then the ViewModel can subscribe as usual.
      *
      * Note: This may introduce performance overhead. Do this change later, after more refactoring!
      */

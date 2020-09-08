@@ -9,7 +9,7 @@ class DeviceRepositoryUseCaseImpl @Inject constructor(
     private val deviceRepo: BluetoothDeviceRepository,
     private val entityMapper: BluetoothDeviceEntityMapper,
     private val reservedDevices: MutableSet<Int>
-) : DeviceRepositoryUseCase { // Add interface
+) : DeviceRepositoryUseCase {
 
     override fun peekDevice(deviceId: Int): BluetoothDeviceDomain {
         val device = deviceRepo.getDeviceEntity(deviceId)

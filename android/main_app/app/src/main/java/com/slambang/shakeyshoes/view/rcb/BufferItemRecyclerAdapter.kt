@@ -66,8 +66,7 @@ class BufferItemRecyclerAdapter(
 
     override fun getItemCount() = items.size
 
-    inner class ViewHolder internal constructor(itemView: View) :
-        RecyclerView.ViewHolder(itemView) {
+    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val circularBufferView = (itemView as BufferItemView)
 

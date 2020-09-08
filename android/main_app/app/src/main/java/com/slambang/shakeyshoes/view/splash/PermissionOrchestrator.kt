@@ -2,7 +2,6 @@ package com.slambang.shakeyshoes.view.splash
 
 import com.slambang.shakeyshoes.domain.permissions.PermissionResultDomain
 import com.slambang.shakeyshoes.domain.permissions.RuntimePermissionManager
-import com.slambang.shakeyshoes.view.splash.mappers.PermissionDeniedMessageMapper
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -34,8 +33,8 @@ class PermissionUseCase @Inject constructor(
     ) = Single.fromCallable {
         when (val result =
             permissionManager.getPermissionResult(requestCode, permissions, grantResults)) {
-            is PermissionResultDomain.PermissionGranted -> true
-            is PermissionResultDomain.PermissionDenied -> throw getPermissionException(result)
+            is PermissionResultDomain.Granted -> true
+            is PermissionResultDomain.Denied -> throw getPermissionException(result)
         }
     }
 
@@ -49,7 +48,7 @@ class PermissionUseCase @Inject constructor(
             }
         }
 
-    private fun getPermissionException(result: PermissionResultDomain.PermissionDenied) =
+    private fun getPermissionException(result: PermissionResultDomain.Denied) =
         PermissionDeniedException(
             permissionMessageMapper.map(result, permissionManager.canReRequestPermissions)
         )

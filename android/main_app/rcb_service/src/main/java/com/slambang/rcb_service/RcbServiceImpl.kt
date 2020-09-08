@@ -28,7 +28,7 @@ class RcbServiceImpl(
             when (it) {
                 is BluetoothConnectionState.Connecting -> listener.onBufferServiceState(
                     this,
-                    RcbState.CONNECTING
+                    RcbServiceState.Connecting
                 )
                 is BluetoothConnectionState.Connected -> {
                     bluetoothSocket = it.bluetoothSocket
@@ -47,21 +47,15 @@ class RcbServiceImpl(
         transmitConfigInt(config.maxUnderflows)
     }
 
+    private fun transmitConfigInt(value: Int) {
+        value.toByteArray().forEach {
+            transmitConfigByte(it.toInt())
+        }
+    }
+
     private fun transmitConfigByte(value: Int) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
         transmit(value)
-    }
-
-    private fun transmitConfigInt(value: Int) {
-        val byteArray = value.toByteArray()
-        transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
-        transmit(byteArray[0].toInt())
-        transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
-        transmit(byteArray[1].toInt())
-        transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
-        transmit(byteArray[2].toInt())
-        transmitCommand(SIGNAL_OUT_COMMAND_CONFIG)
-        transmit(byteArray[3].toInt())
     }
 
     override fun reset() = transmitCommand(SIGNAL_OUT_COMMAND_RESET)
@@ -82,19 +76,20 @@ class RcbServiceImpl(
      *
      * When streaming buffer (not command) data, we need the transfer to be as fast
      * as possible. In Android we do not have the ability to make efficient use of
-     * packets/sizes, so the least we can do is reduce the payload as much as possible.
+     * packets/sizes, so the most we can do is reduce the payload as much as possible.
      *
-     * If we did not have this reserved value we would need to prefix any data value
-     * with some other value, so the service knows what to do with the data (command or
-     * streaming). Or, we can only prefix command data (with the value 255), which the
+     * If we did not have this reserved value then we would need to prefix all buffer & command
+     * values with some other value so the service knows what to do with the next data value
+     * (command or buffer). Or, we only prefix command data (with the value 255), which the
      * service checks for each time it receives any data. If it receives 255, it knows
-     * a command is coming next. Otherwise it will treat what it receives as streaming/buffer
-     * data.
+     * a command value is inbound. Otherwise it will treat what it receives as buffer data.
      *
-     * This trick reduces the streaming/buffer data payload by 50%.
+     * This trick reduces the buffer data payload by 50% at the cost of reserving 1 value.
      */
     override fun sendBufferData(data: Int) =
-        transmit(validateData(data))
+        transmit(
+            validateData(data)
+        )
 
     private fun validateData(data: Int): Int =
         if (data < DATA_MINIMUM_VALUE || data >= SIGNAL_OUT_COMMAND_PREFIX) {
@@ -110,10 +105,10 @@ class RcbServiceImpl(
             }
         } catch (error: IOException) {
             if (wasStopped) {
-                listener.onBufferServiceState(this, RcbState.DISCONNECTED)
+                listener.onBufferServiceState(this, RcbServiceState.Disconnected)
             } else {
                 stop()
-                listener.onBufferServiceError(this, RcbServiceError.Critical(error))
+                listener.onBufferServiceError(this, RcbServiceState.Error.Generic(error))
             }
         }
 
@@ -121,9 +116,10 @@ class RcbServiceImpl(
 
         val signal = read()
 
-        stateMapper.map(signal)?.let {
-            listener.onBufferServiceState(this, it)
-        } ?: throw IllegalArgumentException("Unknown signal value $signal")
+        when (val mapped = stateMapper.map(signal)) {
+            RcbServiceState.Unknown -> throw IllegalArgumentException("Unknown signal value $signal")
+            else -> listener.onBufferServiceState(this, mapped)
+        }
     }
 
     private fun awaitFreeHeap(listener: RcbServiceListener) {

@@ -5,7 +5,7 @@ import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class BluetoothUseCase @Inject constructor(
+class BluetoothStateObserver @Inject constructor(
     private val bluetoothStatus: ObservableBluetoothStatus,
     private val bluetoothMessageMapper: BluetoothMessageMapper
 ) {

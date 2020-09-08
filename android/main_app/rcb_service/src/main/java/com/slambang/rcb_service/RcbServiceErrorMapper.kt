@@ -4,12 +4,12 @@ import com.slambang.bluetooth_connection.BluetoothConnectionState
 
 class RcbServiceErrorMapper {
 
-    fun map(bluetoothConnectionState: BluetoothConnectionState): RcbServiceError =
+    fun map(bluetoothConnectionState: BluetoothConnectionState): RcbServiceState.Error =
         when (bluetoothConnectionState) {
-            is BluetoothConnectionState.NotFound -> RcbServiceError.NotFound
-            is BluetoothConnectionState.Unavailable -> RcbServiceError.Unavailable
-            is BluetoothConnectionState.Disabled -> RcbServiceError.Disabled
-            is BluetoothConnectionState.Error -> RcbServiceError.Critical(bluetoothConnectionState.cause)
-            else -> RcbServiceError.Unknown
+            is BluetoothConnectionState.NotFound -> RcbServiceState.Error.NotFound
+            is BluetoothConnectionState.Unavailable -> RcbServiceState.Error.Unavailable
+            is BluetoothConnectionState.Disabled -> RcbServiceState.Error.Disabled
+            is BluetoothConnectionState.Error -> RcbServiceState.Error.Generic(bluetoothConnectionState.cause)
+            else -> RcbServiceState.Error.Unknown
         }
 }

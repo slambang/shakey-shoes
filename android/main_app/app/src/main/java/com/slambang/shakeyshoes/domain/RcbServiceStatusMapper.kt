@@ -1,16 +1,16 @@
 package com.slambang.shakeyshoes.domain
 
-import com.slambang.rcb_service.RcbServiceError
+import com.slambang.rcb_service.RcbServiceState
 import javax.inject.Inject
 
 class RcbServiceStatusMapper @Inject constructor() {
 
-    fun map(error: RcbServiceError): RcbServiceStatus =
+    fun map(error: RcbServiceState.Error): RcbServiceStatus =
         when (error) {
-            is RcbServiceError.NotFound -> RcbServiceStatus.NotFound
-            is RcbServiceError.Unavailable -> RcbServiceStatus.Unavailable
-            is RcbServiceError.Disabled -> RcbServiceStatus.Disabled
-            is RcbServiceError.Critical -> RcbServiceStatus.Error(error.cause)
+            is RcbServiceState.Error.NotFound -> RcbServiceStatus.NotFound
+            is RcbServiceState.Error.Unavailable -> RcbServiceStatus.Unavailable
+            is RcbServiceState.Error.Disabled -> RcbServiceStatus.Disabled
+            is RcbServiceState.Error.Generic -> RcbServiceStatus.Error(error.cause)
             else -> RcbServiceStatus.Unknown
         }
 }

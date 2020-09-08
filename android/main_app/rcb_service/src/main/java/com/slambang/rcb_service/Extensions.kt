@@ -9,10 +9,11 @@ fun InputStream.readInt(): Int {
         buffer[i] = this.read()
     }
 
-    // TODO try IntBuffer.order() here instead
+    // TODO Try IntBuffer.order() here instead
     return toLittleEndian(buffer)
 }
 
+// TODO This allocates on each call
 fun Int.toByteArray(): ByteArray =
     ByteBuffer
         .allocate(Int.SIZE_BYTES)

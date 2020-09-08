@@ -8,13 +8,17 @@ import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
 import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCase
 import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCaseImpl
+import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCase
+import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCaseImpl
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
 import com.slambang.shakeyshoes.view.rcb.RcbItemModel
-import com.slambang.shakeyshoes.view.rcb.RcbNavigator
-import com.slambang.shakeyshoes.view.rcb.RcbNavigatorImpl
-import com.slambang.shakeyshoes.view.rcb.RcbViewModel
+import com.slambang.shakeyshoes.view.rcb.RcbViewModelImpl
+import com.slambang.shakeyshoes.view.rcb.RcbViewNavigator
+import com.slambang.shakeyshoes.view.rcb.RcbViewNavigatorImpl
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapperImpl
+import com.slambang.shakeyshoes.view.rcb.mappers.ErrorMapper
+import com.slambang.shakeyshoes.view.rcb.mappers.ErrorMapperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,7 +27,7 @@ import dagger.Provides
 class RcbViewFragmentModule {
 
     @Provides
-    fun provideRcbViewModelFactory(viewModel: RcbViewModel): ViewModelProviderFactory<RcbViewModel> =
+    fun provideRcbViewModelFactory(viewModel: RcbViewModelImpl): ViewModelProviderFactory<RcbViewModelImpl> =
         ViewModelProviderFactory(viewModel)
 
     @Provides
@@ -69,15 +73,21 @@ class RcbViewFragmentModule {
     interface Bindings {
 
         @Binds
+        fun bindErrorMapper(impl: ErrorMapperImpl): ErrorMapper
+
+        @Binds
+        fun bindRcbViewNavigator(impl: RcbViewNavigatorImpl): RcbViewNavigator
+
+        @Binds
         fun bindBluetoothMessageMapper(impl: BluetoothMessageMapperImpl): BluetoothMessageMapper
 
         @Binds
         fun bindDeviceRepositoryUseCase(impl: DeviceRepositoryUseCaseImpl): DeviceRepositoryUseCase
 
         @Binds
-        fun provideNavigator(impl: RcbNavigatorImpl): RcbNavigator
+        fun bindRcbServiceOrchestrator(impl: RcbServiceOrchestratorImpl): RcbServiceOrchestrator
 
         @Binds
-        fun provideRcbServiceOrchestrator(impl: RcbServiceOrchestratorImpl): RcbServiceOrchestrator
+        fun bindRcbOrchestratorUseCase(impl: RcbOrchestratorUseCaseImpl): RcbOrchestratorUseCase
     }
 }

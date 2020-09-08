@@ -1,5 +1,6 @@
 package com.slambang.shakeyshoes.view.rcb
 
+const val MAX_VIBRATE_VALUE = 254
 const val INITIAL_VIBRATE_VALUE = 0
 
 data class RcbItemModel(
@@ -49,7 +50,7 @@ data class Page2Model(
 
 data class Page3Model(
     val id: Int,
-    var maxVibrateValue: Int = 254,
+    var maxVibrateValue: Int = MAX_VIBRATE_VALUE,
     var currentVibrateValue: Int = INITIAL_VIBRATE_VALUE,
     var resumeButtonEnabled: Boolean = false,
     var isResumed: Boolean = false,

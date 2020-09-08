@@ -8,7 +8,7 @@ import com.slambang.shakeyshoes.util.StringProvider
 import com.slambang.shakeyshoes.view.rcb.RcbItemModel
 import javax.inject.Inject
 
-class DomainMapper @Inject constructor(
+class RcmItemModelMapper @Inject constructor(
     private val strings: StringProvider
 ) {
 
@@ -156,10 +156,10 @@ class DomainMapper @Inject constructor(
             is RcbServiceStatus.NotFound -> strings.getString(R.string.not_found)
             is RcbServiceStatus.Resumed -> strings.getString(R.string.resumed)
             is RcbServiceStatus.Error -> strings.getString(
-                R.string.error,
-                status.cause?.message ?: "Unknown"
+                R.string.error_template,
+                status.cause?.message ?: strings.getString(R.string.unknown_error)
             )
-            is RcbServiceStatus.Unknown -> strings.getString(R.string.unknown)
+            is RcbServiceStatus.Unknown -> strings.getString(R.string.unknown_error)
             else -> null
         }
 

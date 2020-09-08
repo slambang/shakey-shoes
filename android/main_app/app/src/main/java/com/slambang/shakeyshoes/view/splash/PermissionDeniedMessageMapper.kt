@@ -1,10 +1,9 @@
-package com.slambang.shakeyshoes.view.splash.mappers
+package com.slambang.shakeyshoes.view.splash
 
 import android.Manifest.permission.*
 import com.slambang.shakeyshoes.R
 import com.slambang.shakeyshoes.domain.permissions.PermissionResultDomain
 import com.slambang.shakeyshoes.util.StringProvider
-import com.slambang.shakeyshoes.view.splash.SplashViewState
 import javax.inject.Inject
 
 class PermissionDeniedMessageMapper @Inject constructor(
@@ -13,7 +12,7 @@ class PermissionDeniedMessageMapper @Inject constructor(
 
     @Throws(IllegalArgumentException::class)
     fun map(
-        domain: PermissionResultDomain.PermissionDenied,
+        domain: PermissionResultDomain.Denied,
         canRequestPermissions: Boolean
     ): SplashViewState {
 

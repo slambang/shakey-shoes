@@ -1,13 +1,16 @@
 package com.slambang.shakeyshoes.domain
 
-import com.slambang.rcb_service.*
+import com.slambang.rcb_service.RcbService
+import com.slambang.rcb_service.RcbServiceConfig
+import com.slambang.rcb_service.RcbServiceListener
+import com.slambang.rcb_service.RcbServiceState
 import com.slambang.shakeyshoes.audio.DataSource
 import com.slambang.shakeyshoes.audio.SettableDataSource
 import com.slambang.shakeyshoes.di.factories.RcbDataFactory
 import com.slambang.shakeyshoes.di.factories.RcbServiceFactory
 import javax.inject.Inject
 
-// Responsible for orchestrating `n` RcbService's and updating domains
+// Responsible for orchestrating multiple RcbService's and updating domains
 class RcbServiceOrchestratorImpl @Inject constructor(
     private val rcbDataFactory: RcbDataFactory,
     private val rcbServiceFactory: RcbServiceFactory,
@@ -19,8 +22,8 @@ class RcbServiceOrchestratorImpl @Inject constructor(
     private val rcbServiceListener = object : RcbServiceListener {
         override fun onBufferServiceState(
             rcbService: RcbService,
-            state: RcbState
-        ) = onBufferServiceStateReceived(rcbService, state)
+            serviceState: RcbServiceState
+        ) = onBufferServiceStateReceived(rcbService, serviceState)
 
         override fun onBufferServiceFreeHeap(
             rcbService: RcbService,
@@ -29,7 +32,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
 
         override fun onBufferServiceError(
             rcbService: RcbService,
-            error: RcbServiceError
+            error: RcbServiceState.Error
         ) = onBufferServiceErrorReceived(rcbService, error)
     }
 
@@ -138,16 +141,16 @@ class RcbServiceOrchestratorImpl @Inject constructor(
 
     private fun onBufferServiceStateReceived(
         rcbService: RcbService,
-        state: RcbState
+        serviceState: RcbServiceState
     ) {
-        when (state) {
-            RcbState.CONNECTING -> onBufferConnecting(rcbService)
-            RcbState.READY -> onBufferReady(rcbService)
-            RcbState.PAUSED -> onBufferPaused(rcbService)
-            RcbState.RESUMED -> onBufferResumed(rcbService)
-            RcbState.DISCONNECTED -> onBufferDisconnected(rcbService)
-            RcbState.REFILL -> onBufferRefill(rcbService)
-            RcbState.UNDERFLOW -> onBufferUnderflow(rcbService)
+        when (serviceState) {
+            RcbServiceState.Connecting -> onBufferConnecting(rcbService)
+            RcbServiceState.Ready -> onBufferReady(rcbService)
+            RcbServiceState.Paused -> onBufferPaused(rcbService)
+            RcbServiceState.Resumed -> onBufferResumed(rcbService)
+            RcbServiceState.Disconnected -> onBufferDisconnected(rcbService)
+            RcbServiceState.Refill -> onBufferRefill(rcbService)
+            RcbServiceState.Underflow -> onBufferUnderflow(rcbService)
         }
     }
 
@@ -160,7 +163,7 @@ class RcbServiceOrchestratorImpl @Inject constructor(
 
     private fun onBufferServiceErrorReceived(
         rcbService: RcbService,
-        error: RcbServiceError
+        error: RcbServiceState.Error
     ) {
         val mappedError = serviceStatusMapper.map(error)
         rcbServiceStatusObserver(rcbService.id, mappedError)
