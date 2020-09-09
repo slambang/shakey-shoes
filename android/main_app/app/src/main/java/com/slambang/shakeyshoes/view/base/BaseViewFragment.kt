@@ -34,7 +34,7 @@ abstract class BaseViewFragment<ViewModelType : ViewModel> : Fragment() {
     }
 
     // Optimisation: directly inject the ViewModel
-    protected inline fun <reified T : ViewModel> get() =
+    protected inline fun <reified T : ViewModel> of() =
         ViewModelProviders.of(this, viewModelFactory).get(T::class.java)
 
     protected inline fun <reified T : Any> observe(

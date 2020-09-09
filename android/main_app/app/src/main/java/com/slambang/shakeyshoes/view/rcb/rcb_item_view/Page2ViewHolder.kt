@@ -53,6 +53,7 @@ class Page2ViewHolder internal constructor(
                 it.isEnabled = model.applyButtonEnabled
             }
 
+        // TODO Convert this to a selector
         when (model.applyButtonEnabled) {
             true -> R.drawable.ic_pencil
             false -> R.drawable.ic_pencil_grey
@@ -62,6 +63,6 @@ class Page2ViewHolder internal constructor(
     }
 
     companion object {
-        const val layoutRes = R.layout.fragment_rcb_device_page_2
+        const val LAYOUT_RES_ID = R.layout.fragment_rcb_device_page_2
     }
 }

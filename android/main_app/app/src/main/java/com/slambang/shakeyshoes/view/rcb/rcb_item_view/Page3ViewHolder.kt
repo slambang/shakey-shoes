@@ -26,7 +26,7 @@ class Page3ViewHolder internal constructor(
         }
 
         vibrateValue.onSeekChangeListener = SeekBarValueObserver {
-            listener.onVibrateUpdate(model.id, it)
+            listener.onSetVibrateValue(model.id, it)
         }
     }
 
@@ -46,6 +46,6 @@ class Page3ViewHolder internal constructor(
     }
 
     companion object {
-        const val layoutRes = R.layout.fragment_rcb_device_page_3
+        const val LAYOUT_RES_ID = R.layout.fragment_rcb_device_page_3
     }
 }

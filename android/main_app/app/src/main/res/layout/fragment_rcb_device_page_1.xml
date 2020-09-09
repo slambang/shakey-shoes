@@ -60,7 +60,7 @@
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="32dp"
             android:layout_marginBottom="8dp"
             android:text="Status:"
             android:textStyle="bold"

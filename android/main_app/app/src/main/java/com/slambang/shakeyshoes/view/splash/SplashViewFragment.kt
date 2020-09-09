@@ -11,7 +11,7 @@ class SplashViewFragment : BaseViewFragment<SplashViewModelImpl>() {
 
     override val layoutResId = R.layout.fragment_splash
 
-    private val viewModel by lazy { get<SplashViewModelImpl>() }
+    private val viewModel by lazy { of<SplashViewModelImpl>() }
 
     private lateinit var messageTextView: TextView
     private lateinit var grantPermissionButton: TextView

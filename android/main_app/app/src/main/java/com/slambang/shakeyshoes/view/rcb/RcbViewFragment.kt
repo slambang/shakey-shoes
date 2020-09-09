@@ -10,21 +10,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.slambang.shakeyshoes.R
 import com.slambang.shakeyshoes.view.base.BaseViewFragment
-import com.slambang.shakeyshoes.view.rcb.rcb_item_view.BufferItemViewListener
 import com.slambang.shakeyshoes.view.setAppCompatToolbar
 import kotlinx.android.synthetic.main.fragment_rcb.*
+import javax.inject.Inject
 
 
-class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewListener {
+class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
 
     override val layoutResId = R.layout.fragment_rcb
 
-    private val viewModel by lazy { get<RcbViewModelImpl>() }
+    @Inject
+    lateinit var recyclerAdapter: BufferItemRecyclerAdapter
+
+    private val viewModel by lazy { of<RcbViewModelImpl>() }
 
     private lateinit var addRcbButton: View
     private lateinit var deleteAllBuffersMenuItem: MenuItem
-
-    private val recyclerAdapter = BufferItemRecyclerAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +56,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewList
         }
 
         observe(viewModel.itemModelsLiveData) {
-            updateModels(it)
+            emitModel(it)
         }
 
         observe(viewModel.itemDeletedLiveData) {
@@ -72,6 +73,10 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewList
 
         observe(viewModel.errorLiveData) {
             showSnackBar(it)
+        }
+
+        observe(viewModel.confirmDialogLiveData) {
+            showConfirmDialog(it)
         }
     }
 
@@ -115,11 +120,8 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewList
             .also { it.show() }
     }
 
-    private fun updateModels(models: List<RcbItemModel>) {
-        for (i in models.indices) {
-            recyclerAdapter.updateItem(models[i], i)
-        }
-    }
+    private fun emitModel(model: Pair<RcbItemModel, Int>) =
+        recyclerAdapter.updateItem(model.first, model.second)
 
     private fun setAddRcbClickListener() =
         addRcbButton.setOnClickListener {
@@ -127,59 +129,19 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewList
             viewModel.onAddRcbClicked()
         }
 
-    private fun confirmDeleteBuffer(bufferId: Int) {
-        showDeleteDialog(
-            R.string.delete_buffer_dialog_title,
-            R.string.delete_buffer_dialog_message
-        ) {
-            viewModel.onRemoveRcbItemClicked(bufferId)
-        }
-    }
-
-    private fun confirmDeleteAllBuffers() =
-        showDeleteDialog(
-            R.string.delete_all_buffers_dialog_title,
-            R.string.delete_all_buffers_dialog_message
-        ) {
-            viewModel.onRemoveAllRcbsClicked()
-        }
-
-    private fun showDeleteDialog(titleRes: Int, messageRes: Int, positiveCallback: () -> Unit) =
+    private fun showConfirmDialog(dialogModel: DialogModel) =
         AlertDialog.Builder(requireContext())
-            .setTitle(titleRes)
-            .setMessage(messageRes)
-            .setPositiveButton(R.string.delete) { _, _ -> positiveCallback() }
+            .setTitle(dialogModel.titleResId)
+            .setMessage(dialogModel.messageResId)
+            .setPositiveButton(R.string.delete) { _, _ -> dialogModel.onSuccessListener() }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
-
-    override fun onResumeClicked(modelId: Int) =
-        viewModel.onToggleRcb(modelId)
-
-    override fun onConnectClicked(modelId: Int) =
-        viewModel.onConnectRcbClicked(modelId)
-
-    override fun onVibrateUpdate(modelId: Int, value: Int) =
-        viewModel.onSetVibrateValue(modelId, value)
-
-    override fun onApplyClicked(modelId: Int) =
-        viewModel.onConfigureRbClicked(modelId)
-
-    override fun onProductUrlClicked(modelId: Int) =
-        viewModel.onProductUrlClicked(modelId)
-
-    override fun onDeleteClicked(modelId: Int) =
-        confirmDeleteBuffer(modelId)
-
-    override fun onEditConfig(modelId: Int) {
-//        ::displayConfig
-    }
 
     private fun showSnackBar(message: String) =
         Snackbar.make(requireView(), message, Snackbar.LENGTH_INDEFINITE).show()
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-
         inflater.inflate(R.menu.fragment_rcb_menu, menu)
         deleteAllBuffersMenuItem = menu.findItem(R.id.fragment_rcb_menu_delete_all)
     }
@@ -191,7 +153,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>(), BufferItemViewList
                 true
             }
             R.id.fragment_rcb_menu_delete_all -> {
-                confirmDeleteAllBuffers()
+                viewModel.onDeleteAllClicked()
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -78,9 +78,9 @@ class RcbItemViewAdapter(context: Context) :
 
     companion object {
         private val PAGE_LAYOUTS = listOf(
-            Page1ViewHolder.layoutRes,
-            Page2ViewHolder.layoutRes,
-            Page3ViewHolder.layoutRes
+            Page1ViewHolder.LAYOUT_RES_ID,
+            Page2ViewHolder.LAYOUT_RES_ID,
+            Page3ViewHolder.LAYOUT_RES_ID
         )
     }
 }

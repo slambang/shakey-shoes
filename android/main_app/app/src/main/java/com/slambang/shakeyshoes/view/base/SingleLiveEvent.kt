@@ -18,7 +18,7 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
             Log.w(javaClass.simpleName, "Multiple observers registered.")
         }
 
-        super.observe(owner, Observer {
+        super.observe(owner, {
             if (isPending.compareAndSet(true, false)) {
                 observer.onChanged(it)
             }

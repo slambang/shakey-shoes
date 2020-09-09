@@ -1,12 +1,12 @@
 package com.slambang.shakeyshoes.view.rcb
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.slambang.shakeyshoes.view.rcb.rcb_item_view.BufferItemView
 import com.slambang.shakeyshoes.view.rcb.rcb_item_view.BufferItemViewListener
+import javax.inject.Inject
 
-class BufferItemRecyclerAdapter(
+class BufferItemRecyclerAdapter @Inject constructor(
     private val listener: BufferItemViewListener
 ) : RecyclerView.Adapter<BufferItemRecyclerAdapter.ViewHolder>() {
 
@@ -24,29 +24,19 @@ class BufferItemRecyclerAdapter(
         return ViewHolder(view)
     }
 
-    private fun getView(parent: ViewGroup) =
+    private fun getView(parent: ViewGroup): BufferItemView =
         BufferItemView(parent.context).apply {
-
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-
             setListener(listener)
         }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(items[position])
-
-    // This is necessary to keep the main thread from getting clogged
-    fun updateItem(item: RcbItemModel, index: Int) {
-        if (index >= items.size) {
+    fun updateItem(item: RcbItemModel, index: Int) =
+        if (index == items.size) {
             items.add(item)
-            notifyItemInserted(items.size - 1)
+            notifyItemInserted(index)
         } else {
             items[index] = item
-            getViewHolder(index)?.bind(item)
+            notifyItemChanged(index, item)
         }
-    }
 
     fun clearItems() {
         items.clear()
@@ -58,17 +48,29 @@ class BufferItemRecyclerAdapter(
         notifyItemRemoved(index)
     }
 
+    // TODO Update model instead. Use timestamps for setting page!
     fun setPage(index: Int, page: Int) =
-        getViewHolder(index)?.setPage(page) // update model instead?
+        getViewHolder(index)?.setPage(page)
 
     private fun getViewHolder(index: Int) =
         (recycler.findViewHolderForAdapterPosition(index) as ViewHolder?)
 
     override fun getItemCount() = items.size
 
-    class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) =
+        if (payloads.isNotEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            super.onBindViewHolder(holder, position, payloads)
+        }
 
-        private val circularBufferView = (itemView as BufferItemView)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
+        holder.bind(items[position])
+
+    class ViewHolder internal constructor(itemView: BufferItemView) :
+        RecyclerView.ViewHolder(itemView) {
+
+        private val circularBufferView = itemView
 
         fun bind(model: RcbItemModel) = circularBufferView.bind(model)
         fun setPage(index: Int) = circularBufferView.setPageIndex(index)

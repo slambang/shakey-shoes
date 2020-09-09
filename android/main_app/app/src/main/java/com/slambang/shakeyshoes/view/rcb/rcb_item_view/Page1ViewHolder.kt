@@ -42,6 +42,6 @@ class Page1ViewHolder internal constructor(
     }
 
     companion object {
-        const val layoutRes = R.layout.fragment_rcb_device_page_1
+        const val LAYOUT_RES_ID = R.layout.fragment_rcb_device_page_1
     }
 }

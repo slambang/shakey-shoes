@@ -3,6 +3,7 @@ package com.slambang.shakeyshoes.view.rcb.rcb_item_view
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
@@ -17,16 +18,25 @@ import kotlinx.android.synthetic.main.rcb_item_view.view.*
 interface BufferItemViewListener {
     fun onResumeClicked(modelId: Int)
     fun onConnectClicked(modelId: Int)
-    fun onVibrateUpdate(modelId: Int, value: Int)
+    fun onSetVibrateValue(modelId: Int, value: Int)
     fun onApplyClicked(modelId: Int)
     fun onProductUrlClicked(modelId: Int)
     fun onDeleteClicked(modelId: Int)
     fun onEditConfig(modelId: Int)
+    fun onPauseRcbClicked(modelId: Int)
+    fun onResumeRcbClicked(modelId: Int)
 }
 
 class BufferItemView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
+
+    init {
+        layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
 
     private lateinit var listener: BufferItemViewListener
 
