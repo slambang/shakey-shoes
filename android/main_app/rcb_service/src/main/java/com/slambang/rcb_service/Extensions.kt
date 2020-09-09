@@ -3,6 +3,8 @@ package com.slambang.rcb_service
 import java.io.InputStream
 import java.nio.ByteBuffer
 
+fun InputStream.readByte() = read()
+
 fun InputStream.readInt(): Int {
     val buffer = IntArray(Int.SIZE_BYTES)
     for (i in (Int.SIZE_BYTES - 1) downTo 0) {

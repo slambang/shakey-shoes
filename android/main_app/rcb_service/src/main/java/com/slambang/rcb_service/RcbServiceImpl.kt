@@ -114,7 +114,7 @@ class RcbServiceImpl(
 
     private fun waitForSignal(listener: RcbServiceListener) {
 
-        val signal = read()
+        val signal = requireSocket().inputStream.readByte()
 
         when (val mapped = stateMapper.map(signal)) {
             RcbServiceState.Unknown -> throw IllegalArgumentException("Unknown signal value $signal")
@@ -124,12 +124,9 @@ class RcbServiceImpl(
 
     private fun awaitFreeHeap(listener: RcbServiceListener) {
         transmitCommand(SIGNAL_OUT_COMMAND_CONNECT)
-        val freeRamBytes = read()
+        val freeRamBytes = requireSocket().inputStream.readInt()
         listener.onBufferServiceFreeHeap(this, freeRamBytes)
     }
-
-    private fun read(): Int =
-        requireSocket().inputStream.readInt()
 
     private fun write(data: Int) =
         requireSocket().outputStream.write(data)
