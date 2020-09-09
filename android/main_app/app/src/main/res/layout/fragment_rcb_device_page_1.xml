@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="10dp"
@@ -13,7 +14,7 @@
         android:paddingHorizontal="16dp">
 
         <TextView
-            android:id="@+id/page_0_connect_button"
+            android:id="@+id/page_1_connect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -27,11 +28,11 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/page_0_status"
+            android:id="@+id/page_1_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text=""
+            tools:text="Connected"
             app:layout_constraintBottom_toBottomOf="@+id/textView6"
             app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="@+id/textView6" />
@@ -41,19 +42,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="MAC:"
+            android:text="@string/buffer_item_page_1_mac"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/page_0_mac_address"
+            android:id="@+id/page_1_mac_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            tools:text="00:00:00:00:00:00:00:00"
             app:layout_constraintBottom_toBottomOf="@+id/textView4"
-            app:layout_constraintStart_toStartOf="@+id/page_0_status"
+            app:layout_constraintStart_toStartOf="@+id/page_1_status"
             app:layout_constraintTop_toTopOf="@+id/textView4" />
 
         <TextView
@@ -62,9 +63,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginBottom="8dp"
-            android:text="Status:"
+            android:text="@string/buffer_item_page_1_status"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/page_0_connect_button"
+            app:layout_constraintBottom_toTopOf="@+id/page_1_connect_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -72,7 +73,7 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pin:"
+            android:text="@string/buffer_item_page_1_pin"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView7"
             app:layout_constraintEnd_toEndOf="@+id/textView6"
@@ -82,32 +83,32 @@
             android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Baud:"
+            android:text="@string/buffer_item_page_1_baud"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="@+id/textView6"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/page_0_pin"
+            android:id="@+id/page_1_pin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            tools:text="1234"
             app:layout_constraintBottom_toBottomOf="@+id/textView5"
-            app:layout_constraintStart_toStartOf="@+id/page_0_status"
+            app:layout_constraintStart_toStartOf="@+id/page_1_status"
             app:layout_constraintTop_toTopOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/page_0_baud"
+            android:id="@+id/page_1_baud"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            tools:text="960 B/s"
             app:layout_constraintBottom_toBottomOf="@+id/textView7"
-            app:layout_constraintStart_toStartOf="@+id/page_0_status"
+            app:layout_constraintStart_toStartOf="@+id/page_1_status"
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
         <ImageView
-            android:id="@+id/page_0_product_url"
+            android:id="@+id/page_1_product_url"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginTop="13dp"

@@ -14,11 +14,11 @@ class Page3ViewHolder internal constructor(
 
     private lateinit var model: Page3Model
 
-    private val upTime: Chronometer = itemView.findViewById(R.id.page_2_up_time)
-    private val successRate: TextView = itemView.findViewById(R.id.page_2_success_rate)
-    private val errorRate: TextView = itemView.findViewById(R.id.page_2_error_rate)
-    private val resumeButton: TextView = itemView.findViewById(R.id.page_2_resume_button)
-    private val vibrateValue: IndicatorSeekBar = itemView.findViewById(R.id.page_2_vibrate_value)
+    private val upTime: Chronometer = itemView.findViewById(R.id.page_3_up_time)
+    private val successRate: TextView = itemView.findViewById(R.id.page_3_success_rate)
+    private val errorRate: TextView = itemView.findViewById(R.id.page_3_error_rate)
+    private val resumeButton: TextView = itemView.findViewById(R.id.page_3_resume_button)
+    private val vibrateValue: IndicatorSeekBar = itemView.findViewById(R.id.page_3_vibrate_value)
 
     init {
         resumeButton.setOnClickListener {

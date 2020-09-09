@@ -14,16 +14,16 @@ class Page2ViewHolder internal constructor(
 
     private lateinit var model: Page2Model
 
-    private val editButton: ImageView = itemView.findViewById(R.id.page_1_edit_button)
-    private val maxSize: TextView = itemView.findViewById(R.id.page_1_max_bytes)
-    private val actualSize: TextView = itemView.findViewById(R.id.page_1_calculated_size)
-    private val latency: TextView = itemView.findViewById(R.id.page_1_latency)
-    private val underflowTime: TextView = itemView.findViewById(R.id.page_1_underflow_time)
-    private val refillCount: TextView = itemView.findViewById(R.id.page_1_refill_count)
-    private val refillSize: TextView = itemView.findViewById(R.id.page_1_refill_size)
-    private val windowSize: TextView = itemView.findViewById(R.id.page_1_window_size)
-    private val maxUnderflows: TextView = itemView.findViewById(R.id.page_1_max_underflows)
-    private val applyButton: View = itemView.findViewById(R.id.page_1_apply_button)
+    private val editButton: ImageView = itemView.findViewById(R.id.page_2_edit_button)
+    private val maxSize: TextView = itemView.findViewById(R.id.page_2_max_bytes)
+    private val actualSize: TextView = itemView.findViewById(R.id.page_2_calculated_size)
+    private val latency: TextView = itemView.findViewById(R.id.page_2_latency)
+    private val underflowTime: TextView = itemView.findViewById(R.id.page_2_underflow_time)
+    private val refillCount: TextView = itemView.findViewById(R.id.page_2_refill_count)
+    private val refillSize: TextView = itemView.findViewById(R.id.page_2_refill_size)
+    private val windowSize: TextView = itemView.findViewById(R.id.page_2_window_size)
+    private val maxUnderflows: TextView = itemView.findViewById(R.id.page_2_max_underflows)
+    private val applyButton: View = itemView.findViewById(R.id.page_2_apply_button)
 
     init {
         editButton.setOnClickListener {

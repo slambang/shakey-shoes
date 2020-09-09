@@ -24,10 +24,14 @@ class RcmItemModelMapper @Inject constructor(
 
         model.page3
         model.page3.successRate =
-            strings.getString(R.string.buffer_item_accuracy_format, totalFrames, successPercent)
+            strings.getString(
+                R.string.buffer_item_page_3_accuracy_template,
+                totalFrames,
+                successPercent
+            )
 
         model.page3.errorRate = strings.getString(
-            R.string.buffer_item_accuracy_format,
+            R.string.buffer_item_page_3_accuracy_template,
             domain.underflowCount,
             errorPercent
         )
@@ -40,7 +44,7 @@ class RcmItemModelMapper @Inject constructor(
         rcbItemModel.selectedDeviceId = domainModel.id
         rcbItemModel.header.deviceName = domainModel.name
         rcbItemModel.page1.baudRateBytes =
-            strings.getString(R.string.buffer_item_page_0_baud, domainModel.baudRateBytes)
+            strings.getString(R.string.buffer_item_page_1_baud_template, domainModel.baudRateBytes)
         rcbItemModel.page1.macAddress = domainModel.macAddress
         rcbItemModel.page1.pairingPin = domainModel.pairingPin
 
@@ -80,7 +84,6 @@ class RcmItemModelMapper @Inject constructor(
             is RcbServiceStatus.Disconnected -> {
 
                 itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
-                setMaxSize(itemModel, domainModel.freeHeapBytes)
 
                 mapConfig(
                     itemModel.page2.config.refillCount,
@@ -95,7 +98,7 @@ class RcmItemModelMapper @Inject constructor(
                 itemModel.page1.connectButtonEnabled = false
             }
             is RcbServiceStatus.Setup -> {
-                setMaxSize(itemModel, domainModel.freeHeapBytes)
+                setMaxSize(itemModel, (domainModel.status as RcbServiceStatus.Setup).freeHeapBytes)
                 itemModel.header.isConnected = true
                 itemModel.header.isConnecting = false
                 itemModel.page2.applyButtonEnabled = true
@@ -185,10 +188,10 @@ class RcmItemModelMapper @Inject constructor(
     }
 
     private fun isConnected(status: RcbServiceStatus) =
-        (status !is RcbServiceStatus.Connecting &&
-                status !is RcbServiceStatus.Disconnected &&
-                status !is RcbServiceStatus.Error &&
-                status !is RcbServiceStatus.NotFound &&
-                status !is RcbServiceStatus.Disabled &&
-                status !is RcbServiceStatus.Unavailable)
+        (status is RcbServiceStatus.Setup ||
+                status is RcbServiceStatus.Ready ||
+                status is RcbServiceStatus.Refill ||
+                status is RcbServiceStatus.Underflow ||
+                status is RcbServiceStatus.Paused ||
+                status is RcbServiceStatus.Resumed)
 }

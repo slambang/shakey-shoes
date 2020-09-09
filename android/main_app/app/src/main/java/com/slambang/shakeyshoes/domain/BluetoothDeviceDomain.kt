@@ -8,7 +8,6 @@ data class BluetoothDeviceDomain(
     val serviceUuid: String = "",
     val productUrl: String = "",
     val baudRateBytes: Int = 0,
-    var freeHeapBytes: Int = 0,
     var status: RcbServiceStatus = RcbServiceStatus.Disconnected,
     val accuracies: BluetoothDeviceAccuracyDomain = BluetoothDeviceAccuracyDomain(id)
 )

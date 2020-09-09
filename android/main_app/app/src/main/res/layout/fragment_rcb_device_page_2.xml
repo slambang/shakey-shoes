@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="10dp"
@@ -16,24 +17,26 @@
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max size:"
+            android:text="@string/buffer_item_page_2_free_heap"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="@+id/textView7"
-            app:layout_constraintTop_toBottomOf="@+id/page_1_edit_button" />
+            app:layout_constraintTop_toBottomOf="@+id/page_2_edit_button" />
 
         <TextView
-            android:id="@+id/page_1_max_bytes"
-            android:layout_width="50dp"
+            android:id="@+id/page_2_max_bytes"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/textView9"
+            app:layout_constraintEnd_toStartOf="@+id/page_2_edit_button"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/textView9"
             app:layout_constraintTop_toTopOf="@+id/textView9" />
 
         <TextView
-            android:id="@+id/page_1_refill_size"
+            android:id="@+id/page_2_refill_size"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -47,14 +50,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Refill count:"
+            android:text="@string/buffer_item_page_2_refill_count"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView6"
             app:layout_constraintEnd_toEndOf="@+id/textView7"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
         <TextView
-            android:id="@+id/page_1_refill_count"
+            android:id="@+id/page_2_refill_count"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -68,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Refill size:"
+            android:text="@string/buffer_item_page_2_refill_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="@+id/textView5"
@@ -79,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Window size:"
+            android:text="@string/buffer_item_page_2_window_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/textView7"
             app:layout_constraintEnd_toEndOf="@+id/textView7"
@@ -92,14 +95,14 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
-            android:text="Max underflows:"
+            android:text="@string/buffer_item_page_2_max_underflows"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/page_1_apply_button"
+            app:layout_constraintBottom_toTopOf="@+id/page_2_apply_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/page_1_window_size"
+            android:id="@+id/page_2_window_size"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -109,7 +112,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView5" />
 
         <TextView
-            android:id="@+id/page_1_max_underflows"
+            android:id="@+id/page_2_max_underflows"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -119,13 +122,13 @@
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
         <TextView
-            android:id="@+id/page_1_apply_button"
+            android:id="@+id/page_2_apply_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="13dp"
             android:padding="4dp"
-            android:text="Apply"
+            android:text="@string/buffer_item_page_2_apply"
             android:textAllCaps="true"
             android:textColor="@drawable/cta_text_button_colour"
             android:textStyle="bold|italic"
@@ -133,37 +136,37 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
-            android:id="@+id/page_1_calculated_size"
+            android:id="@+id/page_2_calculated_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/page_1_refill_size"
-            app:layout_constraintStart_toEndOf="@+id/page_1_refill_count"
-            app:layout_constraintTop_toTopOf="@+id/page_1_refill_count" />
+            tools:text="12 bytes"
+            app:layout_constraintBottom_toBottomOf="@+id/page_2_refill_size"
+            app:layout_constraintStart_toEndOf="@+id/page_2_refill_count"
+            app:layout_constraintTop_toTopOf="@+id/page_2_refill_count" />
 
         <TextView
-            android:id="@+id/page_1_latency"
+            android:id="@+id/page_2_latency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/page_1_window_size"
-            app:layout_constraintStart_toEndOf="@+id/page_1_window_size"
-            app:layout_constraintTop_toTopOf="@+id/page_1_window_size" />
+            tools:text="120ms"
+            app:layout_constraintBottom_toBottomOf="@+id/page_2_window_size"
+            app:layout_constraintStart_toEndOf="@+id/page_2_window_size"
+            app:layout_constraintTop_toTopOf="@+id/page_2_window_size" />
 
         <TextView
-            android:id="@+id/page_1_underflow_time"
+            android:id="@+id/page_2_underflow_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text=""
-            app:layout_constraintBottom_toBottomOf="@+id/page_1_max_underflows"
-            app:layout_constraintStart_toEndOf="@+id/page_1_max_underflows"
-            app:layout_constraintTop_toTopOf="@+id/page_1_max_underflows" />
+            tools:text="500ms"
+            app:layout_constraintBottom_toBottomOf="@+id/page_2_max_underflows"
+            app:layout_constraintStart_toEndOf="@+id/page_2_max_underflows"
+            app:layout_constraintTop_toTopOf="@+id/page_2_max_underflows" />
 
         <ImageView
-            android:id="@+id/page_1_edit_button"
+            android:id="@+id/page_2_edit_button"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginTop="13dp"

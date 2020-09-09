@@ -60,11 +60,10 @@ class BufferItemRecyclerAdapter @Inject constructor(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         holder.bind(items[position])
 
-    class ViewHolder internal constructor(itemView: BufferItemView) :
-        RecyclerView.ViewHolder(itemView) {
+    class ViewHolder internal constructor(
+        private val bufferItemView: BufferItemView
+    ) : RecyclerView.ViewHolder(bufferItemView) {
 
-        private val circularBufferView = itemView
-
-        fun bind(model: RcbItemModel) = circularBufferView.bind(model)
+        fun bind(model: RcbItemModel) = bufferItemView.bind(model)
     }
 }

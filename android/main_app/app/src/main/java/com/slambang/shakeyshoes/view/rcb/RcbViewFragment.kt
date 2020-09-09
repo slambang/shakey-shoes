@@ -112,7 +112,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
         val deviceNames = devices.map { it.second }.toTypedArray()
 
         AlertDialog.Builder(requireContext())
-            .setTitle(R.string.select_device_title)
+            .setTitle(R.string.select_device_dialog_title)
             .setItems(deviceNames) { _, which ->
                 viewModel.onRcbDeviceSelected(devices[which].first)
             }

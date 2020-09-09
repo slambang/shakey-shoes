@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="10dp"
@@ -17,13 +18,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Up time:"
+            android:text="@string/buffer_item_page_3_up_time"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/textView4"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.slambang.shakeyshoes.view.rcb.rcb_item_view.Chronometer
-            android:id="@+id/page_2_up_time"
+            android:id="@+id/page_3_up_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -38,17 +39,17 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
-            android:text="Successful frames:"
+            android:text="@string/buffer_item_page_3_successful_frames"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView10" />
 
         <TextView
-            android:id="@+id/page_2_success_rate"
+            android:id="@+id/page_3_success_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text=""
+            tools:text="123 (99.9%)"
             app:layout_constraintBottom_toBottomOf="@+id/textView4"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toTopOf="@+id/textView4" />
@@ -58,36 +59,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Failed frames:"
+            android:text="@string/buffer_item_page_3_failed_frames"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <TextView
-            android:id="@+id/page_2_error_rate"
+            android:id="@+id/page_3_error_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text=""
+            tools:text="1 (0.1%)"
             app:layout_constraintBottom_toBottomOf="@+id/textView8"
             app:layout_constraintStart_toEndOf="@+id/textView8"
             app:layout_constraintTop_toTopOf="@+id/textView8" />
 
         <com.warkiz.widget.IndicatorStayLayout
-            android:id="@+id/page_2_vibrate_value_container"
+            android:id="@+id/page_3_vibrate_value_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toTopOf="@+id/page_2_resume_button"
+            app:layout_constraintBottom_toTopOf="@+id/page_3_resume_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView8">
 
             <com.warkiz.widget.IndicatorSeekBar
-                android:id="@+id/page_2_vibrate_value"
+                android:id="@+id/page_3_vibrate_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:isb_indicator_color="@color/light_gray"
@@ -109,13 +110,13 @@
         </com.warkiz.widget.IndicatorStayLayout>
 
         <TextView
-            android:id="@+id/page_2_resume_button"
+            android:id="@+id/page_3_resume_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="13dp"
             android:padding="4dp"
-            android:text="Resume"
+            tools:text="Resume"
             android:textAllCaps="true"
             android:textColor="@drawable/cta_text_button_colour"
             android:textStyle="bold|italic"
