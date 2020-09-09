@@ -121,9 +121,6 @@ class RcbServiceOrchestratorImpl @Inject constructor(
         }
     }
 
-    override fun startRcbService(rcbServiceId: Int) =
-        requireBufferService(rcbServiceId).resume()
-
     override fun resumeRcbService(rcbServiceId: Int) =
         requireBufferService(rcbServiceId).resume()
 

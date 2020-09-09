@@ -79,6 +79,11 @@ class RcbViewFragmentModule {
     ): BufferItemViewListener =
         ViewModelProviders.of(fragment, factory).get(RcbViewModelImpl::class.java)
 
+    /*
+     * TODO We are Binding classes with @Inject'able constructors.
+     *  This means we could accidentally inject an Impl.
+     *  Convert to @Provides.
+     */
     @Module
     interface Bindings {
 

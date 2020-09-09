@@ -38,7 +38,6 @@ class RcbViewModelImpl @Inject constructor(
     private val _removeAllBuffersLiveData: SingleLiveEvent<Unit>,
     private val _bluetoothStatusLiveData: MutableLiveData<String>,
     private val _confirmDialogLiveData: SingleLiveEvent<DialogModel>,
-    private val _bufferItemPageLiveData: SingleLiveEvent<Pair<Int, Int>>,
     private val _itemModelsLiveData: MutableLiveData<Pair<RcbItemModel, Int>>,
     private val _removeAllMenuOptionEnabledLiveData: SingleLiveEvent<Boolean>,
     private val _showDeviceListLiveData: SingleLiveEvent<List<Pair<Int, String>>>,
@@ -57,9 +56,6 @@ class RcbViewModelImpl @Inject constructor(
     override val showDeviceListLiveData: LiveData<List<Pair<Int, String>>>
         get() = _showDeviceListLiveData
 
-    override val bufferItemPageLiveData: LiveData<Pair<Int, Int>>
-        get() = _bufferItemPageLiveData
-
     override val itemModelsLiveData: LiveData<Pair<RcbItemModel, Int>>
         get() = _itemModelsLiveData
 
@@ -72,7 +68,7 @@ class RcbViewModelImpl @Inject constructor(
     override val errorLiveData: LiveData<String>
         get() = _errorLiveData
 
-    override fun onResume() = async {
+    override fun onResumeView() = async {
         observeBluetoothState()
         rcbOrchestratorUseCase.subscribe(::onDomainUpdated, ::onRcbServiceAccuracy)
     }
@@ -111,10 +107,6 @@ class RcbViewModelImpl @Inject constructor(
 
     override fun onPauseRcbClicked(modelId: Int) = async {
         rcbOrchestratorUseCase.pauseRcbService(modelId)
-    }
-
-    override fun onResumeRcbClicked(modelId: Int) = async {
-        rcbOrchestratorUseCase.resumeRcbService(modelId)
     }
 
     override fun onDeleteClicked(modelId: Int) = async {
@@ -168,11 +160,11 @@ class RcbViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onPause() = async {
+    override fun onPauseView() = async {
         rcbOrchestratorUseCase.pauseAllRcbServices()
     }
 
-    override fun onStop() = async {
+    override fun onStopView() = async {
         rcbOrchestratorUseCase.stopAllRcbServices()
     }
 
@@ -181,7 +173,6 @@ class RcbViewModelImpl @Inject constructor(
         val deviceDomain = rcbOrchestratorUseCase.createRcbService(deviceDomainId)
         val rcbItemModel = itemModelMapper.mapSelectedDevice(deviceDomain)
 
-        setBufferItemPage(deviceDomain, rcbItemModel)
         itemModelMapper.mapState(deviceDomain, rcbItemModel)
         itemModelMapper.mapAccuracies(deviceDomain.accuracies, rcbItemModel)
 
@@ -227,7 +218,7 @@ class RcbViewModelImpl @Inject constructor(
         }
     }
 
-    override fun onEditConfig(modelId: Int) = async {
+    override fun onEditConfigClicked(modelId: Int) = async {
 //        ::displayConfig
     }
 
@@ -235,7 +226,6 @@ class RcbViewModelImpl @Inject constructor(
 
     private fun onDomainUpdated(domain: BluetoothDeviceDomain) =
         requireBufferItemModel(domain.id).let {
-            setBufferItemPage(domain, it)
             itemModelMapper.mapState(domain, it)
             emitModel(it)
         }
@@ -244,15 +234,6 @@ class RcbViewModelImpl @Inject constructor(
         requireBufferItemModel(domain.id).let {
             itemModelMapper.mapAccuracies(domain, it)
             emitModel(it)
-        }
-
-    private fun setBufferItemPage(deviceDomain: BluetoothDeviceDomain, model: RcbItemModel) =
-        itemModelMapper.mapPage(deviceDomain)?.let { page ->
-            orderedItemList.indexOfFirst {
-                it.id == model.id
-            }.let { index ->
-                _bufferItemPageLiveData.postValue(Pair(index, page))
-            }
         }
 
     private fun emitModel(model: RcbItemModel) =

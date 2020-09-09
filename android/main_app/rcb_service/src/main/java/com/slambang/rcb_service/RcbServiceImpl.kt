@@ -128,11 +128,8 @@ class RcbServiceImpl(
         listener.onBufferServiceFreeHeap(this, freeRamBytes)
     }
 
-    private fun write(data: Int) =
-        requireSocket().outputStream.write(data)
-
     private fun transmit(data: Int) =
-        write(data)
+        requireSocket().outputStream.write(data)
 
     private fun transmitCommand(command: Int) {
         transmit(SIGNAL_OUT_COMMAND_PREFIX)

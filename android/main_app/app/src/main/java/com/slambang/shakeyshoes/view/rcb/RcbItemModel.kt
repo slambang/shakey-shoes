@@ -9,7 +9,13 @@ data class RcbItemModel(
     val page1: Page1Model = Page1Model(id),
     val page2: Page2Model = Page2Model(id),
     val page3: Page3Model = Page3Model(id),
+    var activePage: ActivePageModel = ActivePageModel(),
     val header: ItemHeaderModel = ItemHeaderModel()
+)
+
+data class ActivePageModel(
+    val pageIndex: Int = 0,
+    val since: Long = 0
 )
 
 data class ItemHeaderModel(
@@ -24,9 +30,9 @@ data class RcbConfigModel(
     var windowSize: Int = 10,
     var maxUnderflows: Int = 50,
     var maxSize: String = "",
-    var actualSize: String ="0",
-    var latency: String ="0",
-    var maxUnderflowTime: String ="0"
+    var actualSize: String = "0",
+    var latency: String = "0",
+    var maxUnderflowTime: String = "0"
 )
 
 sealed class PageModel

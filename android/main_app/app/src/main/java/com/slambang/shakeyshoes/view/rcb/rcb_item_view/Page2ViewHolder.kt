@@ -27,7 +27,7 @@ class Page2ViewHolder internal constructor(
 
     init {
         editButton.setOnClickListener {
-            listener.onEditConfig(model.id)
+            listener.onEditConfigClicked(model.id)
         }
 
         applyButton.setOnClickListener {
@@ -53,13 +53,7 @@ class Page2ViewHolder internal constructor(
                 it.isEnabled = model.applyButtonEnabled
             }
 
-        // TODO Convert this to a selector
-        when (model.applyButtonEnabled) {
-            true -> R.drawable.ic_pencil
-            false -> R.drawable.ic_pencil_grey
-        }.let {
-            editButton.setImageResource(it)
-        }
+        editButton.isEnabled = model.applyButtonEnabled
     }
 
     companion object {

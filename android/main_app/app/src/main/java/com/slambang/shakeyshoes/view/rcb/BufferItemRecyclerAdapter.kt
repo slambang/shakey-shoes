@@ -48,13 +48,6 @@ class BufferItemRecyclerAdapter @Inject constructor(
         notifyItemRemoved(index)
     }
 
-    // TODO Update model instead. Use timestamps for setting page!
-    fun setPage(index: Int, page: Int) =
-        getViewHolder(index)?.setPage(page)
-
-    private fun getViewHolder(index: Int) =
-        (recycler.findViewHolderForAdapterPosition(index) as ViewHolder?)
-
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) =
@@ -73,6 +66,5 @@ class BufferItemRecyclerAdapter @Inject constructor(
         private val circularBufferView = itemView
 
         fun bind(model: RcbItemModel) = circularBufferView.bind(model)
-        fun setPage(index: Int) = circularBufferView.setPageIndex(index)
     }
 }

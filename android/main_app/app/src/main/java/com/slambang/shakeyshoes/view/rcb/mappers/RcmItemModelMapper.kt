@@ -5,6 +5,7 @@ import com.slambang.shakeyshoes.domain.BluetoothDeviceAccuracyDomain
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceStatus
 import com.slambang.shakeyshoes.util.StringProvider
+import com.slambang.shakeyshoes.view.rcb.ActivePageModel
 import com.slambang.shakeyshoes.view.rcb.RcbItemModel
 import javax.inject.Inject
 
@@ -34,8 +35,7 @@ class RcmItemModelMapper @Inject constructor(
 
     fun mapSelectedDevice(domainModel: BluetoothDeviceDomain): RcbItemModel {
 
-        val rcbItemModel =
-            RcbItemModel(domainModel.id)
+        val rcbItemModel = RcbItemModel(domainModel.id)
 
         rcbItemModel.selectedDeviceId = domainModel.id
         rcbItemModel.header.deviceName = domainModel.name
@@ -75,72 +75,86 @@ class RcmItemModelMapper @Inject constructor(
         )
     }
 
-    fun mapPage(deviceDomain: BluetoothDeviceDomain) =
-        when (deviceDomain.status) {
+    fun mapState(domainModel: BluetoothDeviceDomain, itemModel: RcbItemModel) {
+        when (domainModel.status) {
+            is RcbServiceStatus.Disconnected -> {
+
+                itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
+                setMaxSize(itemModel, domainModel.freeHeapBytes)
+
+                mapConfig(
+                    itemModel.page2.config.refillCount,
+                    itemModel.page2.config.refillSize,
+                    itemModel.page2.config.windowSize,
+                    itemModel.page2.config.maxUnderflows,
+                    itemModel
+                )
+            }
+            is RcbServiceStatus.Connecting -> {
+                itemModel.header.isConnecting = true
+                itemModel.page1.connectButtonEnabled = false
+            }
+            is RcbServiceStatus.Setup -> {
+                setMaxSize(itemModel, domainModel.freeHeapBytes)
+                itemModel.header.isConnected = true
+                itemModel.header.isConnecting = false
+                itemModel.page2.applyButtonEnabled = true
+            }
+            is RcbServiceStatus.Ready -> {
+                itemModel.page1.connectButtonEnabled = false
+                itemModel.page2.applyButtonEnabled = false
+                itemModel.page3.resumeButtonEnabled = true
+            }
+            is RcbServiceStatus.Error, is RcbServiceStatus.NotFound, is RcbServiceStatus.Disabled, is RcbServiceStatus.Unavailable -> {
+                itemModel.header.isConnecting = false
+                itemModel.page1.connectButtonEnabled = true
+                itemModel.page3.isResumed = false
+            }
+            is RcbServiceStatus.Paused -> {
+                itemModel.page3.isResumed = false
+                itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
+            }
+            is RcbServiceStatus.Resumed -> {
+                itemModel.page3.isResumed = true
+                itemModel.page3.resumeButtonText = strings.getString(R.string.pause)
+            }
+        }
+
+        mapPage(domainModel)?.let {
+            itemModel.activePage = it
+        }
+
+        val isConnected = isConnected(domainModel.status)
+        itemModel.header.isConnected = isConnected
+
+        mapStatus(domainModel.status)?.let {
+            itemModel.page1.status = it
+        }
+
+        itemModel.page1.connectButtonEnabled = !isConnected
+        when (isConnected) {
+            true -> R.string.disconnect
+            false -> R.string.connect
+        }.let {
+            itemModel.page1.connectButtonText = strings.getString(it)
+        }
+    }
+
+    private fun mapPage(deviceDomain: BluetoothDeviceDomain): ActivePageModel? {
+        val activePage = when (deviceDomain.status) {
             is RcbServiceStatus.Error -> 0
             is RcbServiceStatus.Setup -> 1
             is RcbServiceStatus.Ready -> 2
             else -> null
         }
 
-    fun mapState(domainModel: BluetoothDeviceDomain, model: RcbItemModel) {
-        when (domainModel.status) {
-            is RcbServiceStatus.Disconnected -> {
-
-                model.page3.resumeButtonText = strings.getString(R.string.resume)
-                setMaxSize(model, domainModel.freeHeapBytes)
-
-                mapConfig(
-                    model.page2.config.refillCount,
-                    model.page2.config.refillSize,
-                    model.page2.config.windowSize,
-                    model.page2.config.maxUnderflows,
-                    model
-                )
-            }
-            is RcbServiceStatus.Connecting -> {
-                model.header.isConnecting = true
-                model.page1.connectButtonEnabled = false
-            }
-            is RcbServiceStatus.Setup -> {
-                setMaxSize(model, domainModel.freeHeapBytes)
-                model.header.isConnected = true
-                model.header.isConnecting = false
-                model.page2.applyButtonEnabled = true
-            }
-            is RcbServiceStatus.Ready -> {
-                model.page1.connectButtonEnabled = false
-                model.page2.applyButtonEnabled = false
-                model.page3.resumeButtonEnabled = true
-            }
-            is RcbServiceStatus.Error, is RcbServiceStatus.NotFound, is RcbServiceStatus.Disabled, is RcbServiceStatus.Unavailable -> {
-                model.header.isConnecting = false
-                model.page1.connectButtonEnabled = true
-                model.page3.isResumed = false
-            }
-            is RcbServiceStatus.Paused -> {
-                model.page3.isResumed = false
-                model.page3.resumeButtonText = strings.getString(R.string.resume)
-            }
-            is RcbServiceStatus.Resumed -> {
-                model.page3.isResumed = true
-                model.page3.resumeButtonText = strings.getString(R.string.pause)
-            }
-        }
-
-        val isConnected = isConnected(domainModel.status)
-        model.header.isConnected = isConnected
-
-        mapStatus(domainModel.status)?.let {
-            model.page1.status = it
-        }
-
-        model.page1.connectButtonEnabled = !isConnected
-        when (isConnected) {
-            true -> R.string.disconnect
-            false -> R.string.connect
-        }.let {
-            model.page1.connectButtonText = strings.getString(it)
+        return if (activePage != null) {
+            ActivePageModel(
+                pageIndex = activePage,
+                since = System.currentTimeMillis() // TODO Move to provider for easier testing!
+            )
+        } else {
+            null
         }
     }
 

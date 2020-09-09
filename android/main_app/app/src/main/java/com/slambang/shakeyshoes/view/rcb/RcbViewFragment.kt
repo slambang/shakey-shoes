@@ -3,6 +3,7 @@ package com.slambang.shakeyshoes.view.rcb
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,9 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.slambang.shakeyshoes.R
 import com.slambang.shakeyshoes.view.base.BaseViewFragment
 import com.slambang.shakeyshoes.view.setAppCompatToolbar
-import kotlinx.android.synthetic.main.fragment_rcb.*
 import javax.inject.Inject
-
 
 class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
 
@@ -24,6 +23,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
 
     private val viewModel by lazy { of<RcbViewModelImpl>() }
 
+    private lateinit var toolbar: Toolbar
     private lateinit var addRcbButton: View
     private lateinit var deleteAllBuffersMenuItem: MenuItem
 
@@ -39,7 +39,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
     override fun onResume() {
         super.onResume()
         observeViewModel()
-        viewModel.onResume()
+        viewModel.onResumeView()
     }
 
     private fun observeViewModel() {
@@ -67,10 +67,6 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
             displayDeviceList(it)
         }
 
-        observe(viewModel.bufferItemPageLiveData) {
-            recyclerAdapter.setPage(it.first, it.second)
-        }
-
         observe(viewModel.errorLiveData) {
             showSnackBar(it)
         }
@@ -81,9 +77,14 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
     }
 
     override fun initView(root: View) {
-        setAppCompatToolbar(R.id.toolbar)
+        initToolbar(root)
         initRecycler(root)
         initAddRcbButton(root)
+    }
+
+    private fun initToolbar(root: View) {
+        setAppCompatToolbar(R.id.toolbar)
+        toolbar = root.findViewById(R.id.toolbar)
     }
 
     private fun initRecycler(root: View) {

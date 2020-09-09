@@ -5,10 +5,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/light_gray"
         android:orientation="vertical"
         android:paddingTop="4dp"
-        android:paddingBottom="8dp"
-        android:background="@color/light_gray">
+        android:paddingBottom="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buffer_view_header_container"
@@ -23,10 +23,10 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
                 android:padding="2dp"
+                android:src="@drawable/ic_trash"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/buffer_view_header_device_name"
-                app:srcCompat="@drawable/ic_trash" />
+                app:layout_constraintTop_toTopOf="@+id/buffer_view_header_device_name" />
 
             <TextView
                 android:id="@+id/buffer_view_header_device_name"
@@ -36,8 +36,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
-                android:textStyle="bold"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/buffer_view_header_connected_icon"
                 app:layout_constraintStart_toEndOf="@id/buffer_view_delete_button"
@@ -48,10 +48,10 @@
                 android:layout_width="30dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="12dp"
+                android:src="@drawable/connection_icon_selector"
                 app:layout_constraintBottom_toBottomOf="@+id/buffer_view_header_device_name"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/buffer_view_header_device_name"
-                app:srcCompat="@drawable/connection_off" />
+                app:layout_constraintTop_toTopOf="@+id/buffer_view_header_device_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
@@ -65,7 +65,7 @@
                 android:clipToPadding="false"
                 android:overScrollMode="never"
                 android:paddingStart="20dp"
-                android:paddingEnd="20dp"/>
+                android:paddingEnd="20dp" />
 
             <ru.tinkoff.scrollingpagerindicator.ScrollingPagerIndicator
                 android:id="@+id/buffer_view_indicator"
@@ -74,7 +74,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_marginBottom="22dp"
                 app:spi_dotSelectedColor="@color/colorPrimary"
-                app:spi_dotSelectedSize="8dp"/>
+                app:spi_dotSelectedSize="8dp" />
         </FrameLayout>
     </LinearLayout>
 </merge>

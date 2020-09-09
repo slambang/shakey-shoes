@@ -14,17 +14,16 @@ interface RcbViewModel {
     val removeAllMenuOptionEnabledLiveData: LiveData<Boolean>
     val removeAllBuffersLiveData: LiveData<Unit>
     val showDeviceListLiveData: LiveData<List<Pair<Int, String>>>
-    val bufferItemPageLiveData: LiveData<Pair<Int, Int>>
     val itemModelsLiveData: LiveData<Pair<RcbItemModel, Int>>
     val itemDeletedLiveData: LiveData<Int>
     val bluetoothStatusLiveData: LiveData<String>
     val errorLiveData: LiveData<String>
 
-    fun onResume()
+    fun onResumeView()
 
-    fun onPause()
+    fun onPauseView()
 
-    fun onStop()
+    fun onStopView()
 
     fun onAddRcbClicked()
 

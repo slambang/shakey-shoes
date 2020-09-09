@@ -169,7 +169,7 @@
             android:layout_marginTop="13dp"
             android:layout_marginEnd="8dp"
             android:padding="5dp"
-            android:src="@drawable/ic_pencil_grey"
+            android:src="@drawable/edit_icon_selector"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

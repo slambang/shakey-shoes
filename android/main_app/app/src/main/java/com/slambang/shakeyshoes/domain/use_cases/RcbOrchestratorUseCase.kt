@@ -28,7 +28,6 @@ interface RcbOrchestratorUseCase {
 
     fun setVibrateValue(domainId: Int, vibrateValue: Int)
     fun toggleRcb(domainId: Int, isResumed: Boolean)
-    fun resumeRcbService(domainId: Int)
     fun pauseRcbService(domainId: Int)
     fun pauseAllRcbServices()
     fun stopAllRcbServices()

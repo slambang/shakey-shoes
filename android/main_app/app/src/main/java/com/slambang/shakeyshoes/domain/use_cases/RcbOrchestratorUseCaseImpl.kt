@@ -73,16 +73,13 @@ class RcbOrchestratorUseCaseImpl @Inject constructor(
         refillSize: Int,
         windowSizeMs: Int,
         maxUnderflows: Int
-    ) {
-        val rcbServiceId = requireRcbServiceId(domainId)
-        rcbServiceOrchestrator.configureRcbService(
-            rcbServiceId,
-            numberOfRefills,
-            refillSize,
-            windowSizeMs,
-            maxUnderflows
-        )
-    }
+    ) = rcbServiceOrchestrator.configureRcbService(
+        requireRcbServiceId(domainId),
+        numberOfRefills,
+        refillSize,
+        windowSizeMs,
+        maxUnderflows
+    )
 
     override fun setVibrateValue(domainId: Int, vibrateValue: Int) =
         requireRcbServiceId(domainId).let {
@@ -94,12 +91,9 @@ class RcbOrchestratorUseCaseImpl @Inject constructor(
             if (isResumed) {
                 rcbServiceOrchestrator.pauseRcbService(it)
             } else {
-                rcbServiceOrchestrator.startRcbService(it)
+                rcbServiceOrchestrator.resumeRcbService(it)
             }
         }
-
-    override fun resumeRcbService(domainId: Int) =
-        rcbServiceOrchestrator.resumeRcbService(domainId)
 
     override fun pauseRcbService(domainId: Int) =
         rcbServiceOrchestrator.pauseRcbService(domainId)

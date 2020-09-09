@@ -16,7 +16,6 @@ interface RcbServiceOrchestrator {
         maxUnderflows: Int
     )
 
-    fun startRcbService(rcbServiceId: Int)
     fun resumeRcbService(rcbServiceId: Int)
     fun pauseRcbService(rcbServiceId: Int)
     fun stopRcbService(rcbServiceId: Int)
