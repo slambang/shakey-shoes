@@ -22,11 +22,11 @@ class Page1ViewHolder internal constructor(
 
     init {
         productUrl.setOnClickListener {
-            listener.onProductUrlClicked(model.id)
+            listener.onProductUrlClicked(model.modelId)
         }
 
         connectButton.setOnClickListener {
-            listener.onConnectClicked(model.id)
+            listener.onConnectClicked(model.modelId)
         }
     }
 

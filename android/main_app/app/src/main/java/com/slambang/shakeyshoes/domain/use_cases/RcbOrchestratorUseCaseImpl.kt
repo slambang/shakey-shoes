@@ -48,7 +48,9 @@ class RcbOrchestratorUseCaseImpl @Inject constructor(
         }
     }
 
-    override fun getAvailableDeviceNames() = deviceRepoUseCase.getAvailableDeviceNames()
+    override fun getAvailableDeviceNames(): List<Pair<Int, String>> =
+        deviceRepoUseCase.getAvailableDeviceNames()
+            .map { Pair(it.id, it.name) }
 
     override fun createRcbService(deviceDomainId: Int): BluetoothDeviceDomain {
         val rcbServiceId = rcbServiceOrchestrator.createRcbService()

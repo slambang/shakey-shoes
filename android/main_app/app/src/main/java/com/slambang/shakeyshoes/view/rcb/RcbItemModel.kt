@@ -3,6 +3,8 @@ package com.slambang.shakeyshoes.view.rcb
 const val MAX_VIBRATE_VALUE = 254
 const val INITIAL_VIBRATE_VALUE = 0
 
+// TODO Consider use of val/var here
+
 data class RcbItemModel(
     val id: Int,
     var selectedDeviceId: Int = 0,
@@ -15,8 +17,12 @@ data class RcbItemModel(
 
 data class ActivePageModel(
     val pageIndex: Int = 0,
-    val since: Long = 0
-)
+    val since: Long = NOT_SET
+) {
+    companion object {
+        const val NOT_SET = 0L
+    }
+}
 
 data class ItemHeaderModel(
     var deviceName: String = "",
@@ -29,7 +35,7 @@ data class RcbConfigModel(
     var refillCount: Int = 3,
     var windowSize: Int = 10,
     var maxUnderflows: Int = 50,
-    var maxSize: String = "",
+    var maxSize: String = "0",
     var actualSize: String = "0",
     var latency: String = "0",
     var maxUnderflowTime: String = "0"
@@ -38,7 +44,7 @@ data class RcbConfigModel(
 sealed class PageModel
 
 data class Page1Model(
-    val id: Int,
+    val modelId: Int,
     var status: String = "",
     var macAddress: String = "",
     var pairingPin: String = "",
@@ -48,14 +54,14 @@ data class Page1Model(
 ) : PageModel()
 
 data class Page2Model(
-    val id: Int,
+    val modelId: Int,
     var config: RcbConfigModel = RcbConfigModel(),
     var applyButtonEnabled: Boolean = false,
     var progressVisible: Boolean = false
 ) : PageModel()
 
 data class Page3Model(
-    val id: Int,
+    val modelId: Int,
     var maxVibrateValue: Int = MAX_VIBRATE_VALUE,
     var currentVibrateValue: Int = INITIAL_VIBRATE_VALUE,
     var resumeButtonEnabled: Boolean = false,

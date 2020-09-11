@@ -24,7 +24,7 @@
     <string name="buffer_item_page_1_baud">Baud:</string>
     <string name="buffer_item_page_1_baud_template">%d Bytes/s</string>
     <string name="buffer_item_page_1_max_size">%d bytes</string>
-    <string name="buffer_item_page_1_actual_size">= %d bytes</string>
+    <string name="buffer_item_page_1_free_heap_size">= %d bytes</string>
     <string name="buffer_item_page_1_latency">= %d ms</string>
     <string name="buffer_item_page_1_underflow_time">= %d ms</string>
 

@@ -6,5 +6,5 @@ interface DeviceRepositoryUseCase {
     fun peekDevice(deviceId: Int): BluetoothDeviceDomain
     fun popDevice(deviceId: Int): BluetoothDeviceDomain
     fun pushDevice(deviceId: Int)
-    fun getAvailableDeviceNames(): List<Pair<Int, String>>
+    fun getAvailableDeviceNames(): List<BluetoothDeviceDomain>
 }

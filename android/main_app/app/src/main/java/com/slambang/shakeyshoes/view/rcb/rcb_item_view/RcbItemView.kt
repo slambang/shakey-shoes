@@ -35,9 +35,9 @@ class BufferItemView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private var pageIndexUpdatedSince = 0L
     private val pagerSnapHelper = PagerSnapHelper()
     private val recyclerAdapter = RcbItemViewAdapter(context)
+    private var pageIndexUpdatedSince = ActivePageModel.NOT_SET
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var deviceName: TextView
@@ -46,7 +46,6 @@ class BufferItemView @JvmOverloads constructor(
     private lateinit var deleteButton: ImageView
 
     init {
-        inflate(context, R.layout.rcb_item_view, this)
         setupView()
     }
 
@@ -72,7 +71,7 @@ class BufferItemView @JvmOverloads constructor(
     }
 
     private fun updatePageIndex(pageModel: ActivePageModel) {
-        if (pageModel.since > pageIndexUpdatedSince) {
+        if (pageModel.since == ActivePageModel.NOT_SET || pageModel.since > pageIndexUpdatedSince) {
             pageIndexUpdatedSince = pageModel.since
             recyclerView.smoothScrollToPosition(pageModel.pageIndex)
         }
@@ -92,19 +91,36 @@ class BufferItemView @JvmOverloads constructor(
 
     private fun setupView() {
 
+        inflate()
+        setupRecyclerView()
+
+        deviceName = findViewById(R.id.buffer_view_header_device_name)
+        connectedIcon = findViewById(R.id.buffer_view_header_connected_icon)
+        deleteButton = findViewById(R.id.buffer_view_delete_button)
+
+        deleteButton.setOnClickListener {
+            listener.onDeleteClicked(model.id)
+        }
+    }
+
+    private fun inflate() {
+        inflate(context, R.layout.rcb_item_view, this)
+
         layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    private fun setupRecyclerView() {
 
         recyclerView = findViewById(R.id.buffer_view_recycler)
-        deviceName = findViewById(R.id.buffer_view_header_device_name)
-        connectedIcon = findViewById(R.id.buffer_view_header_connected_icon)
         scrollIndicator = findViewById(R.id.buffer_view_indicator)
-        deleteButton = findViewById(R.id.buffer_view_delete_button)
 
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = recyclerAdapter
+            setItemViewCacheSize(3)
 
             addOnScrollListener(SimpleRecyclerScrollListener {
                 hideKeyboard()
@@ -112,13 +128,7 @@ class BufferItemView @JvmOverloads constructor(
         }
 
         pagerSnapHelper.attachToRecyclerView(recyclerView)
-        recyclerView.setItemViewCacheSize(3) // TODO: This isn't behaving as we expect
-        recyclerView.adapter = recyclerAdapter
         scrollIndicator.attachToRecyclerView(recyclerView)
-
-        deleteButton.setOnClickListener {
-            listener.onDeleteClicked(model.id)
-        }
     }
 
     private fun hideKeyboard() {

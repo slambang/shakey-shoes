@@ -22,11 +22,11 @@ class Page3ViewHolder internal constructor(
 
     init {
         resumeButton.setOnClickListener {
-            listener.onResumeClicked(model.id)
+            listener.onResumeClicked(model.modelId)
         }
 
         vibrateValue.onSeekChangeListener = SeekBarValueObserver {
-            listener.onSetVibrateValue(model.id, it)
+            listener.onSetVibrateValue(model.modelId, it)
         }
     }
 

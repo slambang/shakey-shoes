@@ -5,12 +5,14 @@ import com.slambang.shakeyshoes.domain.BluetoothDeviceAccuracyDomain
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceStatus
 import com.slambang.shakeyshoes.util.StringProvider
+import com.slambang.shakeyshoes.util.TimeProvider
 import com.slambang.shakeyshoes.view.rcb.ActivePageModel
 import com.slambang.shakeyshoes.view.rcb.RcbItemModel
 import javax.inject.Inject
 
 class RcbItemModelMapper @Inject constructor(
-    private val strings: StringProvider
+    private val strings: StringProvider,
+    private val timeProvider: TimeProvider
 ) {
 
     fun mapAccuracies(domain: BluetoothDeviceAccuracyDomain, model: RcbItemModel) {
@@ -18,11 +20,9 @@ class RcbItemModelMapper @Inject constructor(
         val totalFrames = (domain.refillCount * model.page2.config.refillSize)
         val successFrames = if (totalFrames == 0) 0 else totalFrames - domain.underflowCount
 
-        val successPercent = if (totalFrames == 0) 0f else ((100f / totalFrames) * successFrames)
-        val errorPercent =
-            if (totalFrames == 0) 0f else ((100f / totalFrames) * domain.underflowCount)
+        val successPercent = mapPercentage(totalFrames, successFrames)
+        val errorPercent = mapPercentage(totalFrames, domain.underflowCount)
 
-        model.page3
         model.page3.successRate =
             strings.getString(
                 R.string.buffer_item_page_3_accuracy_template,
@@ -36,6 +36,13 @@ class RcbItemModelMapper @Inject constructor(
             errorPercent
         )
     }
+
+    private fun mapPercentage(value: Int, maxValue: Int): Float =
+        if (value == 0) {
+            0f
+        } else {
+            ((100f / value) * maxValue)
+        }
 
     fun mapSelectedDevice(domainModel: BluetoothDeviceDomain): RcbItemModel {
 
@@ -63,81 +70,54 @@ class RcbItemModelMapper @Inject constructor(
         model.page2.config.windowSize = windowSizeMs
         model.page2.config.maxUnderflows = maxUnderflows
 
+        val freeHeapBytes = refillSize * numberOfRefills
         model.page2.config.actualSize = strings.getString(
-            R.string.buffer_item_page_1_actual_size,
-            refillSize * numberOfRefills
+            R.string.buffer_item_page_1_free_heap_size,
+            freeHeapBytes
         )
 
+        val latency = (refillSize * numberOfRefills) * windowSizeMs
         model.page2.config.latency = strings.getString(
             R.string.buffer_item_page_1_latency,
-            (refillSize * numberOfRefills) * windowSizeMs
+            latency
         )
 
+        val underflowTime = windowSizeMs * maxUnderflows
         model.page2.config.maxUnderflowTime = strings.getString(
             R.string.buffer_item_page_1_underflow_time,
-            windowSizeMs * maxUnderflows
+            underflowTime
         )
     }
 
     fun mapState(domainModel: BluetoothDeviceDomain, itemModel: RcbItemModel) {
+
+        mapPage(itemModel, domainModel)
+        mapConnectionState(domainModel, itemModel)
+
         when (domainModel.status) {
-            is RcbServiceStatus.Disconnected -> {
-
-                itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
-
-                mapConfig(
-                    itemModel,
-                    itemModel.page2.config.refillCount,
-                    itemModel.page2.config.refillSize,
-                    itemModel.page2.config.windowSize,
-                    itemModel.page2.config.maxUnderflows,
-                )
-            }
-            is RcbServiceStatus.Connecting -> {
-                itemModel.header.isConnecting = true
-                itemModel.page1.connectButtonEnabled = false
-            }
-            is RcbServiceStatus.Setup -> {
-                setMaxSize(itemModel, (domainModel.status as RcbServiceStatus.Setup).freeHeapBytes)
-                itemModel.header.isConnected = true
-                itemModel.header.isConnecting = false
-                itemModel.page2.applyButtonEnabled = true
-            }
-            is RcbServiceStatus.Ready -> {
-                itemModel.page1.connectButtonEnabled = false
-                itemModel.page2.applyButtonEnabled = false
-                itemModel.page3.resumeButtonEnabled = true
-            }
+            is RcbServiceStatus.Disconnected -> mapDisconnectedState(itemModel)
+            is RcbServiceStatus.Connecting -> mapConnectingState(itemModel)
+            is RcbServiceStatus.Setup -> mapSetupState(itemModel, domainModel)
+            is RcbServiceStatus.Ready -> mapReadyState(itemModel)
+            is RcbServiceStatus.Paused -> mapPausedState(itemModel)
+            is RcbServiceStatus.Resumed -> mapResumedState(itemModel)
             is RcbServiceStatus.Error,
             is RcbServiceStatus.NotFound,
             is RcbServiceStatus.Disabled,
-            is RcbServiceStatus.Unavailable -> {
-                itemModel.header.isConnecting = false
-                itemModel.page1.connectButtonEnabled = true
-                itemModel.page3.isResumed = false
-            }
-            is RcbServiceStatus.Paused -> {
-                itemModel.page3.isResumed = false
-                itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
-            }
-            is RcbServiceStatus.Resumed -> {
-                itemModel.page3.isResumed = true
-                itemModel.page3.resumeButtonText = strings.getString(R.string.pause)
-            }
+            is RcbServiceStatus.Unavailable -> mapUnavailableState(itemModel)
         }
+    }
 
-        mapPage(domainModel)?.let {
-            itemModel.activePage = it
-        }
+    private fun mapConnectionState(domainModel: BluetoothDeviceDomain, itemModel: RcbItemModel) {
+        mapStatus(itemModel, domainModel.status)
 
         val isConnected = isConnected(domainModel.status)
+        mapConnectButtonText(isConnected, itemModel)
         itemModel.header.isConnected = isConnected
-
-        mapStatus(domainModel.status)?.let {
-            itemModel.page1.status = it
-        }
-
         itemModel.page1.connectButtonEnabled = !isConnected
+    }
+
+    private fun mapConnectButtonText(isConnected: Boolean, itemModel: RcbItemModel) {
         when (isConnected) {
             true -> R.string.disconnect
             false -> R.string.connect
@@ -146,25 +126,71 @@ class RcbItemModelMapper @Inject constructor(
         }
     }
 
-    private fun mapPage(deviceDomain: BluetoothDeviceDomain): ActivePageModel? {
-        val activePage = when (deviceDomain.status) {
+    private fun mapConnectingState(itemModel: RcbItemModel) {
+        itemModel.header.isConnecting = true
+        itemModel.page1.connectButtonEnabled = false
+    }
+
+    private fun mapDisconnectedState(itemModel: RcbItemModel) {
+
+        itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
+
+        mapConfig(
+            itemModel,
+            itemModel.page2.config.refillCount,
+            itemModel.page2.config.refillSize,
+            itemModel.page2.config.windowSize,
+            itemModel.page2.config.maxUnderflows,
+        )
+    }
+
+    private fun mapSetupState(itemModel: RcbItemModel, domainModel: BluetoothDeviceDomain) =
+        with(itemModel) {
+            header.isConnected = true
+            header.isConnecting = false
+            page2.applyButtonEnabled = true
+            page2.config.maxSize = strings.getString(
+                R.string.buffer_item_page_1_max_size,
+                (domainModel.status as RcbServiceStatus.Setup).freeHeapBytes
+            )
+        }
+
+    private fun mapReadyState(itemModel: RcbItemModel) {
+        itemModel.page1.connectButtonEnabled = false
+        itemModel.page2.applyButtonEnabled = false
+        itemModel.page3.resumeButtonEnabled = true
+    }
+
+    private fun mapUnavailableState(itemModel: RcbItemModel) {
+        itemModel.header.isConnecting = false
+        itemModel.page1.connectButtonEnabled = true
+        itemModel.page3.isResumed = false
+    }
+
+    private fun mapPausedState(itemModel: RcbItemModel) {
+        itemModel.page3.isResumed = false
+        itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
+    }
+
+    private fun mapResumedState(itemModel: RcbItemModel) {
+        itemModel.page3.isResumed = true
+        itemModel.page3.resumeButtonText = strings.getString(R.string.pause)
+    }
+
+    private fun mapPage(itemModel: RcbItemModel, domainModel: BluetoothDeviceDomain) =
+        when (domainModel.status) {
             is RcbServiceStatus.Error -> 0
             is RcbServiceStatus.Setup -> 1
             is RcbServiceStatus.Ready -> 2
             else -> null
-        }
-
-        return if (activePage != null) {
-            ActivePageModel(
+        }?.let { activePage ->
+            itemModel.activePage = ActivePageModel(
                 pageIndex = activePage,
-                since = System.currentTimeMillis() // TODO Move to provider for easier testing!
+                since = timeProvider.now()
             )
-        } else {
-            null
         }
-    }
 
-    private fun mapStatus(status: RcbServiceStatus): String? =
+    private fun mapStatus(itemModel: RcbItemModel, status: RcbServiceStatus) =
         when (status) {
             is RcbServiceStatus.Disconnected -> strings.getString(R.string.disconnected)
             is RcbServiceStatus.Connecting -> strings.getString(R.string.connecting)
@@ -181,20 +207,22 @@ class RcbItemModelMapper @Inject constructor(
             )
             is RcbServiceStatus.Unknown -> strings.getString(R.string.unknown_error)
             else -> null
+        }?.let {
+            itemModel.page1.status = it
         }
 
-    private fun setMaxSize(model: RcbItemModel, maxSize: Int) {
-        model.page2.config.maxSize = strings.getString(
-            R.string.buffer_item_page_1_max_size,
-            maxSize
+    private fun isConnected(status: RcbServiceStatus) =
+        CONNECTED_STATES.contains(status::class)
+
+    companion object {
+        private val CONNECTED_STATES = listOf(
+            RcbServiceStatus.Connecting::class,
+            RcbServiceStatus.Setup::class,
+            RcbServiceStatus.Ready::class,
+            RcbServiceStatus.Refill::class,
+            RcbServiceStatus.Underflow::class,
+            RcbServiceStatus.Paused::class,
+            RcbServiceStatus.Resumed::class
         )
     }
-
-    private fun isConnected(status: RcbServiceStatus) =
-        (status is RcbServiceStatus.Setup ||
-                status is RcbServiceStatus.Ready ||
-                status is RcbServiceStatus.Refill ||
-                status is RcbServiceStatus.Underflow ||
-                status is RcbServiceStatus.Paused ||
-                status is RcbServiceStatus.Resumed)
 }

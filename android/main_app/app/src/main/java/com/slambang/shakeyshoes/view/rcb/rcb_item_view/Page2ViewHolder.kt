@@ -27,11 +27,11 @@ class Page2ViewHolder internal constructor(
 
     init {
         editButton.setOnClickListener {
-            listener.onEditConfigClicked(model.id)
+            listener.onEditConfigClicked(model.modelId)
         }
 
         applyButton.setOnClickListener {
-            listener.onApplyClicked(model.id)
+            listener.onApplyClicked(model.modelId)
         }
     }
 

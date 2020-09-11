@@ -11,6 +11,8 @@ import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCase
 import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCaseImpl
 import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCase
 import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCaseImpl
+import com.slambang.shakeyshoes.util.TimeProvider
+import com.slambang.shakeyshoes.util.TimeProviderImpl
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
 import com.slambang.shakeyshoes.view.rcb.*
 import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
@@ -89,6 +91,9 @@ class RcbViewFragmentModule {
 
         @Binds
         fun bindErrorMapper(impl: ErrorMapperImpl): ErrorMapper
+
+        @Binds
+        fun bindTimeProvider(impl: TimeProviderImpl): TimeProvider
 
         @Binds
         fun bindRcbViewNavigator(impl: RcbViewNavigatorImpl): RcbViewNavigator
