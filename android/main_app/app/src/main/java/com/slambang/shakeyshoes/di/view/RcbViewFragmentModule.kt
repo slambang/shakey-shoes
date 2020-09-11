@@ -4,27 +4,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import com.slambang.rcb_service.RcbService
 import com.slambang.shakeyshoes.audio.DataSource
+import com.slambang.shakeyshoes.di.factories.RcbDataFactory
+import com.slambang.shakeyshoes.di.factories.RcbServiceFactory
 import com.slambang.shakeyshoes.domain.BluetoothDeviceDomain
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestrator
 import com.slambang.shakeyshoes.domain.RcbServiceOrchestratorImpl
+import com.slambang.shakeyshoes.domain.RcbServiceStatusMapper
 import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCase
 import com.slambang.shakeyshoes.domain.use_cases.DeviceRepositoryUseCaseImpl
 import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCase
 import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCaseImpl
+import com.slambang.shakeyshoes.entity.BluetoothDeviceEntityMapper
+import com.slambang.shakeyshoes.entity.BluetoothDeviceRepository
+import com.slambang.shakeyshoes.util.StringProvider
 import com.slambang.shakeyshoes.util.TimeProvider
 import com.slambang.shakeyshoes.util.TimeProviderImpl
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
 import com.slambang.shakeyshoes.view.rcb.*
-import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapper
-import com.slambang.shakeyshoes.view.rcb.mappers.BluetoothMessageMapperImpl
-import com.slambang.shakeyshoes.view.rcb.mappers.ErrorMapper
-import com.slambang.shakeyshoes.view.rcb.mappers.ErrorMapperImpl
+import com.slambang.shakeyshoes.view.rcb.mappers.*
 import com.slambang.shakeyshoes.view.rcb.rcb_item_view.BufferItemViewListener
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
-@Module(includes = [RcbViewFragmentModule.Bindings::class])
+@Module
 class RcbViewFragmentModule {
 
     @Provides
@@ -81,33 +83,52 @@ class RcbViewFragmentModule {
     ): BufferItemViewListener =
         ViewModelProviders.of(fragment, factory).get(RcbViewModelImpl::class.java)
 
-    /*
-     * TODO We are Binding classes with @Inject'able constructors.
-     *  This means we could accidentally inject an Impl.
-     *  Convert to @Provides.
-     */
-    @Module
-    interface Bindings {
+    @Provides
+    fun provideErrorMapper(strings: StringProvider): ErrorMapper = ErrorMapperImpl(strings)
 
-        @Binds
-        fun bindErrorMapper(impl: ErrorMapperImpl): ErrorMapper
+    @Provides
+    fun provideTimeProvider(): TimeProvider = TimeProviderImpl()
 
-        @Binds
-        fun bindTimeProvider(impl: TimeProviderImpl): TimeProvider
+    @Provides
+    fun provideRcbViewNavigator(
+        fragment: RcbViewFragment,
+        productUrlMapper: ProductUrlMapper
+    ): RcbViewNavigator =
+        RcbViewNavigatorImpl(fragment, productUrlMapper)
 
-        @Binds
-        fun bindRcbViewNavigator(impl: RcbViewNavigatorImpl): RcbViewNavigator
+    @Provides
+    fun provideBluetoothMessageMapper(strings: StringProvider): BluetoothMessageMapper =
+        BluetoothMessageMapperImpl(strings)
 
-        @Binds
-        fun bindBluetoothMessageMapper(impl: BluetoothMessageMapperImpl): BluetoothMessageMapper
+    @Provides
+    fun provideDeviceRepositoryUseCase(
+        deviceRepo: BluetoothDeviceRepository,
+        entityMapper: BluetoothDeviceEntityMapper,
+        reservedDevices: MutableSet<Int>
+    ): DeviceRepositoryUseCase =
+        DeviceRepositoryUseCaseImpl(deviceRepo, entityMapper, reservedDevices)
 
-        @Binds
-        fun bindDeviceRepositoryUseCase(impl: DeviceRepositoryUseCaseImpl): DeviceRepositoryUseCase
+    @Provides
+    fun provideRcbServiceOrchestrator(
+        rcbDataFactory: RcbDataFactory,
+        rcbServiceFactory: RcbServiceFactory,
+        dataSources: MutableMap<Int, DataSource>,
+        rcbServices: MutableMap<Int, RcbService>,
+        serviceStatusMapper: RcbServiceStatusMapper
+    ): RcbServiceOrchestrator =
+        RcbServiceOrchestratorImpl(
+            rcbDataFactory,
+            rcbServiceFactory,
+            dataSources,
+            rcbServices,
+            serviceStatusMapper
+        )
 
-        @Binds
-        fun bindRcbServiceOrchestrator(impl: RcbServiceOrchestratorImpl): RcbServiceOrchestrator
-
-        @Binds
-        fun bindRcbOrchestratorUseCase(impl: RcbOrchestratorUseCaseImpl): RcbOrchestratorUseCase
-    }
+    @Provides
+    fun provideRcbOrchestratorUseCase(
+        rcbServiceOrchestrator: RcbServiceOrchestrator,
+        deviceRepoUseCase: DeviceRepositoryUseCaseImpl,
+        domainMap: MutableMap<Int, BluetoothDeviceDomain>
+    ): RcbOrchestratorUseCase =
+        RcbOrchestratorUseCaseImpl(rcbServiceOrchestrator, deviceRepoUseCase, domainMap)
 }

@@ -2,9 +2,14 @@ package com.slambang.rcb_service
 
 import com.slambang.bluetooth_connection.BluetoothConnectionState
 
-class RcbServiceErrorMapper {
+interface RcbServiceErrorMapper {
 
-    fun map(bluetoothConnectionState: BluetoothConnectionState): RcbServiceState.Error =
+    fun map(bluetoothConnectionState: BluetoothConnectionState): RcbServiceState.Error
+}
+
+class RcbServiceErrorMapperImpl : RcbServiceErrorMapper {
+
+    override fun map(bluetoothConnectionState: BluetoothConnectionState): RcbServiceState.Error =
         when (bluetoothConnectionState) {
             is BluetoothConnectionState.NotFound -> RcbServiceState.Error.NotFound
             is BluetoothConnectionState.Unavailable -> RcbServiceState.Error.Unavailable

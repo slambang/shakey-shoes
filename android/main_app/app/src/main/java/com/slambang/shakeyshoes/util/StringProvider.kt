@@ -9,7 +9,7 @@ interface StringProvider {
     fun getString(@StringRes resourceId: Int, vararg args: Any): String
 }
 
-class StringsProviderImpl @Inject constructor(
+class StringProviderImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : StringProvider {
 

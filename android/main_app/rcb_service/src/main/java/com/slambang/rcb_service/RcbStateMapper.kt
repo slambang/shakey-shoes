@@ -1,8 +1,13 @@
 package com.slambang.rcb_service
 
-class RcbStateMapper {
+interface RcbStateMapper {
 
-    fun map(signalIn: Int): RcbServiceState =
+    fun map(signalIn: Int): RcbServiceState
+}
+
+class RcbStateMapperImpl : RcbStateMapper {
+
+    override fun map(signalIn: Int): RcbServiceState =
         when (signalIn) {
             SIGNAL_IN_READY -> RcbServiceState.Ready
             SIGNAL_IN_PAUSED -> RcbServiceState.Paused

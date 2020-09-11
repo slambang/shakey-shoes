@@ -11,7 +11,7 @@ import com.slambang.shakeyshoes.entity.BluetoothDeviceRepositoryImpl
 import com.slambang.shakeyshoes.util.SchedulerProvider
 import com.slambang.shakeyshoes.util.SchedulerProviderImpl
 import com.slambang.shakeyshoes.util.StringProvider
-import com.slambang.shakeyshoes.util.StringsProviderImpl
+import com.slambang.shakeyshoes.util.StringProviderImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -40,6 +40,16 @@ class AppModule {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
 
+    @Provides
+    fun provideSchedulerProvider(): SchedulerProvider = SchedulerProviderImpl()
+
+    @Provides
+    fun provideStringProvider(@ApplicationContext context: Context): StringProvider =
+        StringProviderImpl(context)
+
+    @Provides
+    fun provideDeviceRepo(): BluetoothDeviceRepository = BluetoothDeviceRepositoryImpl()
+
     @Module
     interface Bindings {
 
@@ -47,17 +57,5 @@ class AppModule {
         @Singleton
         @ApplicationContext
         fun bindContext(impl: Application): Context
-
-        @Binds
-        @Singleton
-        fun bindSchedulers(impl: SchedulerProviderImpl): SchedulerProvider
-
-        @Binds
-        @Singleton
-        fun bindStringResources(impl: StringsProviderImpl): StringProvider
-
-        @Binds
-        @Singleton
-        fun bindDeviceRepo(impl: BluetoothDeviceRepositoryImpl): BluetoothDeviceRepository
     }
 }

@@ -1,7 +1,8 @@
 package com.slambang.shakeyshoes.view.rcb
 
+import com.slambang.shakeyshoes.di.factories.INITIAL_VIBRATE_VALUE
+
 const val MAX_VIBRATE_VALUE = 254
-const val INITIAL_VIBRATE_VALUE = 0
 
 // TODO Consider use of val/var here
 

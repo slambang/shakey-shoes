@@ -3,6 +3,7 @@ package com.slambang.shakeyshoes.view.splash
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.slambang.shakeyshoes.R
 import javax.inject.Inject
@@ -15,7 +16,7 @@ interface SplashNavigator {
 }
 
 class SplashNavigatorImpl @Inject constructor(
-    private val fragment: SplashViewFragment
+    private val fragment: Fragment
 ) : SplashNavigator {
 
     override fun navigateToRcbView() =

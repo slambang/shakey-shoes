@@ -5,12 +5,11 @@ import com.slambang.shakeyshoes.di.app.REQUIRED_RUNTIME_PERMISSIONS
 import com.slambang.shakeyshoes.domain.permissions.RuntimePermissionManager
 import com.slambang.shakeyshoes.domain.permissions.RuntimePermissionManagerImpl
 import com.slambang.shakeyshoes.view.splash.*
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
 
-@Module(includes = [SplashViewFragmentModule.Bindings::class])
+@Module
 class SplashViewFragmentModule {
 
     @Provides
@@ -28,12 +27,9 @@ class SplashViewFragmentModule {
     fun provideStatesLiveData(): MutableLiveData<SplashViewState> = MutableLiveData()
 
     @Provides
-    fun provideSnackbarLiveData(): MutableLiveData<String> = MutableLiveData()
+    fun provideSnackBarLiveData(): MutableLiveData<String> = MutableLiveData()
 
-    @Module
-    interface Bindings {
-
-        @Binds
-        fun bindNavigator(impl: SplashNavigatorImpl): SplashNavigator
-    }
+    @Provides
+    fun provideSplashNavigator(fragment: SplashViewFragment): SplashNavigator =
+        SplashNavigatorImpl(fragment)
 }
