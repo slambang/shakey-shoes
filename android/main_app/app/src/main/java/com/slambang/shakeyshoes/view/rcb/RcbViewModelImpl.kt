@@ -196,7 +196,7 @@ class RcbViewModelImpl @Inject constructor(
         ).also { _confirmDialogEvent.postValue(it) }
     }
 
-    private fun onDeleteAllConfirmed() {
+    private fun onDeleteAllConfirmed() = async {
         rcbOrchestratorUseCase.removeAllItems()
         orderedItemList.clear()
         _removeAllItemsEvent.postValue(Unit)

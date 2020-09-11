@@ -5,6 +5,8 @@ import com.slambang.bluetooth_connection.BluetoothConnection
 import com.slambang.bluetooth_connection.BluetoothConnectionState
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 class RcbServiceImpl(
     private val bluetoothConnection: BluetoothConnection,
@@ -15,8 +17,10 @@ class RcbServiceImpl(
     override var id = ID.incrementAndGet() // Hmm...
 
     private var wasStopped = false
-
     private var bluetoothSocket: BluetoothSocket? = null
+
+    private val lock = ReentrantLock()
+    private val condition = lock.newCondition()
 
     override fun connect(
         macAddress: String,
@@ -65,10 +69,16 @@ class RcbServiceImpl(
     override fun pause() = transmitCommand(SIGNAL_OUT_COMMAND_PAUSE)
 
     override fun stop() {
-        wasStopped = true
-        bluetoothSocket?.close()
-        bluetoothSocket = null
-        bluetoothConnection.close()
+        if (bluetoothSocket != null) {
+            wasStopped = true
+            bluetoothSocket?.close()
+            bluetoothSocket = null
+            bluetoothConnection.close()
+
+            lock.withLock {
+                condition.await()
+            }
+        }
     }
 
     /*
@@ -109,6 +119,10 @@ class RcbServiceImpl(
             } else {
                 stop()
                 listener.onBufferServiceError(this, RcbServiceState.Error.Generic(error))
+            }
+        } finally {
+            lock.withLock {
+                condition.signalAll()
             }
         }
 
