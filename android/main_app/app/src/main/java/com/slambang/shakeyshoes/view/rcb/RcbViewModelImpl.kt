@@ -95,11 +95,11 @@ class RcbViewModelImpl @Inject constructor(
     override fun onApplyClicked(modelId: Int) = async {
         requireBufferItemModel(modelId).let {
             rcbOrchestratorUseCase.configureRcbService(
-                modelId,
-                it.page2.config.refillCount,
-                it.page2.config.refillSize,
-                it.page2.config.windowSize,
-                it.page2.config.maxUnderflows
+                domainId = modelId,
+                numberOfRefills = it.page2.config.refillCount,
+                refillSize = it.page2.config.refillSize,
+                windowSizeMs = it.page2.config.windowSize,
+                maxUnderflows = it.page2.config.maxUnderflows
             )
         }
     }
@@ -118,17 +118,9 @@ class RcbViewModelImpl @Inject constructor(
 
     private fun onDeleteConfirmed(modelId: Int) {
         rcbOrchestratorUseCase.removeItem(modelId)
-
-        val index = orderedItemList.indexOfFirst {
-            it.id == modelId
-        }.also {
-            if (it == -1) {
-                throw IllegalStateException("Model with id $modelId is not in the ordered list")
-            }
-        }
-
-        orderedItemList.removeAt(index)
-        _removeItemEvent.postValue(index)
+        val indexItemIndex = requireItemIndex(modelId)
+        orderedItemList.removeAt(indexItemIndex)
+        _removeItemEvent.postValue(indexItemIndex)
         _removeAllMenuOptionEnabledEvent.postValue(orderedItemList.isNotEmpty())
     }
 
@@ -148,11 +140,11 @@ class RcbViewModelImpl @Inject constructor(
 
         requireBufferItemModel(modelId).let {
             itemModelMapper.mapConfig(
-                numberOfRefills.toSafeInt(),
-                refillSize.toSafeInt(),
-                windowSizeMs.toSafeInt(),
-                maxUnderflows.toSafeInt(),
-                it
+                model = it,
+                numberOfRefills = numberOfRefills.toSafeInt(),
+                refillSize = refillSize.toSafeInt(),
+                windowSizeMs = windowSizeMs.toSafeInt(),
+                maxUnderflows = maxUnderflows.toSafeInt()
             )
 
             emitModel(it)
@@ -210,8 +202,8 @@ class RcbViewModelImpl @Inject constructor(
     override fun onResumeClicked(modelId: Int) = async {
         requireBufferItemModel(modelId).let {
             rcbOrchestratorUseCase.toggleRcb(
-                modelId,
-                it.page3.isResumed
+                domainId = modelId,
+                isResumed = it.page3.isResumed
             )
             emitModel(it)
         }
@@ -256,4 +248,13 @@ class RcbViewModelImpl @Inject constructor(
     private fun requireBufferItemModel(modelId: Int): RcbItemModel =
         orderedItemList.find { it.id == modelId }
             ?: throw IllegalArgumentException("Invalid modelId: $modelId")
+
+    private fun requireItemIndex(modelId: Int) =
+        orderedItemList.indexOfFirst {
+            it.id == modelId
+        }.also {
+            if (it == -1) {
+                throw IllegalStateException("Required item index for model id $modelId")
+            }
+        }
 }

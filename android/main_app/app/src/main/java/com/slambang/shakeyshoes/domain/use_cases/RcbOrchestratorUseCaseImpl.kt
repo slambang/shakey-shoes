@@ -138,7 +138,7 @@ class RcbOrchestratorUseCaseImpl @Inject constructor(
 
     private fun requireDeviceDomain(rcbServiceId: Int) =
         domainMap[rcbServiceId]
-            ?: throw IllegalArgumentException("Invalid rcbServiceId")
+            ?: throw IllegalArgumentException("Required device domain $rcbServiceId")
 
     private fun requireRcbServiceId(deviceDomainId: Int): Int {
         for (entry in domainMap) {

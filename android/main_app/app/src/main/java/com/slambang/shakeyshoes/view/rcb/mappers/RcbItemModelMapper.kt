@@ -52,11 +52,11 @@ class RcbItemModelMapper @Inject constructor(
     }
 
     fun mapConfig(
+        model: RcbItemModel,
         numberOfRefills: Int,
         refillSize: Int,
         windowSizeMs: Int,
-        maxUnderflows: Int,
-        model: RcbItemModel
+        maxUnderflows: Int
     ) {
         model.page2.config.refillCount = numberOfRefills
         model.page2.config.refillSize = refillSize
@@ -86,11 +86,11 @@ class RcbItemModelMapper @Inject constructor(
                 itemModel.page3.resumeButtonText = strings.getString(R.string.resume)
 
                 mapConfig(
+                    itemModel,
                     itemModel.page2.config.refillCount,
                     itemModel.page2.config.refillSize,
                     itemModel.page2.config.windowSize,
                     itemModel.page2.config.maxUnderflows,
-                    itemModel
                 )
             }
             is RcbServiceStatus.Connecting -> {
