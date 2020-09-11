@@ -9,7 +9,7 @@ import com.slambang.shakeyshoes.view.rcb.ActivePageModel
 import com.slambang.shakeyshoes.view.rcb.RcbItemModel
 import javax.inject.Inject
 
-class RcmItemModelMapper @Inject constructor(
+class RcbItemModelMapper @Inject constructor(
     private val strings: StringProvider
 ) {
 
@@ -108,7 +108,10 @@ class RcmItemModelMapper @Inject constructor(
                 itemModel.page2.applyButtonEnabled = false
                 itemModel.page3.resumeButtonEnabled = true
             }
-            is RcbServiceStatus.Error, is RcbServiceStatus.NotFound, is RcbServiceStatus.Disabled, is RcbServiceStatus.Unavailable -> {
+            is RcbServiceStatus.Error,
+            is RcbServiceStatus.NotFound,
+            is RcbServiceStatus.Disabled,
+            is RcbServiceStatus.Unavailable -> {
                 itemModel.header.isConnecting = false
                 itemModel.page1.connectButtonEnabled = true
                 itemModel.page3.isResumed = false

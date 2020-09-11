@@ -10,7 +10,7 @@ import com.slambang.shakeyshoes.domain.use_cases.RcbOrchestratorUseCase
 import com.slambang.shakeyshoes.util.SchedulerProvider
 import com.slambang.shakeyshoes.view.base.SingleLiveEvent
 import com.slambang.shakeyshoes.view.rcb.mappers.ErrorMapper
-import com.slambang.shakeyshoes.view.rcb.mappers.RcmItemModelMapper
+import com.slambang.shakeyshoes.view.rcb.mappers.RcbItemModelMapper
 import com.slambang.shakeyshoes.view.rcb.rcb_item_view.BufferItemViewListener
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -20,53 +20,52 @@ import javax.inject.Inject
  * TODO
  *  - Map/visualise models: Entity -> Domain -> View (how does it look?)
  *  - Do we need separate RcbOrchestratorUseCase & RcbServiceOrchestrator?
- *  - Refactor setPage and editConfig.
- *  - Convert edit & wifi images to selectors
+ *  - Refactor editConfig.
  */
 class RcbViewModelImpl @Inject constructor(
     private val errorMapper: ErrorMapper,
     private val navigator: RcbViewNavigator,
     private val schedulers: SchedulerProvider,
     private val disposables: CompositeDisposable,
-    private val itemModelMapper: RcmItemModelMapper,
+    private val itemModelMapper: RcbItemModelMapper,
     private val orderedItemList: MutableList<RcbItemModel>,
     private val bluetoothStateObserver: BluetoothStateObserver,
     private val rcbOrchestratorUseCase: RcbOrchestratorUseCase,
     // LiveData
-    private val _errorLiveData: SingleLiveEvent<String>,
-    private val _itemDeletedLiveData: SingleLiveEvent<Int>,
-    private val _removeAllBuffersLiveData: SingleLiveEvent<Unit>,
-    private val _bluetoothStatusLiveData: MutableLiveData<String>,
-    private val _confirmDialogLiveData: SingleLiveEvent<DialogModel>,
-    private val _itemModelsLiveData: MutableLiveData<Pair<RcbItemModel, Int>>,
-    private val _removeAllMenuOptionEnabledLiveData: SingleLiveEvent<Boolean>,
-    private val _showDeviceListLiveData: SingleLiveEvent<List<Pair<Int, String>>>,
+    private val _errorEvent: SingleLiveEvent<String>,
+    private val _removeItemEvent: SingleLiveEvent<Int>,
+    private val _removeAllItemsEvent: SingleLiveEvent<Unit>,
+    private val _bluetoothStatusEvent: MutableLiveData<String>,
+    private val _confirmDialogEvent: SingleLiveEvent<DialogModel>,
+    private val _itemModelsEvent: MutableLiveData<Pair<RcbItemModel, Int>>,
+    private val _removeAllMenuOptionEnabledEvent: SingleLiveEvent<Boolean>,
+    private val _showDeviceListEvent: SingleLiveEvent<List<Pair<Int, String>>>,
 ) : RcbViewModel, BufferItemViewListener, ViewModel() {
 
     // Is there a cleaner way to do this?
-    override val confirmDialogLiveData: LiveData<DialogModel>
-        get() = _confirmDialogLiveData
+    override val confirmDialogEvent: LiveData<DialogModel>
+        get() = _confirmDialogEvent
 
-    override val removeAllMenuOptionEnabledLiveData: LiveData<Boolean>
-        get() = _removeAllMenuOptionEnabledLiveData
+    override val removeAllMenuOptionEnabledEvent: LiveData<Boolean>
+        get() = _removeAllMenuOptionEnabledEvent
 
-    override val removeAllBuffersLiveData: LiveData<Unit>
-        get() = _removeAllBuffersLiveData
+    override val removeAllItemsEvent: LiveData<Unit>
+        get() = _removeAllItemsEvent
 
-    override val showDeviceListLiveData: LiveData<List<Pair<Int, String>>>
-        get() = _showDeviceListLiveData
+    override val showDeviceListEvent: LiveData<List<Pair<Int, String>>>
+        get() = _showDeviceListEvent
 
-    override val itemModelsLiveData: LiveData<Pair<RcbItemModel, Int>>
-        get() = _itemModelsLiveData
+    override val newItemEvent: LiveData<Pair<RcbItemModel, Int>>
+        get() = _itemModelsEvent
 
-    override val itemDeletedLiveData: LiveData<Int>
-        get() = _itemDeletedLiveData
+    override val removeItemEvent: LiveData<Int>
+        get() = _removeItemEvent
 
-    override val bluetoothStatusLiveData: LiveData<String>
-        get() = _bluetoothStatusLiveData
+    override val bluetoothStatusEvent: LiveData<String>
+        get() = _bluetoothStatusEvent
 
-    override val errorLiveData: LiveData<String>
-        get() = _errorLiveData
+    override val errorEvent: LiveData<String>
+        get() = _errorEvent
 
     override fun onResumeView() = async {
         observeBluetoothState()
@@ -77,16 +76,16 @@ class RcbViewModelImpl @Inject constructor(
         bluetoothStateObserver.observeBluetoothStatus()
             .subscribeOn(schedulers.io)
             .subscribe({
-                _bluetoothStatusLiveData.postValue(it)
+                _bluetoothStatusEvent.postValue(it)
             }, {
-                _errorLiveData.postValue(it.message)
+                _errorEvent.postValue(it.message)
             })
             .also { disposables.add(it) }
     }
 
     override fun onAddRcbClicked() = async {
         val availableDeviceNames = rcbOrchestratorUseCase.getAvailableDeviceNames()
-        _showDeviceListLiveData.postValue(availableDeviceNames)
+        _showDeviceListEvent.postValue(availableDeviceNames)
     }
 
     override fun onConnectClicked(modelId: Int) = async {
@@ -113,12 +112,12 @@ class RcbViewModelImpl @Inject constructor(
         DialogModel(
             titleResId = R.string.delete_buffer_dialog_title,
             messageResId = R.string.delete_buffer_dialog_message,
-            onSuccessListener = { onDeleteConfirmed(modelId) }
-        ).also { _confirmDialogLiveData.postValue(it) }
+            onConfirmedListener = { onDeleteConfirmed(modelId) }
+        ).also { _confirmDialogEvent.postValue(it) }
     }
 
     private fun onDeleteConfirmed(modelId: Int) {
-        rcbOrchestratorUseCase.deleteRcbService(modelId)
+        rcbOrchestratorUseCase.removeItem(modelId)
 
         val index = orderedItemList.indexOfFirst {
             it.id == modelId
@@ -129,8 +128,8 @@ class RcbViewModelImpl @Inject constructor(
         }
 
         orderedItemList.removeAt(index)
-        _itemDeletedLiveData.postValue(index)
-        _removeAllMenuOptionEnabledLiveData.postValue(orderedItemList.isNotEmpty())
+        _removeItemEvent.postValue(index)
+        _removeAllMenuOptionEnabledEvent.postValue(orderedItemList.isNotEmpty())
     }
 
     override fun onCheckRcbConfig(
@@ -168,7 +167,7 @@ class RcbViewModelImpl @Inject constructor(
         rcbOrchestratorUseCase.stopAllRcbServices()
     }
 
-    override fun onRcbDeviceSelected(deviceDomainId: Int) = async {
+    override fun onDeviceSelected(deviceDomainId: Int) = async {
 
         val deviceDomain = rcbOrchestratorUseCase.createRcbService(deviceDomainId)
         val rcbItemModel = itemModelMapper.mapSelectedDevice(deviceDomain)
@@ -176,7 +175,7 @@ class RcbViewModelImpl @Inject constructor(
         itemModelMapper.mapState(deviceDomain, rcbItemModel)
         itemModelMapper.mapAccuracies(deviceDomain.accuracies, rcbItemModel)
 
-        _removeAllMenuOptionEnabledLiveData.postValue(true)
+        _removeAllMenuOptionEnabledEvent.postValue(true)
         orderedItemList.add(rcbItemModel)
         emitModel(rcbItemModel)
     }
@@ -193,15 +192,15 @@ class RcbViewModelImpl @Inject constructor(
         DialogModel(
             titleResId = R.string.delete_all_buffers_dialog_title,
             messageResId = R.string.delete_all_buffers_dialog_message,
-            onSuccessListener = ::onDeleteAllConfirmed
-        ).also { _confirmDialogLiveData.postValue(it) }
+            onConfirmedListener = ::onDeleteAllConfirmed
+        ).also { _confirmDialogEvent.postValue(it) }
     }
 
     private fun onDeleteAllConfirmed() {
-        rcbOrchestratorUseCase.deleteAllRcbServices()
+        rcbOrchestratorUseCase.removeAllItems()
         orderedItemList.clear()
-        _removeAllBuffersLiveData.postValue(Unit)
-        _removeAllMenuOptionEnabledLiveData.postValue(false)
+        _removeAllItemsEvent.postValue(Unit)
+        _removeAllMenuOptionEnabledEvent.postValue(false)
     }
 
     override fun onSetVibrateValue(modelId: Int, value: Int) = async {
@@ -237,7 +236,7 @@ class RcbViewModelImpl @Inject constructor(
         }
 
     private fun emitModel(model: RcbItemModel) =
-        _itemModelsLiveData.postValue(model to orderedItemList.indexOf(model))
+        _itemModelsEvent.postValue(model to orderedItemList.indexOf(model))
 
     private fun async(task: () -> Unit) {
         Single.fromCallable(task)
@@ -248,7 +247,7 @@ class RcbViewModelImpl @Inject constructor(
     }
 
     private fun onError(error: Throwable) =
-        _errorLiveData.postValue(
+        _errorEvent.postValue(
             errorMapper.map(error)
         ).also {
             error.printStackTrace()

@@ -28,13 +28,13 @@ class BluetoothConnectionImpl private constructor(
 
             stateObserver(BluetoothConnectionState.Connecting)
 
-            when {
+            val state = when {
                 !bluetoothProvider.isBluetoothAvailable -> BluetoothConnectionState.Unavailable
                 !bluetoothProvider.isBluetoothEnabled -> BluetoothConnectionState.Disabled
                 else -> connectToDevice(macAddress, serviceUuid)
-            }.let {
-                stateObserver(it)
             }
+
+            stateObserver(state)
         }.also { subscriptions.add(it) }
     }
 
@@ -74,7 +74,7 @@ class BluetoothConnectionImpl private constructor(
             scheduler: Scheduler,
             bluetoothProvider: BluetoothProvider,
             subscriptions: CompositeDisposable
-        ) : BluetoothConnection = BluetoothConnectionImpl(
+        ): BluetoothConnection = BluetoothConnectionImpl(
             scheduler,
             bluetoothProvider,
             subscriptions

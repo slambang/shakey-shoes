@@ -5,19 +5,19 @@ import androidx.lifecycle.LiveData
 data class DialogModel (
     val titleResId: Int,
     val messageResId: Int,
-    val onSuccessListener: () -> Unit
+    val onConfirmedListener: () -> Unit
 )
 
 interface RcbViewModel {
 
-    val confirmDialogLiveData: LiveData<DialogModel>
-    val removeAllMenuOptionEnabledLiveData: LiveData<Boolean>
-    val removeAllBuffersLiveData: LiveData<Unit>
-    val showDeviceListLiveData: LiveData<List<Pair<Int, String>>>
-    val itemModelsLiveData: LiveData<Pair<RcbItemModel, Int>>
-    val itemDeletedLiveData: LiveData<Int>
-    val bluetoothStatusLiveData: LiveData<String>
-    val errorLiveData: LiveData<String>
+    val confirmDialogEvent: LiveData<DialogModel>
+    val removeAllMenuOptionEnabledEvent: LiveData<Boolean>
+    val removeAllItemsEvent: LiveData<Unit>
+    val showDeviceListEvent: LiveData<List<Pair<Int, String>>>
+    val newItemEvent: LiveData<Pair<RcbItemModel, Int>>
+    val removeItemEvent: LiveData<Int>
+    val bluetoothStatusEvent: LiveData<String>
+    val errorEvent: LiveData<String>
 
     fun onResumeView()
 
@@ -27,7 +27,7 @@ interface RcbViewModel {
 
     fun onAddRcbClicked()
 
-    fun onRcbDeviceSelected(deviceDomainId: Int)
+    fun onDeviceSelected(deviceDomainId: Int)
 
     fun onCheckRcbConfig(
         modelId: Int,

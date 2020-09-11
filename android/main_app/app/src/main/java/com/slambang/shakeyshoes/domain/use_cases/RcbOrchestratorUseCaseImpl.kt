@@ -98,15 +98,17 @@ class RcbOrchestratorUseCaseImpl @Inject constructor(
     override fun pauseRcbService(domainId: Int) =
         rcbServiceOrchestrator.pauseRcbService(domainId)
 
-    override fun pauseAllRcbServices() = domainMap.keys.forEach {
-        pauseRcbService(it)
-    }
+    override fun pauseAllRcbServices() =
+        domainMap.keys.forEach {
+            pauseRcbService(it)
+        }
 
-    override fun stopAllRcbServices() = domainMap.keys.forEach {
-        rcbServiceOrchestrator.stopRcbService(it)
-    }
+    override fun stopAllRcbServices() =
+        domainMap.keys.forEach {
+            rcbServiceOrchestrator.stopRcbService(it)
+        }
 
-    override fun deleteRcbService(deviceDomainId: Int) {
+    override fun removeItem(deviceDomainId: Int) {
 
         val rcbServiceId = requireRcbServiceId(deviceDomainId)
         rcbServiceOrchestrator.removeRcbService(rcbServiceId)
@@ -116,7 +118,7 @@ class RcbOrchestratorUseCaseImpl @Inject constructor(
         } ?: throw IllegalArgumentException("No device for service id $rcbServiceId")
     }
 
-    override fun deleteAllRcbServices() = domainMap.forEach {
+    override fun removeAllItems() = domainMap.forEach {
         rcbServiceOrchestrator.removeRcbService(it.key)
         deviceRepoUseCase.pushDevice(it.value.id)
     }.also {

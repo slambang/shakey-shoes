@@ -43,35 +43,35 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
     }
 
     private fun observeViewModel() {
-        observe(viewModel.bluetoothStatusLiveData) {
+        observe(viewModel.bluetoothStatusEvent) {
             toolbar.subtitle = it
         }
 
-        observe(viewModel.removeAllBuffersLiveData) {
+        observe(viewModel.removeAllItemsEvent) {
             recyclerAdapter.clearItems()
         }
 
-        observe(viewModel.removeAllMenuOptionEnabledLiveData) {
+        observe(viewModel.removeAllMenuOptionEnabledEvent) {
             deleteAllBuffersMenuItem.isEnabled = it
         }
 
-        observe(viewModel.itemModelsLiveData) {
+        observe(viewModel.newItemEvent) {
             emitModel(it)
         }
 
-        observe(viewModel.itemDeletedLiveData) {
+        observe(viewModel.removeItemEvent) {
             recyclerAdapter.removeItem(it)
         }
 
-        observe(viewModel.showDeviceListLiveData) {
+        observe(viewModel.showDeviceListEvent) {
             displayDeviceList(it)
         }
 
-        observe(viewModel.errorLiveData) {
+        observe(viewModel.errorEvent) {
             showSnackBar(it)
         }
 
-        observe(viewModel.confirmDialogLiveData) {
+        observe(viewModel.confirmDialogEvent) {
             showConfirmDialog(it)
         }
     }
@@ -114,7 +114,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.select_device_dialog_title)
             .setItems(deviceNames) { _, which ->
-                viewModel.onRcbDeviceSelected(devices[which].first)
+                viewModel.onDeviceSelected(devices[which].first)
             }
             .setOnDismissListener { setAddRcbClickListener() }
             .create()
@@ -134,7 +134,7 @@ class RcbViewFragment : BaseViewFragment<RcbViewModelImpl>() {
         AlertDialog.Builder(requireContext())
             .setTitle(dialogModel.titleResId)
             .setMessage(dialogModel.messageResId)
-            .setPositiveButton(R.string.delete) { _, _ -> dialogModel.onSuccessListener() }
+            .setPositiveButton(R.string.delete) { _, _ -> dialogModel.onConfirmedListener() }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
 

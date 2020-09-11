@@ -31,6 +31,6 @@ interface RcbOrchestratorUseCase {
     fun pauseRcbService(domainId: Int)
     fun pauseAllRcbServices()
     fun stopAllRcbServices()
-    fun deleteRcbService(deviceDomainId: Int)
-    fun deleteAllRcbServices()
+    fun removeItem(deviceDomainId: Int)
+    fun removeAllItems()
 }
