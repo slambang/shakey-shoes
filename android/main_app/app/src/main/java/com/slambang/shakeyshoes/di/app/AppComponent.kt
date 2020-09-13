@@ -1,10 +1,12 @@
 package com.slambang.shakeyshoes.di.app
 
 import android.app.Application
+import com.slambang.shakeyshoes.App
 import com.slambang.shakeyshoes.di.view.FragmentBuilder
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
+import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
@@ -19,9 +21,9 @@ import javax.inject.Singleton
         FragmentBuilder::class
     ]
 )
-interface AppComponent {
+interface AppComponent : AndroidInjector<App> {
 
-    val androidInjector: DispatchingAndroidInjector<Any>
+    val androidInjector: DispatchingAndroidInjector<App>
 
     @Component.Builder
     interface Builder {
