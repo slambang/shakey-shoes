@@ -48,7 +48,7 @@ App *initApp(jobject obj, JNIEnv *jniEnv, const char *path, int intervalMs, int 
 extern "C" {
 
 JNIEXPORT jlong JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeInitApp(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeInitApp(
         JNIEnv *env,
         jobject obj,
         jstring path,
@@ -69,7 +69,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeInitApp(
 }
 
 JNIEXPORT jint JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeGetRefillSizeFrames(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeGetRefillSizeFrames(
         JNIEnv *,
         jobject,
         jlong appHandle) {
@@ -80,7 +80,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeGetRefillSizeFrames(
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeGetSampleRate(JNIEnv*,
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeGetSampleRate(JNIEnv*,
                                                                      jobject,
                                                                      jlong appHandle) {
     auto *app = reinterpret_cast<App *>(appHandle);
@@ -88,7 +88,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeGetSampleRate(JNIEnv*,
 }
 
 JNIEXPORT void JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeDeleteApp(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeDeleteApp(
         JNIEnv *,
         jobject,
         jlong appHandle) {
@@ -100,7 +100,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeDeleteApp(
 }
 
 JNIEXPORT void JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeSetPlaying(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeSetPlaying(
         JNIEnv *,
         jobject,
         jlong appHandle,
@@ -111,7 +111,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeSetPlaying(
 }
 
 JNIEXPORT jdouble JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeGetCurrentOutputLatencyMillis(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeGetCurrentOutputLatencyMillis(
         JNIEnv *,
         jobject,
         jlong appHandle) {
@@ -121,7 +121,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeGetCurrentOutputLatencyMi
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeIsLatencyDetectionSupported(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeIsLatencyDetectionSupported(
         JNIEnv *,
         jobject,
         jlong appHandle) {
@@ -131,7 +131,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativeIsLatencyDetectionSupport
 }
 
 JNIEXPORT void JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativePrime(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativePrime(
         JNIEnv *,
         jobject,
         jint refills,
@@ -143,7 +143,7 @@ Java_com_google_oboe_samples_hellooboe_NativeApp_nativePrime(
 }
 
 JNIEXPORT void JNICALL
-Java_com_google_oboe_samples_hellooboe_NativeApp_nativeStart(
+Java_com_slambang_shakeyshoes_oboe_NativeApp_nativeStart(
         JNIEnv *,
         jobject,
         jlong appHandle) {
