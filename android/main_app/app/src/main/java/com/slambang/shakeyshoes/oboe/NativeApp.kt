@@ -1,7 +1,8 @@
 package com.slambang.shakeyshoes.oboe
 
-import android.content.Context
 import android.util.Log
+import java.io.File
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.IntBuffer
@@ -28,11 +29,11 @@ object NativeApp {
     private val mockArduinoConsumer = MockArduinoConsumer()
 
     @JvmStatic
-    fun create(context: Context): Boolean {
+    fun create(inputStream: InputStream, filesDir: File): Boolean {
 
         if (mAppHandle == 0L) {
 
-            fileManager.copySamples(context)
+            val path = fileManager.copy(inputStream, filesDir)
 
             val totalBytesCount = WINDOW_SIZE * (Integer.SIZE / java.lang.Byte.SIZE)
             mDspBuffer = ByteBuffer.allocateDirect(totalBytesCount)
@@ -41,7 +42,6 @@ object NativeApp {
 
             if (!mDspBuffer.isDirect) throw IllegalStateException("mDspBuffer is not direct!")
 
-            val path = fileManager.resolve(FileManager.TERMINUS_SIGNED_16BIT_PCM_MONO.second, context)
             mAppHandle = nativeInitApp(path, WINDOW_INTERVAL_MS, WINDOW_COUNT, WINDOW_SIZE, mDspBuffer)
 
             /*

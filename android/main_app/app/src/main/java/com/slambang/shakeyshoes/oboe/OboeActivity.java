@@ -3,12 +3,15 @@ package com.slambang.shakeyshoes.oboe;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.slambang.shakeyshoes.R;
 
+import java.io.InputStream;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,14 +34,8 @@ public class OboeActivity extends Activity {
             mIsPlaying = !mIsPlaying;
             NativeApp.setToneOn(mIsPlaying);
         });
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        NativeApp.create(this);
-        setupLatencyUpdater();
-//        selectFile();
+        selectFile();
     }
 
     private void selectFile() {
@@ -74,12 +71,7 @@ public class OboeActivity extends Activity {
                     latencyStr = "Only supported on API 26";
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mLatencyText.setText("Latency: " + latencyStr);
-                    }
-                });
+                runOnUiThread(() -> mLatencyText.setText("Latency: " + latencyStr));
             }
         };
         mLatencyUpdater = new Timer();
@@ -89,5 +81,14 @@ public class OboeActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(Objects.requireNonNull(data.getData()));
+            assert inputStream != null;
+            NativeApp.create(inputStream, getFilesDir());
+            setupLatencyUpdater();
+        } catch (Throwable error) {
+            Log.e("Steve", "Error", error);
+        }
     }
 }
