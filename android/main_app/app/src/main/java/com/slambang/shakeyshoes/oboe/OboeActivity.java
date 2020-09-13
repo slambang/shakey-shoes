@@ -1,7 +1,9 @@
 package com.slambang.shakeyshoes.oboe;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
 import com.slambang.shakeyshoes.R;
@@ -36,6 +38,15 @@ public class OboeActivity extends Activity {
         super.onResume();
         NativeApp.create(this);
         setupLatencyUpdater();
+//        selectFile();
+    }
+
+    private void selectFile() {
+        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension("wav");
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(mime);
+        Intent chooserIntent = Intent.createChooser(intent, "Wav files only");
+        startActivityForResult(chooserIntent, 123);
     }
 
     @Override
@@ -73,5 +84,10 @@ public class OboeActivity extends Activity {
         };
         mLatencyUpdater = new Timer();
         mLatencyUpdater.schedule(latencyUpdateTask, 0, UPDATE_LATENCY_EVERY_MILLIS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
