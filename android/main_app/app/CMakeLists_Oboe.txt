@@ -1,0 +1,47 @@
+cmake_minimum_required(VERSION 3.4.1)
+
+set (APP_DIR ../app/src/main/cpp/app)
+set (OBOE_DIR ../app/src/main/cpp/oboe)
+set (PARSELIB_DIR ../app/src/main/cpp/oboe/parselib)
+
+include(${OBOE_DIR}/CMakeLists.txt)
+include_directories(${OBOE_DIR}/src)
+
+# Add the Oboe library as a subproject. Since Oboe is an out-of-tree source library we must also
+# specify a binary directory
+# add_subdirectory(${OBOE_DIR} ./oboe-bin)
+
+# Include the Oboe headers and shared sample code
+include_directories(${OBOE_DIR}/include ${OBOE_DIR}/shared)
+
+# Debug utilities
+set (DEBUG_UTILS_PATH "${OBOE_DIR}/debug-utils")
+set (DEBUG_UTILS_SOURCES ${DEBUG_UTILS_PATH}/trace.cpp)
+include_directories(${DEBUG_UTILS_PATH})
+
+# parselib
+include(${PARSELIB_DIR}/src/main/cpp/CMakeLists.txt)
+include_directories(${PARSELIB_DIR}/src/main/cpp)
+
+### END OBOE INCLUDE SECTION ###
+
+# App specific sources
+set (APP_SOURCES
+    ${APP_DIR}/jni_bridge.cpp
+    ${APP_DIR}/OboeBridge.cpp
+    ${APP_DIR}/LatencyTuningCallback.cpp
+    ${APP_DIR}/DataBuffer.cpp
+)
+
+# Build the libhello-oboe library
+add_library(hello-oboe SHARED
+            ${DEBUG_UTILS_SOURCES}
+            ${APP_SOURCES}
+            )
+
+# Specify the libraries needed for hello-oboe
+target_link_libraries(hello-oboe android atomic log parselib oboe)
+
+# Enable optimization flags: if having problems with source level debugging,
+# disable -Ofast ( and debug ), re-enable after done debugging.
+target_compile_options(hello-oboe PRIVATE -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")

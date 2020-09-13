@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
+include("CMakeLists_Oboe.txt")
+
 add_definitions(-DBEATPROCESSOR_DEBUG)
 
 set(FINGERBAND_DIR_RELATIVE ${PROJECT_SOURCE_DIR}../../../../common/libfingerband/libfingerband)
