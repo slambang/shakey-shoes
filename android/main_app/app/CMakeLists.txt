@@ -4,25 +4,16 @@ include("CMakeLists_Oboe.txt")
 
 add_definitions(-DBEATPROCESSOR_DEBUG)
 
-set(FINGERBAND_DIR_RELATIVE ${PROJECT_SOURCE_DIR}../../../../common/libfingerband/libfingerband)
-message(${FINGERBAND_DIR_RELATIVE})
-
-get_filename_component(FINGERBAND_LIBS_DIR
-        "${FINGERBAND_DIR_RELATIVE}/libs"
-        ABSOLUTE)
-
-get_filename_component(FINGERBAND_SRC_DIR
-        "${FINGERBAND_DIR_RELATIVE}/src"
-        ABSOLUTE)
+set(FINGERBAND_DIR ../../../common/libfingerband/libfingerband)
 
 get_filename_component(FINGERBAND_SHARED_DIR
-        "${FINGERBAND_DIR_RELATIVE}/.."
+        "${FINGERBAND_DIR}/.."
         ABSOLUTE)
 
 # -------------------------  Dependencies START
 
 # ----- IIR1
-set(IIR1_DIR ${FINGERBAND_LIBS_DIR}/iir1)
+set(IIR1_DIR ${FINGERBAND_DIR}/libs/iir1)
 include_directories("${IIR1_DIR}")
 include_directories("${IIR1_DIR}/iir")
 add_library(iir1
@@ -38,7 +29,7 @@ add_library(iir1
         ${IIR1_DIR}/iir/State.cpp)
 
 # ----- Gist
-set(GIST_DIR ${FINGERBAND_LIBS_DIR}/Gist/src)
+set(GIST_DIR ${FINGERBAND_DIR}/libs/Gist/src)
 include_directories(${GIST_DIR})
 add_library(gist
         SHARED
@@ -51,14 +42,14 @@ add_library(gist
         ${GIST_DIR}/pitch/Yin.cpp)
 
 # ----- ofxGist
-set(OFXGIST_DIR ${FINGERBAND_LIBS_DIR}/ofxGist)
+set(OFXGIST_DIR ${FINGERBAND_DIR}/libs/ofxGist)
 include_directories("${OFXGIST_DIR}/src")
 add_library(ofxgist
         SHARED
         ${OFXGIST_DIR}/src/ofxGist.cpp)
 
 # ----- SndFile
-set(SNDFILE_DIR ${FINGERBAND_LIBS_DIR}/libsndfile)
+set(SNDFILE_DIR ${FINGERBAND_DIR}/libs/libsndfile)
 include_directories("${SNDFILE_DIR}/src")
 add_library(sndfile
         SHARED
@@ -139,7 +130,7 @@ add_library(sndfile
         ${SNDFILE_DIR}/src/G72x/g72x.c)
 
 # ----- KissFFT
-set(KISS_DIR ${FINGERBAND_LIBS_DIR}/kissfft)
+set(KISS_DIR ${FINGERBAND_DIR}/libs/kissfft)
 include_directories(${KISS_DIR})
 add_library(kissfft
         SHARED
@@ -154,21 +145,21 @@ add_definitions(-DUSE_KISS_FFT)
 #add_definitions(-DFIXED_POINT=16)
 #target_compile_options(fingerband PRIVATE -std=c++14 -Wall -Werror "$<$<CONFIG:RELEASE>:-Ofast>")
 
-include_directories(${FINGERBAND_SRC_DIR})
+include_directories(${FINGERBAND_DIR}/src)
 
 set(SOURCE_FILES
     ${FINGERBAND_SHARED_DIR}/fingerband_runner.cpp
-    ${FINGERBAND_SRC_DIR}/dsp/DspUtil.cpp
-    ${FINGERBAND_SRC_DIR}/dsp/BeatGeneratorImpl.cpp
-    ${FINGERBAND_SRC_DIR}/write/MagnitudesWriter.cpp
-    ${FINGERBAND_SRC_DIR}/write/EventWriter.cpp
-    ${FINGERBAND_SRC_DIR}/write/StringWriter.cpp
-    ${FINGERBAND_SRC_DIR}/write/AudioFrameWriter.cpp
-    ${FINGERBAND_SRC_DIR}/write/AverageMagnitudeWriter.cpp
-    ${FINGERBAND_SRC_DIR}/decode/WavFileDataSource.cpp
-    ${FINGERBAND_SRC_DIR}/BeatProcessor.cpp
-    ${FINGERBAND_SRC_DIR}/PreProcessor.cpp
-    ${FINGERBAND_SRC_DIR}/DebugLogger.h)
+    ${FINGERBAND_DIR}/src/dsp/DspUtil.cpp
+    ${FINGERBAND_DIR}/src/dsp/BeatGeneratorImpl.cpp
+    ${FINGERBAND_DIR}/src/write/MagnitudesWriter.cpp
+    ${FINGERBAND_DIR}/src/write/EventWriter.cpp
+    ${FINGERBAND_DIR}/src/write/StringWriter.cpp
+    ${FINGERBAND_DIR}/src/write/AudioFrameWriter.cpp
+    ${FINGERBAND_DIR}/src/write/AverageMagnitudeWriter.cpp
+    ${FINGERBAND_DIR}/src/decode/WavFileDataSource.cpp
+    ${FINGERBAND_DIR}/src/BeatProcessor.cpp
+    ${FINGERBAND_DIR}/src/PreProcessor.cpp
+    ${FINGERBAND_DIR}/src/DebugLogger.h)
 
 add_library(fingerband
             SHARED
