@@ -20,7 +20,7 @@ class BeatReceiver : public WindowResultReceiver {
 };
 
 JNIEXPORT jint JNICALL
-Java_com_betty7_fingerband_alpha_audio_JniBridgeImpl_runFingerbandNative(JNIEnv *env, jobject, jint filterCenterHz, jint filterWidthHz, jint bufferSize, jfloat threshold, jint windowName, jint signalFeature, jstring inputFile, jstring outputDir) {
+Java_com_slambang_shakeyshoes_audio_JniBridgeImpl_runFingerbandNative(JNIEnv *env, jobject, jint filterCenterHz, jint filterWidthHz, jint bufferSize, jfloat threshold, jint windowName, jint signalFeature, jstring inputFile, jstring outputDir) {
 
     const char *nativeInputFile = env->GetStringUTFChars(inputFile, nullptr);
     const char *nativeOutputDir = env->GetStringUTFChars(outputDir, nullptr);
