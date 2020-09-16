@@ -6,9 +6,6 @@ The end result is that it feels like you're standing next to a giant, loud speak
 The prototype almost ready. It has required huge amounts of research, experimentation, and trial & error.  
 My first goal since the beginning was "just get something working", and I'm almost there.  
 
-**Note**  
-The [main_app](android/main_app) is undergoing an extensive rewrite. Please see the [main_app_update](https://github.com/slambang/shakey_shoes/tree/origin/main_app_update) branch.
-
 Components
 ----------
 ### Android
@@ -16,7 +13,7 @@ Components
 ![Main App Connected](android/main_app/docs/main_app_connected.gif)
 
 [main_app](android/main_app): __Working__  
-The main Android app that connects to the hardware and controls the system  
+The main Android app that connects to the hardware and controls the full system  
 
 [audio_test](android/audio_test/samples/hello-oboe) : __WIP (temporary project)__  
 Heavily modified Oboe sample to play low latency audio and call [fingerband](common/libfingerband)  
